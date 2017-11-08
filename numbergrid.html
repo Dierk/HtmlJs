@@ -1,0 +1,31 @@
+<html>
+
+<head>
+	<style>
+		#numbers > * {
+			text-align: center;
+			padding: 2em;
+			margin : 2px;
+			background-color: silver;
+			float: left;
+			font: 2em monospace;
+		}
+	</style>
+	
+</head>
+
+<body>
+	<div id="numbers"></div>
+    <script lang="text/javascript">
+		const numberDiv = document.getElementById("numbers");
+        for (i = 1; i < 10; i++) {
+            numberDiv.innerHTML += "<div>&nbsp;" + i + "</div>" ;
+        }
+	    for (i = 10; i < 100; i++) {
+	        numberDiv.innerHTML += "<div>" + i + "</div>" ;
+	    }
+    </script>
+	
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+<html>
+
+<head>
+	
+</head>
+
+<body>
+	<div id="numbers"> Endless recursion</div>
+    <script lang="text/javascript">
+		const div = document.getElementById("numbers");
+		async function inc(i) {
+			return new Promise((resolve, reject) => {
+			    // some lengthy async action	
+		        setTimeout(() => resolve(i+1), 1000);
+		    });
+		}
+		function print(num) {
+			div.innerText = num;
+			inc(num).then(print); // implicit await
+		}
+		print(0);
+    </script>
+	
+</body>
+
+</html>
