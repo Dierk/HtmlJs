@@ -43,26 +43,22 @@
 	}
 	
 	function nextBoard() {				
-		const maxX = 20; // place new head position
+		const maxX = 20; 
 		const maxY = 20;
-		const head = snake[0];
+		const oldHead = snake[0];
 			
-		if (food.x == head.x && food.y == head.y) {  // have we found the food?
-			food.x = Math.floor(Math.random() * 20); // place new food at random location
-			food.y = Math.floor(Math.random() * 20);
-			const copyLast = Object.assign({}, snake[snake.length - 1] ) // store in case we need to grow
-			snake.push(copyLast);                    // make snake one element longer
-		}
-		
-		for(let i=snake.length - 1; i > 0; i--) { // draw tail behind predecessor
-			const element = snake[i];
-			const pred    = snake[i-1];
-			element.x = pred.x;
-			element.y = pred.y;
-		}				
+		const head = { x: oldHead.x, y: oldHead.y };		
 		head.x += direction.dx; if (head.x < 0) { head.x = maxX - 1 }; if (head.x > maxX) { head.x = 0 }
 		head.y += direction.dy; if (head.y < 0) { head.y = maxY - 1 }; if (head.y > maxY) { head.y = 0 }		
 			
+		if (food.x == head.x && food.y == head.y) {  // have we found any food?
+			food.x = Math.floor(Math.random() * 20);       // place new food at random location
+			food.y = Math.floor(Math.random() * 20);
+		} else {
+			snake.pop(); // no food found => no growth despite new head => remove last element
+		}
+		
+		snake.unshift(head); // put head at front of the list
 	}
 	
 	function display(context) {		
