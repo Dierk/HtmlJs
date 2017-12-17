@@ -19,6 +19,30 @@ if(ok) {
     document.writeln("test failed");
 }
 
+
+// after one step, snake has moved up
+nextBoard();
+ok  = snakeEquals(snake[0] , {x: 10, y: 4} );
+
+if(ok) {
+    document.writeln("ok");
+} else {
+    document.writeln("test failed");
+
+}
+
+
+// after eating food, snake has grown in size
+food = {x: 10, y: 3};
+nextBoard();
+ok  = snake.length === 5;
+
+if(ok) {
+    document.writeln("ok");
+} else {
+    document.writeln("test failed");
+}
+
 </script>
 
 </pre>
