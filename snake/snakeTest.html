@@ -8,39 +8,36 @@
 
 <script language="javascript">
 
-let ok = true;
+let ok = [];
 
 // before start, snake is in start position
-ok  = snakeEquals(snake[0] , {x: 10, y: 5} );
-
-if(ok) {
-    document.writeln("ok");
-} else {
-    document.writeln("test failed");
-}
-
+ok.push(snakeEquals(snake[0] , {x: 10, y: 5} ));
 
 // after one step, snake has moved up
 nextBoard();
-ok  = snakeEquals(snake[0] , {x: 10, y: 4} );
+ok.push(snakeEquals(snake[0] , {x: 10, y: 4} ));
 
-if(ok) {
-    document.writeln("ok");
-} else {
-    document.writeln("test failed");
-
-}
-
+// before eating food, snake is of size 4
+ok.push(snake.length === 4);
 
 // after eating food, snake has grown in size
 food = {x: 10, y: 3};
 nextBoard();
-ok  = snake.length === 5;
+ok.push(snake.length === 5);
 
-if(ok) {
-    document.writeln("ok");
+
+// test result report
+if ( ok.every( elem => elem) ) {
+    document.writeln("All "+ ok.length +" tests ok.");
 } else {
-    document.writeln("test failed");
+    document.writeln("Not all tests ok! Details:");
+    for (let i = 0; i<ok.length; i++) {
+        if(ok[i]) {
+            document.writeln("Test "+ i +" ok");
+        } else {
+            document.writeln("Test "+ i +" failed");
+        }
+    }
 }
 
 </script>
