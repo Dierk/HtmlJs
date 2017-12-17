@@ -17,6 +17,8 @@ let snake = [
 ];
 let food = {x: 15, y: 15};
 
+function snakeEquals(a, b) { return a.x === b.x && a.y === b.y}
+
 function start() {
     const canvas  = document.getElementById("canvas");
     const context = canvas.getContext("2d");
@@ -51,7 +53,7 @@ function nextBoard() {
         y: inBounds(oldHead.y + direction.dy, maxY)
     };
 
-    if (food.x === head.x && food.y === head.y) {  // have we found any food?
+    if (snakeEquals(food, head)) {  // have we found any food?
         food.x = Math.floor(Math.random() * 20);   // place new food at random location
         food.y = Math.floor(Math.random() * 20);
     } else {
