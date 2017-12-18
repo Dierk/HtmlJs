@@ -17,7 +17,12 @@ let snake = [
 ];
 let food = {x: 15, y: 15};
 
-function snakeEquals(a, b) { return a.x === b.x && a.y === b.y}
+function snakeEquals(a, b) { return a.x === b.x && a.y === b.y }
+
+function changeDirection(orientation) {
+    const idx = orientation.indexOf(direction);
+    direction = orientation[idx + 1];
+}
 
 function start() {
     const canvas  = document.getElementById("canvas");
@@ -27,8 +32,7 @@ function start() {
     const leftArrow  = 37;
     window.onkeydown = evt => {
         const orientation = (evt.keyCode === rightArrow) ? clockwise : countercw;
-        const idx = orientation.indexOf(direction);
-        direction = orientation[idx + 1];
+        changeDirection(orientation);
     };
 
     setInterval(() => {

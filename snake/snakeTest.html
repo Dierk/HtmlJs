@@ -25,6 +25,16 @@ food = {x: 10, y: 3};
 nextBoard();
 ok.push(snake.length === 5);
 
+// current direction is north
+ok.push(direction === north);
+
+// when I go clockwise, I end up east
+changeDirection(clockwise);
+ok.push(direction === east);
+
+// going counterclockwise, we end up north again
+changeDirection(countercw);
+ok.push(direction === north);
 
 // test result report
 if ( ok.every( elem => elem) ) {
