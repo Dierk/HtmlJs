@@ -7,27 +7,7 @@
 <script language="javascript" src="../util/test.js"></script>
 <pre>
 
-<script language="javascript">
-
-let ok = [];
-
-const attribute = Attribute();
-
-// initial state
-ok.push(attribute.getValue() === "");
-
-// subscribers get notified
-let found;
-attribute.subscribe(val => found = val);
-attribute.setValue("firstValue");
-ok.push(found === "firstValue");
-
-// value is updated
-ok.push(attribute.getValue() === "firstValue");
-
-report("observable", ok)
-
-</script>
+<script language="javascript" src="observableTest.js"></script>
 
 </pre>
 </body>
