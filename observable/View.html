@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+</head>
+<body>
+
+<input id="name" type="text">
+<div id="label"></div>
+<div id="size"></div>
+
+<script>
+    const nameInput = document.getElementById("name");
+    const label     = document.getElementById("label");
+    const size      = document.getElementById("size");
+
+    const attribute = {
+        value : "",
+        listeners : [],
+        setValue : value => {
+            attribute.value = value;
+            attribute.listeners.forEach(notify => notify(value));
+        }
+    };
+
+    attribute.listeners.push(val => label.innerText  = val);
+    attribute.listeners.push(val => size.innerText  = val.length);
+
+    nameInput.oninput = _ => attribute.setValue(nameInput.value);
+
+
+
+</script>
+
+</body>
+</html>
