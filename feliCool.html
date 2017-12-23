@@ -1,0 +1,32 @@
+<head>
+<style> 
+.cell {
+	float:left;
+	padding: 1em;
+	margin: 5px;
+	background-color: lightgray;
+	width: 1em;
+	height: 1em;
+	text-align: center;
+}
+.row {
+	clear:both;
+}
+
+</style>
+	
+</head>
+<body> 
+	<script>
+	for (var linksNachRechts=1; linksNachRechts<11; linksNachRechts++) {
+		
+	    document.write("<div class=row>")
+		for (var obenNachUnten=1; obenNachUnten<11; obenNachUnten++) {
+		    document.write("<div class=cell>" + linksNachRechts * obenNachUnten + "</div>")
+	    }
+	    document.write("</div>")
+	}
+	</script>
+
+	
+</body>
