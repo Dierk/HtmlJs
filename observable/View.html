@@ -15,21 +15,22 @@
     const size      = document.getElementById("size");
 
     const attribute = function() { // IIFE
+        // private state
         let value = "";
         let listeners = [];
+        // exposed state
         return {
-            value: value,
-            listeners: listeners,
+            getValue: () => value,
+            subscribe: callback => listeners.push(callback),
             setValue: val => {
                 value = val;
-                console.dir(this);
                 listeners.forEach(notify => notify(val));
             }
         }
     } () ;
 
-    attribute.listeners.push(val => label.innerText  = val);
-    attribute.listeners.push(val => size.innerText  = val.length);
+    attribute.subscribe(val => label.innerText  = val);
+    attribute.subscribe(val => size.innerText   = val.length);
 
     nameInput.oninput = _ => attribute.setValue(nameInput.value);
 
