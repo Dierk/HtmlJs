@@ -14,7 +14,7 @@
     const label     = document.getElementById("label");
     const size      = document.getElementById("size");
 
-    const attribute = function() { // IIFE
+    function Attribute() { // Constructor
         // private state
         let value = "";
         let listeners = [];
@@ -27,12 +27,14 @@
                 listeners.forEach(notify => notify(val));
             }
         }
-    } () ;
+    }
 
-    attribute.subscribe(val => label.innerText  = val);
-    attribute.subscribe(val => size.innerText   = val.length);
+    const inputAttr = Attribute();
+    inputAttr.subscribe(val => label.innerText  = val);
+    inputAttr.subscribe(val => size.innerText   = val.length);
+    inputAttr.subscribe(val => console.dir(inputAttr.getValue()));
 
-    nameInput.oninput = _ => attribute.setValue(nameInput.value);
+    nameInput.oninput = _ => inputAttr.setValue(nameInput.value);
 
 
 
