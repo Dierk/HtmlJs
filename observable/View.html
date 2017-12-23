@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>View</title>
+    <script src="observable.js"></script>
 </head>
 <body>
 
@@ -14,29 +15,11 @@
     const label     = document.getElementById("label");
     const size      = document.getElementById("size");
 
-    function Attribute() { // Constructor
-        // private state
-        let value = "";
-        let listeners = [];
-        // exposed state
-        return {
-            getValue: () => value,
-            subscribe: callback => listeners.push(callback),
-            setValue: val => {
-                value = val;
-                listeners.forEach(notify => notify(val));
-            }
-        }
-    }
-
     const inputAttr = Attribute();
     inputAttr.subscribe(val => label.innerText  = val);
     inputAttr.subscribe(val => size.innerText   = val.length);
-    inputAttr.subscribe(val => console.dir(inputAttr.getValue()));
 
     nameInput.oninput = _ => inputAttr.setValue(nameInput.value);
-
-
 
 </script>
 

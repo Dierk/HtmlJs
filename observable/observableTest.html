@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html><head></head><body>
+
+<h1>Testing Observable Attributes</h1>
+
+<script language="javascript" src="observable.js">
+</script>
+<pre>
+
+<script language="javascript">
+
+let ok = [];
+
+const attribute = Attribute();
+
+// initial state
+ok.push(attribute.getValue() === "");
+
+// subscribers get notified
+let found;
+attribute.subscribe(val => found = val);
+attribute.setValue("firstValue");
+ok.push(found === "firstValue");
+
+// value is updated
+ok.push(attribute.getValue() === "firstValue");
+
+
+// test result report
+if ( ok.every( elem => elem) ) {
+    document.writeln("All "+ ok.length +" tests ok.");
+} else {
+    document.writeln("Not all tests ok! Details:");
+    for (let i = 0; i<ok.length; i++) {
+        if(ok[i]) {
+            document.writeln("Test "+ i +" ok");
+        } else {
+            document.writeln("Test "+ i +" failed");
+        }
+    }
+}
+
+</script>
+
+</pre>
+</body>
+</html>
