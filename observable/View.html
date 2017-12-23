@@ -14,14 +14,19 @@
     const label     = document.getElementById("label");
     const size      = document.getElementById("size");
 
-    const attribute = {
-        value : "",
-        listeners : [],
-        setValue : value => {
-            attribute.value = value;
-            attribute.listeners.forEach(notify => notify(value));
+    const attribute = function() { // IIFE
+        let value = "";
+        let listeners = [];
+        return {
+            value: value,
+            listeners: listeners,
+            setValue: val => {
+                value = val;
+                console.dir(this);
+                listeners.forEach(notify => notify(val));
+            }
         }
-    };
+    } () ;
 
     attribute.listeners.push(val => label.innerText  = val);
     attribute.listeners.push(val => size.innerText  = val.length);
