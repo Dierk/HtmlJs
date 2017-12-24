@@ -2,7 +2,6 @@
 <html>
 <head>
     <title> All Tests </title>
-
     <script src="util/test.js"></script>
 </head>
 <body>
@@ -11,10 +10,18 @@
 
 <pre>
 
-   <script src="snake/snake.js"></script>
-   <script src="snake/snakeTest.js"></script>
-   <script src="observable/observable.js"></script>
-   <script src="observable/observableTest.js"></script>
+<script>
+
+    const testNames = [
+        'snake',
+        'observable',
+    ];
+
+    testNames.forEach( testName => {
+        document.write('<script src=\"'+ testName +'/'+ testName + '.js\"></s'+'cript>'); // dirty trick of the day
+        document.write('<script src=\"'+ testName +'/'+ testName + 'Test.js\"></s'+'cript>');
+    });
+</script>
 
 </pre>
 
