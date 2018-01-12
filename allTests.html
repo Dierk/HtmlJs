@@ -15,11 +15,12 @@
     const testNames = [
         'snake',
         'observable',
+        'church',
     ];
 
     testNames.forEach( testName => {
-        document.write('<script src=\"'+ testName +'/'+ testName + '.js\"></s'+'cript>'); // dirty trick of the day
-        document.write('<script src=\"'+ testName +'/'+ testName + 'Test.js\"></s'+'cript>');
+        document.write(`<script src="${testName}/${testName}.js\"></s`+'cript>'); // dirty trick of the day
+        document.write(`<script src="${testName}/${testName}Test.js\"></s`+'cript>'); // dirty trick of the day
     });
 </script>
 
