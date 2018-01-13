@@ -28,6 +28,18 @@ const flip = f => x => y => f(y)(x);
 // const kite = x => y => flip(konst)(x)(y);
 const kite = flip(konst);
 
+// -----
+
+// Bluebird, composition
+const cmp = f => g => x => f(g(x));
+
+// Blackbird
+//const cmp2 = f => g => x => y => f(g(x)(y));
+const cmp2 = cmp (cmp)(cmp);
+
+// is there any such combinator?
+// const s = f => x => f(x)(x);
+
 // ---- boolean logic
 
 const T = konst;
@@ -35,6 +47,7 @@ const F = kite;
 const and = x => y => x(y)(x);
 const or  = M;
 const not = flip;
-const beq = x => y => x(y)(flip(y));
+const beq = x => y => x(y)(not(y));
 
-const xor = x => y => not(beq(x)(y));
+//const xor = cmp (cmp(not)) (beq)   ;
+const xor =  cmp2 (not) (beq)   ;
