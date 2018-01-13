@@ -143,9 +143,8 @@
         const f1 = x =>      f2(x);
         const f0 =           f1;
 
-        ok.push( append  ("x")("y") === "xy");
         ok.push( f2("x")("y") === "xy");
-        ok.push( f1 ("x")("y") === "xy");
+        ok.push( f1("x")("y") === "xy");
         ok.push( f0("x")("y") === "xy");
 
         // explain currying sequence with paren nesting
