@@ -13,31 +13,34 @@
     f = x => (expr_without_x) (x)   // eta reduction
     f =       expr_without_x
 
-    in case there are more params one can reduce last (innermost) param with last argument
+    In case there are more params one can reduce last (innermost) param with last argument
 
     f = w => x => (expr_without_x) (w) (x)   // eta reduction
     f = w =>      (expr_without_x) (w)       // now you can even reduce w, if ..
 
-    error cases:
+    Special cases:
 
     1) x is not last parameter, cannot reduce
        f = w => x => (expr_without_x) (x) (w)
+
        to make it last parameter, you can use flip before reduction
        f = w => x => flip (expr_without_x) (w) (x)    // eta
-
        f = w =>      flip (expr_without_x) (w)
 
+    2) x appears at the end but is nested in the term
 
-    Replace nesting with compose
+       Replace nesting with compose
 
-    f = x => g(h(x))            // compose
-    f = x => cmp(g)(h)(x)       // now we can eta-reduce
-    f = cmp(g)(h)
+        f = x => g(h(x))            // compose
+        f = x => cmp(g)(h)(x)       // now we can eta-reduce
+        f = cmp(g)(h)
 
-    Referential transparancy (part of), equational reasoning, term algebra
-    f(x)(y)(z)                  // and
-    g = f(x)                    // follows
-    f(x)(y)(z) == g(y)(z)
+       Referential transparency (part of), equational reasoning, term algebra
+        f(x)(y)(z)                  // and
+        g = f(x)                    // follows
+        f(x)(y)(z) == g(y)(z)
+
+       Any subterm can be extracted but mind the (maybe implicit) parentheses!
 
 </pre>
 
