@@ -89,6 +89,9 @@
         ok.push( append("x")("y") === "xy");
         ok.push( flip(append)("x")("y") === "yx");
 
+        const backwards = flip(append);
+        ok.push( backwards("x")("y") === "yx");
+
         report("church-flip", ok);
     }
 )();
@@ -125,5 +128,29 @@
         ok.push( veq (F) (xor(F)(F)) );
 
         report("church-boolean", ok);
+    }
+)();
+
+
+(   () => {
+        let ok = [];
+
+        const inc = x => x + 1;
+        ok.push( cmp(inc)(inc)(0) === 2);
+
+        const append = x => y => x + y;          // have an impl.
+        const f2 = x => y => append(x)(y); // curried form for experiment
+        const f1 = x =>      f2(x);
+        const f0 =           f1;
+
+        ok.push( append  ("x")("y") === "xy");
+        ok.push( f2("x")("y") === "xy");
+        ok.push( f1 ("x")("y") === "xy");
+        ok.push( f0("x")("y") === "xy");
+
+        // explain currying sequence with paren nesting
+        // const myappend = (x => (y => (append(x)) (y) ));
+
+        report("church-composition", ok);
     }
 )();

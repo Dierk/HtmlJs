@@ -1,19 +1,37 @@
 
 // test result report
-// report :: String -> [Bool] -> DOM ()
+// report :: String, [Bool] -> DOM ()
 function report(origin, ok) {
     "use strict";
+    const extend = 20;
     if ( ok.every( elem => elem) ) {
-        document.writeln("All "+ ok.length +" tests in " + origin + " ok.");
+        document.writeln(" "+ padLeft(ok.length, 3) +" tests in " + padRight(origin, extend) + " ok.");
     } else {
-        document.writeln("Not all tests  in " + origin + " ok! Details:");
+        document.writeln("+------------------------------------------+");
+        document.writeln("|    Failing tests in " + padRight(origin, extend) + " |");
         for (let i = 0; i < ok.length; i++) {
-            if(ok[i]) {
-                document.writeln("Test "+ i +" ok");
-            } else {
-                document.writeln("Test "+ i +" failed");
+            if( ! ok[i]) {
+                document.writeln("|    Test #"+ padLeft(i, 3) +" failed                      |");
             }
         }
+        document.writeln("+------------------------------------------+");
     }
+
 }
 
+// padRight :: String, Int -> String
+function padRight(str, extend) {
+    return "" + str + fill(str, extend);
+}
+
+function padLeft(str, extend) {
+    return "" + fill(str, extend) + str;
+}
+
+function fill(str, extend) {
+    const len = str.toString().length; // in case str is not a string
+    if (len >= extend) {
+        return str;
+    }
+    return " ".repeat(extend - len);
+}

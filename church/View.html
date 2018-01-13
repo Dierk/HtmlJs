@@ -1,27 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View</title>
-    <script src="church.js"></script>
+    <title>Notes about FP moves</title>
 </head>
 <body>
 
-<input id="name" type="text">
-<div id="label"></div>
-<div id="size"></div>
 
-<script>
-    const nameInput = document.getElementById("name");
-    const label     = document.getElementById("label");
-    const size      = document.getElementById("size");
+<pre>
 
-    const inputAttr = Attribute();
-    inputAttr.subscribe(val => label.innerText  = val);
-    inputAttr.subscribe(val => size.innerText   = val.length);
+    Eta reduction
 
-    nameInput.oninput = _ => inputAttr.setValue(nameInput.value);
+    f = x => (expr_without_x) (x)   // eta reduction
+    f =       expr_without_x
 
-</script>
+    in case there are more params one can reduce last (innermost) param with last argument
+
+    f = w => x => (expr_without_x) (w) (x)   // eta reduction
+    f = w =>      (expr_without_x) (w)       // now you can even reduce w, if ..
+
+    error cases:
+
+    1) x is not last parameter, cannot reduce
+       f = w => x => (expr_without_x) (x) (w)
+       to make it last parameter, you can use flip before reduction
+       f = w => x => flip (expr_without_x) (w) (x)    // eta
+
+       f = w =>      flip (expr_without_x) (w)
+
+
+    Replace nesting with compose
+
+    f = x => g(h(x))            // compose
+    f = x => cmp(g)(h)(x)       // now we can eta-reduce
+    f = cmp(g)(h)
+
+    Referential transparancy (part of), equational reasoning, term algebra
+    f(x)(y)(z)                  // and
+    g = f(x)                    // follows
+    f(x)(y)(z) == g(y)(z)
+
+</pre>
 
 </body>
 </html>

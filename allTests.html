@@ -19,9 +19,16 @@
     ];
 
     testNames.forEach( testName => {
-        document.write(`<script src="${testName}/${testName}.js\"></s`+'cript>'); // dirty trick of the day
-        document.write(`<script src="${testName}/${testName}Test.js\"></s`+'cript>'); // dirty trick of the day
+
+
+        document.write(`<script src="${testName}/${testName}.js"></s`+'cript>'); // dirty trick of the day
+        document.write(`<script src="${testName}/${testName}Test.js"></s`+'cript>');
+
+
     });
+
+    document.writeln("\nCheck possible 'compile' errors in the console .")
+
 </script>
 
 </pre>
