@@ -9,7 +9,7 @@ const id = x => x;
 // const beta = f => id(f);
 // const beta = f => f;
 // beta.toString = () => "beta";
-const beta = f => x => f(x);
+const beta = f => x => f(x);       // aka "lazy"
 
 // self-application, Mockingbird, \x.x x
 const M = f => beta(f)(f);  // f(f)
@@ -81,3 +81,41 @@ const beq = x => y => x(y)(not(y));
 
 //const xor = cmp (cmp(not)) (beq)   ;
 const xor =  cmp2 (not) (beq)   ;
+
+
+// ----
+// Graham Hutton: https://www.youtube.com/watch?v=9T8A89jgeTI
+
+// Y combinator: \f. (\x.f(x x)) (\x.f(x x))
+// Y = f => ( x => f(x(x)) )  ( x => f(x(x)) )
+// Y is a fixed point for every f: Y(f) == Y(Y(f))
+// \f. M(\x. f(Mx))
+// f => M(x => f(M(x)))
+
+// in a non-lazy language, we need the Z fixed-point combinator
+// \f. (\x. f(\v.xxv)) (\x. f(\v.xxv))
+// \f. M(\x. f(\v. Mxv))
+const Z = f => M(x => f(v => M(x)(v) ));
+
+// loop = loop
+// loop = (\x. x x) (\x. x x)
+// loop = ( x => x(x) ) ( x => x(x) )
+// this is self-application applied to self-application, i.e. M(M)
+// which we already checked to be endlessly recursive
+
+// rec = f => f (rec (f)) // cannot work, since rec(f) appears in argument position
+
+// define loop in terms of rec:
+// const rec = f => f (rec (f));  // y
+// const rec = f => M ( x => f(M(x)) )     // s/o
+
+// this works:
+// rec :: (a -> a) -> a
+const rec  = f => f ( n => rec(f)(n)  ) ;
+
+// lazy application is simply "beta"
+const recs = f => f ( beta(rec)(f)  ) ;
+
+
+
+

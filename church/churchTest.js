@@ -153,3 +153,36 @@
         report("church-composition", ok);
     }
 )();
+
+
+(   () => {
+        let ok = [];
+
+        ok.push( rec(konst(1))  === 1);
+        ok.push( recs(konst(1)) === 1);
+        ok.push( Z(konst(1))    === 1); // the same in terms of the Z combinator
+
+        // hand-made recursion
+        const triangle = n => n < 1 ? 0 : triangle(n-1) + n;
+        ok.push( triangle(10) === 55);
+
+        // tail recursion
+        const triTail = acc => n => n < 1 ? acc : triTail(acc + n)(n-1);
+        ok.push( triTail(0)(10) === 55);
+
+        // triFun does not longer appear on the right-hand side of the recursion!
+        const triFun = f => acc => n => n < 1 ? acc : f(acc + n)(n-1) ;
+        ok.push( rec (triFun)(0)(10) === 55);
+        ok.push( recs(triFun)(0)(10) === 55); // works both ways
+        ok.push( Z   (triFun)(0)(10) === 55); // the same in terms of the Z combinator
+        ok.push( rec (f => acc => n => n < 1 ? acc : f(acc + n)(n-1)) (0)(10) === 55);
+
+        // if even works with non-tail recursion
+        ok.push( rec (f => n => n < 1 ? 0 : f(n-1) + n) (10) === 55);
+
+
+
+
+        report("church-recursion", ok);
+    }
+)();
