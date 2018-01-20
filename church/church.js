@@ -78,9 +78,23 @@ const beq = x => y => x(y)(not(y));
 //const beq = x => y => S(x)(not)(y);
 //const beq = x => S(x)(not);
 
-
 //const xor = cmp (cmp(not)) (beq)   ;
 const xor =  cmp2 (not) (beq)   ;
+
+//const imp = x => y => x (y) (T);
+//const imp = x => y => x (y) ( not(x));
+// const imp = x => y => flip(x) (not(x)) (y) ;
+// const imp = x => flip(x) (not(x)) ;
+// const imp = S(not)(not) ;
+
+// const imp = x => y => y ( x(T)(T) ) ( x(F)(T) );
+// const imp = x => y => y ( y ) ( not(x) );
+// const imp = x => y => M (y) ( not(x) );
+// const imp = x => y => flip(M) (not(x)) (y);
+// const imp = x => flip(M) (not(x));
+// const imp = x => cmp (flip(M)) (not) (x);
+//const imp = cmp (not(M))(not);
+const imp = cmp (not(M))(not);
 
 
 // ----
@@ -116,6 +130,48 @@ const rec  = f => f ( n => rec(f)(n)  ) ;
 // lazy application is simply "beta"
 const recs = f => f ( beta(rec)(f)  ) ;
 
+// ---------- Numbers
+
+const n0 = f => x => x;         // same as konst, F
+const n1 = f => x => f(x);      // same as beta, once, lazy
+const n2 = f => x => f(f(x));           // twice
+const n3 = f => x => f(f(f(x)));        // thrice
+
+const succ = cn => ( f => x => f( cn(f)(x) ) );
+//const succ = cn => ( f => x => f( (cn(f)) (x) ) );
+//const succ = cn => ( f => x => cmp(f) (cn(f)) (x)  );
+//const succ = cn => ( f => cmp(f) (cn(f)) );
+
+const n4 = succ(n3);
+const n5 = succ(n4);
+
+// addition + n is the nth successor
+
+//const plus = cn1 => cn2 => f => x =>  cn2(succ)(cn1)(f)(x)  ; // eta
+const plus = cn1 => cn2 =>  cn2(succ)(cn1)  ;
+
+// multiplication is repeated plus
+// const mult = cn1 => cn2 => cn2 (plus(cn1)) (n0) ;
+// rolled out example 2 * 3
+// const mult = cn1 => cn2 => f => x =>  f f f   f f f   x
+// const mult = cn1 => cn2 => f => x =>  cn1 (cn2 (f))  (x); // eta
+// const mult = cn1 => cn2 => f =>  cn1 (cn2 (f));  // introduce composition
+// const mult = cn1 => cn2 => cmp(cn1)(cn2); // eta
+// const mult = cn1 => cmp(cn1); // eta
+const mult = cmp;
+
+// power is prepeated multiplication
+// 2 ^ 3 = (2* (2* (2*(1))) ,
+// const pow = cn1 => cn2 => cn2 (mult(cn1)) (n1);
+// rolled out = f f ( f f ( f f x ))
+// const pow = cn1 => cn2 => f => x => cn2 (cn1)(f)(x); // eta
+const pow = cn1 => cn2 => cn2 (cn1) ;
+// const pow = cn1 => cn2 => beta (cn2) (cn1) ;
+// const pow = cn1 => cn2 => flip (beta) (cn1) (cn2) ;
+// const pow = flip (beta) ;  // Thrush combinator  Th \af.fa ; CI
+// const pow = not(id);       // x^0 = 1
 
 
+const isZero = cn =>  cn (konst(F)) (T);
 
+const church = n => n === 0 ? n0 : succ(church(n-1));

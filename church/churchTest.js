@@ -127,6 +127,16 @@
         ok.push( veq (T) (xor(F)(T)) );
         ok.push( veq (F) (xor(F)(F)) );
 
+        ok.push( veq (T) (imp(T)(T)) );
+        ok.push( veq (F) (imp(T)(F)) );
+        ok.push( veq (T) (imp(F)(T)) );
+        ok.push( veq (T) (imp(F)(F)) );
+
+        // addition from numerals
+        ok.push( veq (T) (isZero(n0)) );
+        ok.push( veq (F) (isZero(n1)) );
+        ok.push( veq (F) (isZero(n2)) );
+
         report("church-boolean", ok);
     }
 )();
@@ -180,9 +190,59 @@
         // if even works with non-tail recursion
         ok.push( rec (f => n => n < 1 ? 0 : f(n-1) + n) (10) === 55);
 
-
-
+        // ideas for more exercises:
+        // count, sum, product, (evtl later on array: none, any, every)
 
         report("church-recursion", ok);
+    }
+)();
+
+
+(   () => {
+        let ok = [];
+
+        const inc = x => x + 1;
+        const nval = cn => cn(inc)(0);
+
+        ok.push( nval(n0) === 0 );
+        ok.push( nval(n1) === 1 );
+        ok.push( nval(n2) === 2 );
+        ok.push( nval(n3) === 3 );
+
+        ok.push( nval( succ(n3) ) === 4 );
+
+        ok.push( nval(n4) === 4 );
+        ok.push( nval(n5) === 5 );
+
+        ok.push( nval( succ(succ(n3))) === 3 + 1 + 1 );
+        ok.push( nval( plus(n3)(n2))   === 3 + 2 );
+
+        ok.push( nval( plus(n2)(plus(n2)(n2)) )   === 2 + 2 + 2 );
+        ok.push( nval( mult(n2)(n3) )             === 2 * 3 );
+        ok.push( nval( mult(n2)(n3) )             === 2 * 3 );
+
+        ok.push( nval( pow(n2)(n3) )              === 2 * 2 * 2); // 2^3
+        ok.push( nval( pow(n2)(n0) )              === 1); // x^0
+        ok.push( nval( pow(n2)(n1) )              === 2); // x^1
+        ok.push( nval( pow(n0)(n2) )              === 0); // 0^x
+        ok.push( nval( pow(n1)(n2) )              === 1); // 1^x
+
+        ok.push( nval( pow(n0)(n0) )              === 1); // 0^0  // Ha !!!
+
+        ok.push ( nval( church(42) ) === 42 );
+
+        const sval = cn => cn(s => 'I' + s)('');
+        ok.push( sval(church(10)) === 'IIIIIIIIII');
+
+        const qval = cn => cn(n => cn(inc)(n))(0); // square by cont adding
+        ok.push( qval(church(9)) === 81 );
+
+        const aval = cn => cn(a => a.concat(a[a.length-1]+a[a.length-2]) ) ( [0,1] );
+        ok.push( aval(church(10-2)).toString() === '0,1,1,2,3,5,8,13,21,34');  // fibonacci numbers
+
+        const oval = cn => cn(o => ({acc:o.acc+o.i+1, i:o.i+1})  ) ( {acc:0, i:0} );
+        ok.push( oval(church(10)).acc === 55);  // triangle numbers
+
+        report("church-numbers", ok);
     }
 )();
