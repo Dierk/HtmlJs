@@ -160,7 +160,7 @@ const plus = cn1 => cn2 =>  cn2(succ)(cn1)  ;
 // const mult = cn1 => cmp(cn1); // eta
 const mult = cmp;
 
-// power is prepeated multiplication
+// power is repeated multiplication
 // 2 ^ 3 = (2* (2* (2*(1))) ,
 // const pow = cn1 => cn2 => cn2 (mult(cn1)) (n1);
 // rolled out = f f ( f f ( f f x ))
@@ -185,5 +185,10 @@ const V = pair;  // Vireo  V \abf.fab
 
 const fst = p => p(T); // pick first  element from pair
 const snd = p => p(F); // pick second element from pair
+
+// ---- curry
+
+// curry :: (a,b) -> a -> b
+const curry = f => x => y => f(x,y);
 
 

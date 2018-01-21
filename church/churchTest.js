@@ -243,6 +243,11 @@
         const oval = cn => cn(o => ({acc:o.acc+o.i+1, i:o.i+1})  ) ( {acc:0, i:0} );
         ok.push( oval(church(10)).acc === 55);  // triangle numbers
 
+        // Thrush can be used as a one-element closure
+        const closure = Th(1);  // closure is now "storing" the value until a function uses it
+        ok.push( closure(id)  === 1 );
+        ok.push( closure(inc) === 2 );
+
         report("church-numbers", ok);
     }
 )();
@@ -258,5 +263,17 @@
         ok.push( fst(pval(church(10))) === 55);  // triangle numbers
 
         report("church-data", ok);
+    }
+)();
+
+(   () => {
+        let ok = [];
+
+        function add2(x,y) { return x + y }
+        const inc = curry(add2)(1);
+        ok.push( inc(1) === 2);
+        ok.push( inc(2) === 3);
+
+        report("church-curry", ok);
     }
 )();
