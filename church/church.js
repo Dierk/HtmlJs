@@ -168,10 +168,22 @@ const mult = cmp;
 const pow = cn1 => cn2 => cn2 (cn1) ;
 // const pow = cn1 => cn2 => beta (cn2) (cn1) ;
 // const pow = cn1 => cn2 => flip (beta) (cn1) (cn2) ;
-// const pow = flip (beta) ;  // Thrush combinator  Th \af.fa ; CI
+// const pow = flip (beta) ;
 // const pow = not(id);       // x^0 = 1
 
+const Th = f => g => g(f);  // Thrush combinator  Th \af.fa ; CI
 
 const isZero = cn =>  cn (konst(F)) (T);
 
 const church = n => n === 0 ? n0 : succ(church(n-1));
+
+// ----------- Data structures
+
+const pair = a => b => f => f(a)(b);
+
+const V = pair;  // Vireo  V \abf.fab
+
+const fst = p => p(T); // pick first  element from pair
+const snd = p => p(F); // pick second element from pair
+
+

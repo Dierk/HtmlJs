@@ -246,3 +246,17 @@
         report("church-numbers", ok);
     }
 )();
+
+(   () => {
+        let ok = [];
+
+        const p = pair(0)(1);      // constituent of a product type
+        ok.push( fst(p)   === 0);  // p(konst) (pick first element of pair)
+        ok.push( snd(p)   === 1);  // p(kite)  (pick second element of pair)
+
+        const pval = cn => cn(p => pair(fst(p) + snd(p) + 1)(snd(p) + 1) ) ( pair(0)(0) );
+        ok.push( fst(pval(church(10))) === 55);  // triangle numbers
+
+        report("church-data", ok);
+    }
+)();
