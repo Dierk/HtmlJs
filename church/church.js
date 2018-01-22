@@ -133,9 +133,6 @@ const Z = f => M(x => f(v => M(x)(v) ));
 // rec :: (a -> a) -> a
 const rec  = f => f ( n => rec(f)(n)  ) ;
 
-// lazy application is simply "beta"
-const recs = f => f ( beta(rec)(f)  ) ;
-
 // ---------- Numbers
 
 const n0 = f => x => x;         // same as konst, F
