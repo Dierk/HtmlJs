@@ -1,9 +1,12 @@
 
 
-// Identity I, for all a: id(a) == a
 
 // function id(x) { return x; }, \x.x
 const id = x => x;
+
+const I = id ;          // Identity I, for all a: id(a) == a
+
+
 
 // function application, beta reduction
 // const beta = f => id(f);
@@ -17,12 +20,17 @@ const M = f => beta(f)(f);  // f(f)
 // S(id)(id) (x) = id(x) (id(x))
 // S(id)(id) = M
 
-// Kestrel, \x. \y. x
 // M, const, first, id2, true
 const konst = x => y => x;
 
-// Cardinal, \fxy.fyx
+const K = konst;        // Kestrel K, \x. \y. x
+
+
 const flip = f => x => y => f(y)(x);
+
+const C = flip;         // Cardinal C, \fxy.fyx
+
+
 // const flip = f => g => x => f(x)(g);  // f(x)(g(x)) // konst(g)(x) -> g
 // const flip = f => g      => s(f)(konst(g));         // C = \fg.S(f)(Kg)
 // const flip = f => g => x => s(f)(konst(g))(x);      // def of S
@@ -36,28 +44,34 @@ const flip = f => x => y => f(y)(x);
 // const kite = x => y => flip(konst)(x)(y);
 const kite = flip(konst);
 
+const KI  = kite;
+
 // -----
 
 // Bluebird, composition
 const cmp = f => g => x => f(g(x));
-// const cmp = f => g      => S(konst(f))(g); // B = \fg.S(Kf)g
+// const cmp = f => g      => S(konst(f))(g);
 // const cmp = f => g => x => S(konst(f))(g)(x);
 // const cmp = f => g => x => (konst(f)(x))(g(x));
 // const cmp = f => g => x => (f)(g(x));
 // const cmp = f => g => x => f(g(x)); // qed.
 
-// Blackbird
+const B = cmp; // Bluebird B,  \fg.S(Kf)g
+
+
 //const cmp2 = f => g => x => y => f(g(x)(y));
 const cmp2 = cmp (cmp)(cmp);
+
+const BB = cmp2;        // Blackbird
 
 // Starling, \abc.ac(bc)
 const S = f => g => x => f(x)(g(x));
 
 // identity is SKK, S(konst)(konst)
-// S(konst)(konst)(x) = konst(x)( konst(x) )
-// S(konst)(konst)(x) =      (x)
-// S(konst)(konst)(x) =    id(x)
-// S(konst)(konst)    =    id          // qed
+// S(K)(K)(x) = konst(x)( konst(x) )
+// S(K)(K)(x) =      (x)
+// S(K)(K)(x) =    id(x)
+// S(K)(K)    =    id          // qed
 
 
 // ---- boolean logic
@@ -70,13 +84,13 @@ const and = x => y => x(y)(x);
 // const and = f => g => f(g)(f);
 // const and = f => g => S(f)(konst(f))(g)  // \fg.Sf(Kf)g
 
-const or  = x => y => x(x)(y);
+// const or  = x => y => x(x)(y);
 // const or  = x =>  x(x);
-// const or  = M;
+const or  = M;
 
-const beq = x => y => x(y)(not(y));
+//const beq = x => y => x(y)(not(y));
 //const beq = x => y => S(x)(not)(y);
-//const beq = x => S(x)(not);
+const beq = x => S(x)(not);   // S(x)(K)
 
 //const xor = cmp (cmp(not)) (beq)   ;
 const xor =  cmp2 (not) (beq)   ;
@@ -86,15 +100,7 @@ const xor =  cmp2 (not) (beq)   ;
 // const imp = x => y => flip(x) (not(x)) (y) ;
 // const imp = x => flip(x) (not(x)) ;
 // const imp = S(not)(not) ;
-
-// const imp = x => y => y ( x(T)(T) ) ( x(F)(T) );
-// const imp = x => y => y ( y ) ( not(x) );
-// const imp = x => y => M (y) ( not(x) );
-// const imp = x => y => flip(M) (not(x)) (y);
-// const imp = x => flip(M) (not(x));
-// const imp = x => cmp (flip(M)) (not) (x);
-//const imp = cmp (not(M))(not);
-const imp = cmp (not(M))(not);
+const imp = S(C)(C) ;
 
 
 // ----
@@ -137,10 +143,12 @@ const n1 = f => x => f(x);      // same as beta, once, lazy
 const n2 = f => x => f(f(x));           // twice
 const n3 = f => x => f(f(f(x)));        // thrice
 
-const succ = cn => ( f => x => f( cn(f)(x) ) );
+//const succ = cn => ( f => x => f( cn(f)(x) ) );
 //const succ = cn => ( f => x => f( (cn(f)) (x) ) );
 //const succ = cn => ( f => x => cmp(f) (cn(f)) (x)  );
 //const succ = cn => ( f => cmp(f) (cn(f)) );
+// const succ = cn => ( f => S(cmp)(cn)(f) );
+const succ = cn => S(B)(cn);
 
 const n4 = succ(n3);
 const n5 = succ(n4);
@@ -158,7 +166,8 @@ const plus = cn1 => cn2 =>  cn2(succ)(cn1)  ;
 // const mult = cn1 => cn2 => f =>  cn1 (cn2 (f));  // introduce composition
 // const mult = cn1 => cn2 => cmp(cn1)(cn2); // eta
 // const mult = cn1 => cmp(cn1); // eta
-const mult = cmp;
+// const mult = cmp;
+const mult = B;
 
 // power is repeated multiplication
 // 2 ^ 3 = (2* (2* (2*(1))) ,
@@ -188,7 +197,10 @@ const snd = p => p(F); // pick second element from pair
 
 // ---- curry
 
-// curry :: (a,b) -> a -> b
+// curry :: ((a,b)->c) -> a -> b -> c
 const curry = f => x => y => f(x,y);
+
+// uncurry :: ( a -> b -> c) -> ((a,b) -> c)
+const uncurry = f => (x,y) => f(x)(y);
 
 

@@ -270,9 +270,12 @@
         let ok = [];
 
         function add2(x,y) { return x + y }
-        const inc = curry(add2)(1);
-        ok.push( inc(1) === 2);
-        ok.push( inc(2) === 3);
+        const inc = curry(add2);
+        ok.push( inc(1)(1) ===  2);
+        ok.push( inc(5)(7) === 12);
+
+        const add3 = uncurry(curry(add2));
+        ok.push( add3(1,1) === 2 );
 
         report("church-curry", ok);
     }
