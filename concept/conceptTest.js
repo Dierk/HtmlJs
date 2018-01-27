@@ -39,12 +39,12 @@
 
     const z11 = mod(11);
     const checksum = products.reduce((accu, item) => z11.op(accu)(item), z11.neutral);
+    ok.push( checksum    === 0);
 
     const generalized = mfold(z11)(products);
-
-
-    ok.push( checksum    === 0);
     ok.push( generalized === 0);
+
+    ok.push( mfold(mod(2))([2,4,6,8]) === 0);
 
     report("concept-isbn-example", ok);
 
