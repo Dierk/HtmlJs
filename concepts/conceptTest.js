@@ -25,3 +25,27 @@
     report("concept-monoid", ok);
 
 })();
+
+( () => {
+
+    let ok = [];
+
+    const base11    = [1,2,3,4,5,6,7,8,9,10];
+    const gina_isbn = '1935182447';
+
+    const gina_nums = Array.from(gina_isbn).map(Number);
+
+    const products  = Array.from({length:10}, (_,i) => base11[i] * gina_nums[i]);
+
+    const z11 = mod(11);
+    const checksum = products.reduce((accu, item) => z11.op(accu)(item), z11.neutral);
+
+    const generalized = mfold(z11)(products);
+
+
+    ok.push( checksum    === 0);
+    ok.push( generalized === 0);
+
+    report("concept-isbn-example", ok);
+
+})();

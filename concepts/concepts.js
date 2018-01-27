@@ -29,5 +29,15 @@ const clock = size => {
     }
 };
 
-const base11 = [1,2,3,4,5,6,7,8,9,10];
-const gina_isbn = 1935182447;
+const mod = modul => {
+    const neutral = 0;
+    const op = cx => cy => ( cx + cy) % modul;
+    return {
+        neutral: neutral,
+        op: op
+    }
+};
+
+// generalized monoidal fold
+
+const mfold = monoid => array => array.reduce( (accu, item) => monoid.op(accu)(item) , monoid.neutral);

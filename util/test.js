@@ -30,7 +30,7 @@ function padLeft(str, extend) {
 
 function fill(str, extend) {
     const len = str.toString().length; // in case str is not a string
-    if (len >= extend) {
+    if (len > extend) {
         return str;
     }
     return " ".repeat(extend - len);
