@@ -40,4 +40,7 @@ const mod = modul => {
 
 // generalized monoidal fold
 
-const mfold = monoid => array => array.reduce( (accu, item) => monoid.op(accu)(item) , monoid.neutral);
+const mfold = monoid => array =>
+    array.reduce(
+        (accu, item) => monoid.op(accu)(item) ,
+        monoid.neutral);
