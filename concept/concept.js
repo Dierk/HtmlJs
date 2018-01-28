@@ -44,3 +44,21 @@ const mfold = monoid => array =>
     array.reduce(
         (accu, item) => monoid.op(accu)(item) ,
         monoid.neutral);
+
+
+// a usual function type over (a -> a) allows for monoidal composition
+
+const a2aMonoid = a2a => {
+    const apply   = x => a2a(x);
+    const neutral = x => x; // id
+    const op = f => g => x => f(g(x));
+    return {
+        apply: apply,
+        neutral: neutral,
+        op: op
+    }
+};
+
+
+
+

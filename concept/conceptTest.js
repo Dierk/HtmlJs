@@ -26,7 +26,7 @@
 
 })();
 
-( () => {
+( () => { // validating an ISBN-10 number
 
     let ok = [];
 
@@ -47,5 +47,28 @@
     ok.push( mfold(mod(2))([2,4,6,8]) === 0);
 
     report("concept-isbn-example", ok);
+
+})();
+
+( () => { // a monoid for functions types (a -> a)
+
+    let ok = [];
+
+    const times2 = num => num * 2;   // num -> num
+    const plus3  = num => num + 3;   // num -> num
+    const square = num => num * num; // num -> num
+
+    const tm = a2aMonoid(times2);
+    const pm = a2aMonoid(plus3);
+    const sm = a2aMonoid(square);
+
+    ok.push( tm.op(tm.neutral)(tm.apply)(1) === tm.apply(1) ); // left id for all values like 1
+    ok.push( tm.op(tm.apply)(tm.neutral)(1) === tm.apply(1) ); // right id for all values like 1
+
+    // associativity for all values like 5
+    ok.push( tm.op(tm.op(tm.apply)(pm.apply))(sm.apply)(5) ===   // ( (*2).(+3) ) . (^2) ) (5) == (( 5^2 +3)*2)
+             tm.op(tm.apply)(tm.op(pm.apply)(sm.apply))(5) );    // (*2) . ( (+3) . (^2) ) (5) == (( 5^2 +3)*2)
+
+    report("concept-a2a-monoid", ok);
 
 })();
