@@ -1,6 +1,5 @@
 
 ( () => {
-
     let ok = [];
 
     // right-neutral
@@ -23,11 +22,9 @@
     ok.push( clock11.op(clock11.op(9)(10))(11) ===  clock11.op(9)(clock11.op(10)(11)) );
 
     report("concept-monoid", ok);
-
 })();
 
 ( () => { // validating an ISBN-10 number
-
     let ok = [];
 
     const base11    = [1,2,3,4,5,6,7,8,9,10];
@@ -47,11 +44,9 @@
     ok.push( mfold(mod(2))([2,4,6,8]) === 0);
 
     report("concept-isbn-example", ok);
-
 })();
 
 ( () => { // a monoid for functions types (a -> a)
-
     let ok = [];
 
     const times2 = num => num * 2;   // num -> num
@@ -69,6 +64,13 @@
     ok.push( tm.op(tm.op(tm.apply)(pm.apply))(sm.apply)(5) ===   // ( (*2).(+3) ) . (^2) ) (5) == (( 5^2 +3)*2)
              tm.op(tm.apply)(tm.op(pm.apply)(sm.apply))(5) );    // (*2) . ( (+3) . (^2) ) (5) == (( 5^2 +3)*2)
 
-    report("concept-a2a-monoid", ok);
+    // we can instantly use the generalized monoidal fold!
+    // const combined = mfold(tm)([tm.apply,pm.apply,sm.apply]);
+    // const combined = mfold(tm)([tm,pm,sm].map(m => m.apply));
+    // const combined = foldMap(tm)(m => m.apply)([tm,pm,sm]);
+    const combined = mfoldMap(tm)([tm,pm,sm]);
 
+    ok.push( combined(5) === 56 );
+
+    report("concept-a2a-monoid", ok);
 })();

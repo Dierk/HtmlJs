@@ -25,7 +25,7 @@ const clock = size => {
         cx + cy;
     return {
         neutral: neutral,
-        op: op
+        op:      op
     }
 };
 
@@ -34,7 +34,7 @@ const mod = modul => {
     const op = cx => cy => ( cx + cy) % modul;
     return {
         neutral: neutral,
-        op: op
+        op:      op
     }
 };
 
@@ -53,12 +53,16 @@ const a2aMonoid = a2a => {
     const neutral = x => x; // id
     const op = f => g => x => f(g(x));
     return {
-        apply: apply,
+        apply:   apply,
         neutral: neutral,
-        op: op
+        op:      op
     }
 };
 
+// generalizing mfold and map into foldmap
 
+const foldMap = monoid => mapFn => array => mfold(monoid)(array.map(mapFn));
 
+// for monoids, the mapFn is always its "apply"
 
+const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
