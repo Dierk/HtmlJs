@@ -66,3 +66,8 @@ const foldMap = monoid => mapFn => array => mfold(monoid)(array.map(mapFn));
 // for monoids, the mapFn is always its "apply"
 
 const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
+
+// ----------- functor laws:
+// identity    : x.map(id) = x
+// composition : x.map( cmp(f)(g) ) = cmp( x.map(f) )( x.map(g) )
+
