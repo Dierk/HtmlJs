@@ -260,7 +260,33 @@
         const pval = cn => cn(p => pair(fst(p) + snd(p) + 1)(snd(p) + 1) ) ( pair(0)(0) );
         ok.push( fst(pval(church(10))) === 55);  // triangle numbers
 
-        report("church-data", ok);
+        report("church-pair", ok);
+    }
+)();
+
+(   () => {
+        let ok = [];
+
+        const left = Left(true);   // constituent of a sum type
+        ok.push( either (left) (id) (konst(false)) );  // left is true, right is false
+
+        const right = Right(true);   // constituent of a sum type
+        ok.push( either (right) (konst(false)) (id) );  // left is false, right is true
+
+        report("church-either", ok);
+    }
+)();
+
+(   () => {
+        let ok = [];
+
+        const no = Nothing;
+        ok.push( maybe (no) ( true ) (konst(false)) );  // test the nothing case
+
+        const good = Just(true);
+        ok.push( maybe (good) ( false ) (id) );  // test the just value
+
+        report("church-maybe", ok);
     }
 )();
 

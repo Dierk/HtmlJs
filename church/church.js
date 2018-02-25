@@ -185,12 +185,32 @@ const church = n => n === 0 ? n0 : succ(church(n-1));
 
 // ----------- Data structures
 
+// prototypical Product Type: pair
 const pair = a => b => f => f(a)(b);
 
 const V = pair;  // Vireo  V \abf.fab
 
 const fst = p => p(T); // pick first  element from pair
 const snd = p => p(F); // pick second element from pair
+
+// prototypical Sum Type: either
+
+const Left   = x => f => g => f (x);
+const Right  = x => f => g => g (x);
+const either = e => f => g => e (f) (g);
+
+// maybe as a sum type
+
+// const Nothing  = ()=> f => g => f ;        // f is used as a value
+// const Just     = x => f => g => g (x);
+// const maybe    = m => f => g => m (f) (g);
+
+const Nothing  = Left() ;        // f is used as a value
+const Just     = Right  ;
+// const maybe    = either ;     // convenience: caller does not need to repeat "konst"
+const maybe    = m => f => either (m) (konst(f)) ;
+
+
 
 // ---- curry
 
