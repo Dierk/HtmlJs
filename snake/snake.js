@@ -18,9 +18,11 @@ let snake = [
 ];
 let food = pair(15)(15);
 
-const pairEq = a => b => fst(a) === fst(b) && snd(a) === snd(b);
+const pairEq   = a => b => fst(a) === fst(b) && snd(a) === snd(b);
 
-const pairPlus = a => b => pair (fst(a)  + fst(b)) (snd(a) + snd(b));
+const pairPlus = a => b => pair (fst(a) + fst(b)) (snd(a) + snd(b));
+
+const pairMap  = f => p => pair (f(fst(p))) (f(snd(p)));
 
 function changeDirection(orientation) {
     const idx = orientation.indexOf(direction);
@@ -45,16 +47,10 @@ function start() {
 }
 
 function nextBoard() {
-    const maxX = 20;
-    const maxY = 20;
+    const max     = 20;
     const oldHead = snake[0];
 
-    const temp = pairPlus (oldHead) (direction);
-    const pairApply = f => p => pair (f(fst(p))) (f(snd(p)));
-
-    const f = max => x => inBounds (max) (x);
-
-    const head = pairApply (f (20) ) (temp);
+    const head = pairMap (inBounds (max)) (pairPlus (oldHead) (direction));
 
     if (pairEq(food)(head)) {  // have we found any food?
         food = pair (pick()) (pick());
