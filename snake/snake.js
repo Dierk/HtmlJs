@@ -20,6 +20,8 @@ let food = pair(15)(15);
 
 const pairEq = a => b => fst(a) === fst(b) && snd(a) === snd(b);
 
+const pairPlus = a => b => pair (fst(a)  + fst(b)) (snd(a) + snd(b));
+
 function changeDirection(orientation) {
     const idx = orientation.indexOf(direction);
     direction = orientation[idx + 1];
@@ -47,17 +49,14 @@ function nextBoard() {
     const maxY = 20;
     const oldHead = snake[0];
 
-    function inBounds(x, max) {
-        if (x < 0)   { return max - 1 }
-        if (x > max) { return 0 }
-        return x
-    }
+    const temp = pairPlus(oldHead)(direction)
 
     const head =
-        pair (inBounds(fst(oldHead) + fst(direction), maxX)) (inBounds(snd(oldHead) + snd(direction), maxY));
+        pair
+            (inBounds(fst(temp), maxX))
+            (inBounds(snd(temp), maxY));
 
     if (pairEq(food)(head)) {  // have we found any food?
-        const pick = () => Math.floor(Math.random() * 20);
         food = pair (pick()) (pick());
     } else {
         snake.pop(); // no food found => no growth despite new head => remove last element
@@ -86,4 +85,10 @@ function fillBox(context, element) {
     context.fillRect(fst(element) * 20 + 1, snd(element) * 20 + 1, 18, 18);
 }
 
+const pick = () => Math.floor(Math.random() * 20);
 
+function inBounds(x, max) {
+    if (x < 0)   { return max - 1 }
+    if (x > max) { return 0 }
+    return x
+}
