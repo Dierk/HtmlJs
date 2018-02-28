@@ -57,13 +57,13 @@ function nextBoard() {
         pair (inBounds(fst(oldHead) + fst(direction), maxX)) (inBounds(snd(oldHead) + snd(direction), maxY));
 
     if (pairEq(food)(head)) {  // have we found any food?
-        food = pair (Math.floor(Math.random() * 20)) (Math.floor(Math.random() * 20)); // todo: refactor
+        const pick = () => Math.floor(Math.random() * 20);
+        food = pair (pick()) (pick());
     } else {
         snake.pop(); // no food found => no growth despite new head => remove last element
     }
 
     snake.unshift(head); // put head at front of the list
-    console.log(snake.length);
 }
 
 function display(context) {
