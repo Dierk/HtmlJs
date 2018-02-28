@@ -49,12 +49,12 @@ function nextBoard() {
     const maxY = 20;
     const oldHead = snake[0];
 
-    const temp = pairPlus(oldHead)(direction)
+    const temp = pairPlus (oldHead) (direction);
+    const pairApply = f => p => pair (f(fst(p))) (f(snd(p)));
 
-    const head =
-        pair
-            (inBounds(fst(temp), maxX))
-            (inBounds(snd(temp), maxY));
+    const f = max => x => inBounds (max) (x);
+
+    const head = pairApply (f (20) ) (temp);
 
     if (pairEq(food)(head)) {  // have we found any food?
         food = pair (pick()) (pick());
@@ -87,8 +87,8 @@ function fillBox(context, element) {
 
 const pick = () => Math.floor(Math.random() * 20);
 
-function inBounds(x, max) {
+const inBounds = max => x => {
     if (x < 0)   { return max - 1 }
     if (x > max) { return 0 }
     return x
-}
+};
