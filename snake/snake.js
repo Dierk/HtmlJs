@@ -29,8 +29,25 @@ function changeDirection(orientation) {
     direction = orientation[idx + 1];
 }
 
+// nullSafe :: String -> a -> Either String a
+const nullSafe = message => x =>
+    (x === undefined || x === null)
+        ? Left (message)
+        : Right (x);
+
+const safeElementById = domId =>
+    nullSafe
+        ("Cannot find element with id: " + domId)
+        (document.getElementById("canvas"));
+
+
 function start() {
-    const canvas  = document.getElementById("canvas");
+    either (safeElementById("canvas"))
+        ( console.log )
+        ( startWithCanvas )
+}
+
+function startWithCanvas(canvas) {
     const context = canvas.getContext("2d");
 
     const rightArrow = 39;
