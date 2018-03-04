@@ -267,6 +267,58 @@
 (   () => {
         let ok = [];
 
+        // when using church-boolean, either or maybe as control structures,
+        // the branches must be lazy, or otherwise eager evaluation will call
+        // both branches.
+
+        let x = false;
+        let y = false;
+        T (x=true) (y=true);
+        ok.push(x === true && y === true); // wrong: y should be false!
+
+        // it does *not* help to defer execution via abstraction!
+        x = false;
+        y = false;
+        T (konst(x=true)) (konst(y=true)) ();
+        ok.push(x === true && y === true);// wrong: y should be false!
+
+        // this doesn't work either
+        x = false;
+        y = false;
+        const good = konst(x=true);
+        const bad  = konst(y=true);
+        T (good) (bad) ();
+        ok.push(x === true && y === true);// wrong: y should be false!
+
+        // literal definition of laziness works
+        x = false;
+        y = false;
+        T (() => (x=true)) (() => (y=true)) ();
+        ok.push(x === true && y === false);
+
+        // this works
+        x = false;
+        y = false;
+        function good2() {x=true}
+        function bad2()  {y=true}
+        T (good2) (bad2) ();
+        ok.push(x === true && y === false);
+
+        // and this works
+        x = false;
+        y = false;
+        const good3 = () => x=true;
+        const bad3  = () => y=true;
+        T (good3) (bad3) ();
+        ok.push(x === true && y === false);
+
+        report("church-lazy", ok);
+    }
+)();
+
+(   () => {
+        let ok = [];
+
         const left = Left(true);   // constituent of a sum type
         ok.push( either (left) (id) (konst(false)) );  // left is true, right is false
 

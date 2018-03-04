@@ -12,7 +12,7 @@ const I = id ;          // Identity I, for all a: id(a) == a
 // const beta = f => id(f);
 // const beta = f => f;
 // beta.toString = () => "beta";
-const beta = f => x => f(x);       // aka "lazy"
+const beta = f => x => f(x);
 
 // self-application, Mockingbird, \x.x x
 const M = f => beta(f)(f);  // f(f)
