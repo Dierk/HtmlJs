@@ -29,17 +29,16 @@ function changeDirection(orientation) {
     direction = orientation[idx + 1];
 }
 
-// nullSafe :: String -> a -> Either String a
-const nullSafe = message => x =>
+// nullSafe :: -> a -> Maybe a
+const nullSafe = x =>
     (x === undefined || x === null)
-        ? Left (message)
-        : Right (x);
+        ? Nothing
+        : Just (x);
 
 const safeElementById = domId =>
-    nullSafe
-        ("Cannot find element with id: " + domId)
-        (document.getElementById("canvas"));
-
+    maybe ( nullSafe(document.getElementById(domId)) )
+        ( Left ("Cannot find element with id: " + domId) )
+        ( Right );
 
 function start() {
     either (safeElementById("canvas"))
