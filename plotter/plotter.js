@@ -1,18 +1,17 @@
 
-
 const minX =  0;
 const maxX =  6;
 const minY = -1;
 const maxY =  1;
 
 function start() {
+    const userFunction = document.getElementById('user_function');
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext("2d");
-    display(context, x => Math.sin(x));
+    display(context, x => eval( userFunction.value));
 
+    userFunction.onchange = evt => display(context, x => eval( userFunction.value));
 }
-
-
 
 function display(context, f) {
     // clear
@@ -25,13 +24,10 @@ function display(context, f) {
 
     const stride =  (maxX - minX) / 100; // 100 Stützstellen
     for (let x=minX; x<=maxX; x+=stride) {
-        console.log(x);
         context.lineTo(normalizeX(x,canvas.width), normalizeY(f(x),canvas.height));
         context.stroke();
     }
 }
-
-
 
 function normalizeY(y, height){
     let scaleFactor = height / (maxY - minY);
