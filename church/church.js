@@ -210,7 +210,8 @@ const Just     = Right  ;
 // const maybe    = either ;     // convenience: caller does not need to repeat "konst"
 const maybe    = m => f => either (m) (konst(f)) ;
 
-
+//    bindMaybe :: m a -> (a -> m b) -> mb
+const bindMaybe = ma => f => maybe (ma) (ma) (f);
 
 // ---- curry
 

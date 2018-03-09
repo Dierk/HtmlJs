@@ -338,6 +338,9 @@
         const good = Just(true);
         ok.push( maybe (good) ( false ) (id) );  // test the just value
 
+        const bound = bindMaybe(Just(false))( b => Right(not(b))); // bind with not
+        ok.push( maybe (bound) ( false ) (id) );  // test the just value
+
         report("church-maybe", ok);
     }
 )();
