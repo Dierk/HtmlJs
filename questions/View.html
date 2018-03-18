@@ -10,9 +10,21 @@
 
         <script>
 
-            const x = 1;
-            let code = "x" + "x";
-            document.writeln( eval(code) === 2 );
+            // same construction for all choices
+            const Person = name => {
+                let age = 0;
+                return {
+                    getAge: ()       => age,
+                    setAge: newAge   => age = newAge,
+                    getName: ()      => name,
+                    setName: newName => name = newName
+                }
+            };
+
+            const me = Person("Myself");
+            me.name = "***";
+            document.writeln(me.getName() === "***");
+
 
         </script>
 

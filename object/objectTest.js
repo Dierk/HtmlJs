@@ -44,6 +44,7 @@
 // is super dynamic, keeps "methods" close to their data,
 // but doesn't allow for sharing of structure.
 // (unless advanced use with Object.create)
+// Also: use of "this" can lead to surprises.
 
 ( () => {
     let ok = [];
@@ -65,6 +66,12 @@
     other.firstname = "Other";
     ok.push(other.getName() === "Other Boy");
     ok.push(good.getName()  === "Other Boy");
+
+    const store = {
+        accessor : good.getName  // when we store a reference elsewhere
+    };
+    ok.push(store.accessor()  === "undefined undefined"); // OOPS!
+
 
     report("object-literal", ok);
 }) ();
