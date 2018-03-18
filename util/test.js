@@ -1,6 +1,7 @@
 "use strict";
 
 
+
 // test result report
 // report :: String, [Bool] -> DOM ()
 function report(origin, ok) {

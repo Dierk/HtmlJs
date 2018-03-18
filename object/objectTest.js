@@ -3,6 +3,40 @@
 ( () => {
     let ok = [];
 
+    function Person(first, last) {
+        this.firstname = first;
+        this.lastname = last;
+        this.getName = function() { return this.firstname + " "  + this.lastname };
+        return this;
+    }
+
+    // remember: calling a function retains the scope
+
+    const good = Person("Good", "Boy");
+    ok.push( good.getName() === "Good Boy");
+
+    const other = Person("Other", "Boy");
+    ok.push(other.getName() === "Other Boy");
+    ok.push(good.getName()  === "Other Boy"); // OOPS! We have accidentally overwritten the good boy.
+
+    ok.push(false === good instanceof Person); // they do not share the prototype
+
+    const good2 = new Person("Good", "Boy"); // one way or the other we have to create a "new" object!
+    ok.push( good2.getName() === "Good Boy");
+
+    const other2 = new Person("Other", "Boy");
+    ok.push(other2.getName() === "Other Boy");
+    ok.push(good2.getName()  === "Good Boy"); // retained
+
+    ok.push(good2 instanceof Person);   // now they do
+
+    report("object-silly-scope", ok);
+}) ();
+
+
+( () => {
+    let ok = [];
+
     const good = {
         firstname : "Good",
         lastname  : "Boy",
