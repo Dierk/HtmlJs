@@ -1,5 +1,12 @@
 // requires object.js
 
+// This is kind of a silly variant for encoding object that makes
+// use of the fact that a function is just an object and thus has
+// an associated dynamic scope.
+// The use of "this" is mandatory in all "methods".
+// Forgetting to "instantiate" with "new" will cause all kinds of
+// trouble.
+
 ( () => {
     let ok = [];
 
@@ -12,7 +19,7 @@
 
     // remember: calling a function retains the scope
 
-    const good = Person("Good", "Boy");
+    const good = Person("Good", "Boy");      // "accidentally" forgot the "new"
     ok.push( good.getName() === "Good Boy");
 
     const other = Person("Other", "Boy");
@@ -33,6 +40,10 @@
     report("object-silly-scope", ok);
 }) ();
 
+// Using object literals as a replacement for functions
+// is super dynamic, keeps "methods" close to their data,
+// but doesn't allow for sharing of structure.
+// (unless advanced use with Object.create)
 
 ( () => {
     let ok = [];
@@ -58,6 +69,8 @@
     report("object-literal", ok);
 }) ();
 
+// Variant that doesn't need to be called with "new"
+// since a new object is created with ever "ctor" call.
 
 ( () => {
     let ok = [];
@@ -86,6 +99,10 @@
     report("object-self-new", ok);
 }) ();
 
+// A safe version that makes use of the fact that closure
+// scope is safe from manipulation.
+// Needs no "this"!
+// Trying to change the state fails silently.
 
 ( () => {
     let ok = [];
@@ -110,12 +127,16 @@
     report("object-failed", ok);
 }) ();
 
+// A safe version that makes use of the fact that closure
+// scope is safe from manipulation.
+// Needs no "this"!
+// Creates no "type".
 
 ( () => {
     let ok = [];
 
     function Person(first, last) {
-        let firstname = first;
+        let firstname = first;      // optional, see distinct2
         let lastname  = last;
         return {
             getName   : function() { return firstname + " "  + lastname }
@@ -142,7 +163,38 @@
     report("object-distinct", ok);
 }) ();
 
+// Version of "distinct" that makes use of the closure scope for arguments
+( () => {
+    let ok = [];
 
+    function Person(first, last) { // closure scope for arguments
+        return {
+            getName   : function() { return first + " "  + last }
+        }
+    }
+
+    const good = Person("Good", "Boy");
+    const bad  = Person("Bad", "Boy");     // distinct new instance
+
+    ok.push(good.getName() === "Good Boy");
+    ok.push(bad.getName()  === "Bad Boy" );
+
+    good.getName = () => "changed";
+    ok.push(good.getName() === "changed");  // change one instance doesn't change the other
+    ok.push(bad.getName()  === "Bad Boy" );
+
+    ok.push(! Person.prototype.isPrototypeOf(good)); // they do not even share the same prototype
+    ok.push(! Person.prototype.isPrototypeOf(bad));
+
+    ok.push(false === good instanceof Person); // good is not a Person!
+    ok.push("object" === typeof good );
+
+
+    report("object-distinct2", ok);
+}) ();
+
+// Standard Typescript way of creating objects (unless with => syntax)
+// Still dynamic: instance and "class" (prototype) can change at runtime.
 ( () => {
     let ok = [];
 
@@ -162,6 +214,8 @@
 
     ok.push(good.getName() === "Good Boy");    // without "new" it throws TypeError
     ok.push(bad.getName()  === "Bad Boy" );
+
+    ok.push(good.firstname === "Good");        // the function scope is still accessible for manipulation
 
     good.getName = () => "changed";
     ok.push(good.getName() === "changed");  // one can still change a single instance
