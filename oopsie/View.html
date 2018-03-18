@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OOPSIE</title>
+    <style>
+        .field {
+            float: left;
+            margin: 0.2em;
+            background: lightgrey;
+            width: 3em;
+            height: 3em;
+            border-color: lightgrey;
+            border-width: 1px;
+            border-style: solid;
+        }
+        .fallback {
+            border-color: blue;
+        }
+        .progress {
+            background: blue;
+        }
+        #dice {
+            clear:both;
+        }
+    </style>
+    <script src="oopsie.js"></script>
+</head>
+
+
+<body onload="start()">
+
+
+<div id="fields">
+
+</div>
+
+<div id="dice">
+    --
+</div>
+
+<div>
+    <button onclick="dice()">player one dice</button>
+    <button onclick="turn()">player one turn</button>
+</div>
+
+
+</body>
+
+</html>
