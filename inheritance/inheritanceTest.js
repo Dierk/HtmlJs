@@ -1,5 +1,7 @@
 // requires inheritance.js
 
+const suite = Suite("inheritance");
+    
 // ES6 inheritance scheme
 ( () => {
     let ok = [];
@@ -39,8 +41,7 @@
 
 
 // composition by delegation, here: decorator pattern
-( () => {
-    let ok = [];
+suite.test("delegate", assert => {
 
     function Prof(worker) {
         const worklog  = [];
@@ -51,9 +52,9 @@
     }
 
     const wl = Prof( {work: () => ""} );
-    ok.push(wl.worklog.length === 0);  // initially empty
+    assert.is(wl.worklog.length ,  0);  // initially empty
     wl.work();
-    ok.push(wl.worklog[0] === "");     // superclass impl
+    assert.is(wl.worklog[0] ,  "");     // superclass impl
 
     function Student(name) {
         return {
@@ -63,10 +64,10 @@
     }
 
     const p = Prof(Student("top"));
-    ok.push(p.worklog.length === 0);  // initially empty
+    assert.is(p.worklog.length ,  0);  // initially empty
     p.work();
-    ok.push(p.worklog[0] === "top filled quiz");  // subclass impl
+    assert.is(p.worklog[0] ,  "top filled quiz");  // subclass impl
 
-    report("inheritance-delegate", ok);
-}) ();
+});
+
 

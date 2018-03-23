@@ -1,5 +1,24 @@
 "use strict";
 
+function Assert() {
+    const results = [];
+    return {
+        results: results,
+        true: (testResult)       => results.push(testResult),
+        is:   (actual, expected) => results.push(actual === expected)
+    }
+}
+
+function Suite(suiteName) {
+    return {
+        test: (testName, callback) => {
+            const assert = Assert();
+            callback(assert);
+            report(suiteName + "-"+ testName, assert.results)
+        }
+    }
+}
+
 
 
 // test result report
