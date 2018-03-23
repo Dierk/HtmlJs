@@ -2,10 +2,27 @@
 
 function Assert() {
     const results = [];
+    const reportStack = () => {
+        try {
+            throw new Error();
+        } catch (err) {
+            console.log(err)
+        }
+    };
     return {
         results: results,
-        true: (testResult)       => results.push(testResult),
-        is:   (actual, expected) => results.push(actual === expected)
+        true: (testResult) => {
+            if (!testResult) { reportStack(); }
+            results.push(testResult);
+        },
+        is: (actual, expected) => {
+            const testResult = actual === expected;
+            if (!testResult) {
+                console.log("test failure. Got '"+ actual +"', expected '" + expected +"'");
+                reportStack();
+            }
+            results.push(testResult);
+        }
     }
 }
 

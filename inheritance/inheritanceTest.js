@@ -1,10 +1,10 @@
 // requires inheritance.js
+// requires /util/test.js
 
 const suite = Suite("inheritance");
     
 // ES6 inheritance scheme
-( () => {
-    let ok = [];
+suite.test("ES6", assert => {
 
     class Person {
         constructor(name) {
@@ -20,9 +20,9 @@ const suite = Suite("inheritance");
     }
 
     const p = new Person("unknown");
-    ok.push(p.worklog.length === 0);  // initially empty
+    assert.is(p.worklog.length, 0);  // initially empty
     p.work();
-    ok.push(p.worklog[0] === "");     // superclass impl
+    assert.is(p.worklog[0], "");     // superclass impl
 
     class Student extends Person {
         mustDo() {
@@ -31,13 +31,12 @@ const suite = Suite("inheritance");
     }
 
     const s = new Student();
-    ok.push(s.worklog.length === 0);  // initially empty
+    assert.is(s.worklog.length, 0);  // initially empty
     s.work();
-    ok.push(s.worklog[0] === "fill quiz");  // subclass impl
-    ok.push(s.name === undefined);  // super ctor not enforced
+    assert.is(s.worklog[0], "fill quiz");  // subclass impl
+    assert.is(s.name, undefined);  // super ctor not enforced
 
-    report("inheritance-ES6", ok);
-}) ();
+});
 
 
 // composition by delegation, here: decorator pattern
