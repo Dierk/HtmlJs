@@ -36,6 +36,13 @@ suite.test("ES6", assert => {
     assert.is(s.worklog[0], "fill quiz");  // subclass impl
     assert.is(s.name, undefined);  // super ctor not enforced
 
+    assert.true(s instanceof Student);
+    assert.is(s.__proto__, Student.prototype);
+    assert.is(Object.getPrototypeOf(s), Student.prototype);
+    assert.true(s instanceof Person);
+    assert.true(s instanceof Object);
+    assert.true(Student instanceof Function);
+
 });
 
 
@@ -69,4 +76,22 @@ suite.test("delegate", assert => {
 
 });
 
+// setting the prototype of an object dynamically
+suite.test("setProto", assert => {
+
+    function Prof(worker) {
+        const worklog  = [];
+        const result = {
+            worklog: worklog,
+            work:    () => worklog.push(worker.work())
+        };
+        Object.setPrototypeOf(result, Prof.prototype);
+        return result
+    }
+
+    const wl = Prof( {work: () => ""} );
+
+    assert.true(wl instanceof Prof)
+
+});
 
