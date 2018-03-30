@@ -6,7 +6,9 @@ function startTodo() {
 function addTodo() {
     let row  = document.createElement("TR");
     let text = document.createElement("TD");
-    text.innerText = "todo";
+    let inp  = document.createElement("INPUT");
+    inp.value = "todo";
+    text.appendChild(inp);
     row.appendChild(text);
 
     let del = document.createElement("TD");
