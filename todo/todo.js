@@ -1,9 +1,66 @@
 
-function startTodo() {
+const Observable = value => {
+    const listeners = [];
+    return {
+        onChange: callback => listeners.push(callback),
+        getValue: ()       => value,
+        setValue: val      => {
+            if (value === val) return;
+            value = val;
+            listeners.forEach(notify => notify(val));
+        }
+    }
+};
 
+const ObservableList = list => {
+    const addListeners = [];
+    const delListeners = [];
+    return {
+        onAdd: listener => addListeners.push(listener),
+        onDel: listener => delListeners.push(listener),
+        add: item => {
+            list.push(item);
+            addListeners.forEach( listener => listener(item))
+        },
+        del: item => {
+            const i = list.indexOf(item);
+            if (i >= 0) { list.splice(i, 1) } // essentially "remove(item)"
+            delListeners.forEach( listener => listener(item));
+        },
+        count:   ()   => list.length,
+        countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
+    }
+};
+
+const Todo = () => {
+    const textAttr = Observable("text");
+    const doneAttr = Observable(false);
+    return {
+        getDone:  ()   => doneAttr.getValue(),     // veneer method
+        setDone:  done => doneAttr.setValue(done), // veneer method
+        doneAttr: ()   => doneAttr,
+    }
+};
+
+const model = ObservableList( [] );
+
+function startTodo(todoContainer, numberOfTasks, openTasks) {
+    // attach list-wide listeners
+    const statsUpdate = _ => {
+        numberOfTasks.innerText = ""+ model.count();
+        openTasks.innerText     = ""+ model.countIf( todo => ! todo.getDone());
+    };
+    model.onAdd( statsUpdate );
+    model.onDel( statsUpdate );
+
+    model.onAdd( todo => newRow(todoContainer, todo) );
+    model.onAdd( todo => todo.doneAttr().onChange( statsUpdate) );
 }
 
-function addTodo() {
+function newRow(todoContainer, todo) {
+
+    // create view for the new row
+
     let row  = document.createElement("TR");
     let text = document.createElement("TD");
     let inp  = document.createElement("INPUT");
@@ -13,26 +70,29 @@ function addTodo() {
 
     let del = document.createElement("TD");
     del.innerText = "X";
-    del.onclick = evt => {
-        todoContainer.removeChild(row);
-        numberOfTasks.innerText = Number(numberOfTasks.innerText) - 1;
-        // now it gets messy: we have to find out whether the task that we delete is "done"
-        // because then we have to decrease the "done" count
-        const markDone = row.children[2].onclick; // indication: there is a "set to done" handler
-        if (markDone) { markDone(null) }
-    };
+    del.onclick = _ => model.del(todo) ;
     row.appendChild(del);
 
     let done = document.createElement("TD");
     done.innerText = "OK";
-    done.onclick = _ => {
-        openTasks.innerText = Number(openTasks.innerText) - 1;
-        done.innerText = "Done";
-        done.onclick = null;
-    };
+    done.onclick = _ => todo.setDone(true);
     row.appendChild(done);
 
-    numberOfTasks.innerText = Number(numberOfTasks.innerText) + 1;
-    openTasks.innerText     = Number(openTasks.innerText) + 1;
     todoContainer.appendChild(row);
+
+    // attach todo-view-specific listeners
+
+    model.onDel( item => {
+        if (item === todo) todoContainer.removeChild(row);
+    } );
+
+    todo.doneAttr().onChange( newVal => {
+        done.innerText = newVal ? "Done" : "OK";
+        done.onclick = null;
+    });
+
+}
+
+function newTodo() { // to be called by UI
+    model.add(Todo());
 }

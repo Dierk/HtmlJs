@@ -12,17 +12,19 @@ todo.test("crud", assert => {
     openTasks = document.createElement("span");
     openTasks.innerText = '0';
 
+    startTodo(todoContainer, numberOfTasks, openTasks);
+
     assert.is(todoContainer.children.length, 0);
     assert.is(numberOfTasks.innerText, '0');
     assert.is(openTasks.innerText, '0');
 
-    addTodo();
+    newTodo();
 
     assert.is(todoContainer.children.length, 1);
     assert.is(numberOfTasks.innerText, '1');
     assert.is(openTasks.innerText, '1');
 
-    addTodo();
+    newTodo();
 
     assert.is(todoContainer.children.length, 2);
     assert.is(numberOfTasks.innerText, '2');
