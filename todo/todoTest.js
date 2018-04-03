@@ -30,7 +30,7 @@ todo.test("crud", assert => {
     assert.is(numberOfTasks.innerText, '2');
     assert.is(openTasks.innerText, '2');
 
-    const firstOK = todoContainer.children[0].children[2];
+    const firstOK = todoContainer.children[0].querySelector(".done");
     assert.is(firstOK.innerText, 'OK');
 
     firstOK.click();
@@ -40,7 +40,7 @@ todo.test("crud", assert => {
     assert.is(numberOfTasks.innerText, '2');
     assert.is(openTasks.innerText, '1');
 
-    const firstDel = todoContainer.children[0].children[1];
+    const firstDel = todoContainer.children[0].querySelector(".del");
     assert.is(firstDel.innerText, 'X');
 
     firstDel.click();
@@ -48,7 +48,7 @@ todo.test("crud", assert => {
     assert.is(numberOfTasks.innerText, '1');
     assert.is(openTasks.innerText, '1');  // we have delete a done tasks, so number of open tasks is unchanged
 
-    const lastDel = todoContainer.children[0].children[1];
+    const lastDel = todoContainer.children[0].querySelector(".del");
     lastDel.click();
 
     assert.is(todoContainer.children.length, 0);

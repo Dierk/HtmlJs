@@ -1,36 +1,4 @@
-
-const Observable = value => {
-    const listeners = [];
-    return {
-        onChange: callback => listeners.push(callback),
-        getValue: ()       => value,
-        setValue: val      => {
-            if (value === val) return;
-            value = val;
-            listeners.forEach(notify => notify(val));
-        }
-    }
-};
-
-const ObservableList = list => {
-    const addListeners = [];
-    const delListeners = [];
-    return {
-        onAdd: listener => addListeners.push(listener),
-        onDel: listener => delListeners.push(listener),
-        add: item => {
-            list.push(item);
-            addListeners.forEach( listener => listener(item))
-        },
-        del: item => {
-            const i = list.indexOf(item);
-            if (i >= 0) { list.splice(i, 1) } // essentially "remove(item)"
-            delListeners.forEach( listener => listener(item));
-        },
-        count:   ()   => list.length,
-        countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
-    }
-};
+// requires ../observable/observable.js
 
 const Todo = () => {
     const textAttr = Observable("text");
@@ -69,11 +37,13 @@ function newRow(todoContainer, todo) {
     row.appendChild(text);
 
     let del = document.createElement("TD");
+    del.classList.add("del");
     del.innerText = "X";
     del.onclick = _ => model.del(todo) ;
     row.appendChild(del);
 
     let done = document.createElement("TD");
+    done.classList.add("done");
     done.innerText = "OK";
     done.onclick = _ => todo.setDone(true);
     row.appendChild(done);
