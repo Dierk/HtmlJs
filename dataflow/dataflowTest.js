@@ -47,7 +47,7 @@ dataflow.test("scheduler", assert => {
     });
     scheduler.addOk ( () => result.push(3)); // convenience
 
-    scheduler.add(ok => {
+    scheduler.addOk( () => {
         assert.is(result[0], 1); // sequence is still ensured
         assert.is(result[1], 2);
         assert.is(result[2], 3);
