@@ -30,6 +30,26 @@ dataflow.test("cache", assert => { // value must be set at most once
 
 });
 
+
+dataflow.test("async", assert => { // promise must be set at most once
+
+    let counter = 0;
+
+    const x = DataFlowVariable( async () => await y() * 3);
+    const y = DataFlowVariable(() => {
+        counter++;
+        return new Promise( ok => setTimeout(ok(3), 10))
+    });
+
+    x().then( val => assert.is(counter,1));
+    x().then( val => assert.is(val,9));
+    x().then( val => assert.is(counter,1)); // yes, again!
+    assert.true(true) // check console
+
+});
+
+
+
 dataflow.test("scheduler", assert => {
 
     const result = [];
