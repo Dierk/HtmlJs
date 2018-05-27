@@ -1,12 +1,16 @@
 // requires ../observable/observable.js
+// requires fortuneService.js
 
 const Todo = () => {
-    const textAttr = Observable("text");
+    const textAttr = Observable("todo");
     const doneAttr = Observable(false);
     return {
         getDone:  ()   => doneAttr.getValue(),     // veneer method
         setDone:  done => doneAttr.setValue(done), // veneer method
         doneAttr: ()   => doneAttr,
+        getText:  ()   => textAttr.getValue(),
+        setText:  text => textAttr.setValue(text),
+        textAttr: ()   => textAttr,
     }
 };
 
@@ -32,7 +36,8 @@ function newRow(todoContainer, todo) {
     let row  = document.createElement("TR");
     let text = document.createElement("TD");
     let inp  = document.createElement("INPUT");
-    inp.value = "todo";
+    inp.value = todo.getText();  // add value change listener (?)
+    inp.size = 50;
     text.appendChild(inp);
     row.appendChild(text);
 
@@ -52,7 +57,7 @@ function newRow(todoContainer, todo) {
 
     // attach todo-view-specific listeners
 
-    model.onDel( item => {
+    model.onDel( item => {           // memory leak: when todos get deleted the onDel listener remains
         if (item === todo) todoContainer.removeChild(row);
     } );
 
@@ -60,9 +65,19 @@ function newRow(todoContainer, todo) {
         done.innerText = newVal ? "Done" : "OK";
         done.onclick = null;
     });
-
 }
 
 function newTodo() { // to be called by UI
     model.add(Todo());
+}
+
+function fortune(button) { // to be called by UI
+    button = document.getElementById('fortune');
+    button.disabled = true;
+    fortuneService(text => {
+        const todo = Todo();
+        todo.setText(text);
+        model.add(todo);
+        button.disabled = false;
+    });
 }
