@@ -1,4 +1,5 @@
 // requires ../observable/observable.js
+// requires ../dataflow/dataflow.js
 // requires fortuneService.js
 
 const Todo = () => {
@@ -15,6 +16,7 @@ const Todo = () => {
 };
 
 const model = ObservableList( [] );
+const scheduler = Scheduler();
 
 function startTodo(todoContainer, numberOfTasks, openTasks) {
     // attach list-wide listeners
@@ -73,13 +75,13 @@ function newTodo() { // to be called by UI
 }
 
 function fortune(button) { // to be called by UI
-    button = document.getElementById('fortune');
-    button.disabled = true;
     const todo = Todo();
     todo.setText("< waiting ... >");
     model.add(todo);
-    fortuneService(text => {
-        todo.setText(text);
-        button.disabled = false;
-    });
+    scheduler.add(ok =>         // async but in strict sequence
+        fortuneService(text => {
+            ok();               // interesting when to do this...
+            todo.setText(text);
+        })
+    )
 }

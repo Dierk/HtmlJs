@@ -9,5 +9,8 @@ const fortunes = [
 ];
 
 function fortuneService(whenDone) {
-    setTimeout( () => whenDone(fortunes[Math.floor((Math.random() * fortunes.length))]), 1000);
+    setTimeout(
+        () => whenDone(fortunes[Math.floor((Math.random() * fortunes.length))]),
+        Math.floor((Math.random() * 3000))
+    );
 }
