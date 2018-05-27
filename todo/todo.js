@@ -38,6 +38,7 @@ function newRow(todoContainer, todo) {
     let inp  = document.createElement("INPUT");
     inp.value = todo.getText();  // add value change listener (?)
     inp.size = 50;
+    todo.textAttr().onChange( text => inp.value = text);
     text.appendChild(inp);
     row.appendChild(text);
 
@@ -74,10 +75,11 @@ function newTodo() { // to be called by UI
 function fortune(button) { // to be called by UI
     button = document.getElementById('fortune');
     button.disabled = true;
+    const todo = Todo();
+    todo.setText("< waiting ... >");
+    model.add(todo);
     fortuneService(text => {
-        const todo = Todo();
         todo.setText(text);
-        model.add(todo);
         button.disabled = false;
     });
 }
