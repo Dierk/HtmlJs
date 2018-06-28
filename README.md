@@ -8,3 +8,4 @@ see HTML files e.g.
 - [Canvas Animation](https://dierk.github.io/HtmlJs/canvasAnimation.html)
 - [Observables](https://dierk.github.io/HtmlJs/observable/View.html)
 - [Church Encoding](https://dierk.github.io/HtmlJs/church/View.html)
+- [Florian Game](https://dierk.github.io/HtmlJs/florian.html)
