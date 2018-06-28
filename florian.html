@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+
+	h1 {
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.holder {
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+    .bordered {
+        border: solid 1px lightgray;
+    }
+
+</style>
+	
+</head>
+<body>
+<h1>Florian's &nbsp;&nbsp; Platten-Spiel</h1>
+
+<div class="holder">
+    <canvas id="canvas" class="center bordered" width="800" height="800"></canvas>
+</div>
+
+<script>
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = "lightgrey";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.fillStyle = "white";
+    const tileWidth   = canvas.width / 16 ;
+    const tileHeight  = tileWidth;
+
+    const colRow2coords = ({col, row}) => ({
+        x: col * tileWidth,
+        y: row * tileHeight
+    });
+    const coords2colRow = ({x, y}) => ({
+        col: Math.floor(x / tileWidth) ,
+        row: Math.floor(y / tileHeight)
+    });
+    const paintTile = ({col, row}) => {
+        const {x,y} = colRow2coords({col,row});
+        context.fillRect(x+1, y+1, tileWidth - 2, tileHeight - 2);
+    };
+
+    for (let row=1; row < 15 ; row++) {
+        for (let col = 0; col < 16; col++) {
+            if (row === 3 && col > 2 && col < 13 ) {
+                context.fillStyle = "black";
+            } else if (col === 13 && row > 3) {
+                context.fillStyle = "black";
+            } else if (col === 2 && row > 2) {
+                context.fillStyle = "black";
+            } else if ((row + col) % 2 === 0) {
+                context.fillStyle = "green";
+            } else {
+                context.fillStyle = "red";
+            }
+            paintTile({col,row});
+        }
+    }
+
+    context.fillStyle = "blue";
+    paintTile({col:7, row:0});
+    paintTile({col:8, row:0});
+    paintTile({col:7, row:15});
+    paintTile({col:8, row:15});
+
+    canvas.onclick = evt => {
+        context.fillStyle = "black";
+        paintTile(coords2colRow({x: evt.offsetX, y: evt.offsetY}));
+    }
+
+</script>
+</body>
+</html>
