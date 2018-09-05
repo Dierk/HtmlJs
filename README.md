@@ -9,3 +9,4 @@ see HTML files e.g.
 - [Observables](https://dierk.github.io/HtmlJs/observable/View.html)
 - [Church Encoding](https://dierk.github.io/HtmlJs/church/View.html)
 - [Florian Game](https://dierk.github.io/HtmlJs/florian.html)
+- [Mini React](https://dierk.github.io/HtmlJs/Mini.html)
