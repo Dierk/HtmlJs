@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>A Mini-Version of React-Elm-Style Programming</h1>
+<p>In 42 lines of JavaScript</p>
+<p>Inspired by hyperappJS/infernoJS/superfineJS.</p>
+
+<div id="counter"></div>
+
+<script src="./mini.js"></script>
+
+<script >
+
+    const actions = {
+        dec : state => state - 1,
+        inc : state => state + 1
+    };
+
+
+    function view(go, state) {
+        return h("div", {}, [
+              h("h1",     { style: "color:red"     }, state),
+              h("button", { click: go(actions.dec) }, "-"),                  // declarative variant
+              h("button", { click: go(actions.inc) }, "+"),
+              h("button", { click: go(_ => 0 )     }, "0"),                  // inline variant
+              ...Array.from( {length: state} , (v,x) => h("div", {}, x) ),   // dynamic element count
+              h("p",{}, state < 0 ? "negative not supported" : ""),          // conditional entries
+          ]); }
+
+    mini(view, 4, counter);
+
+
+</script>
+
+
+
+</body>
+
+</html>

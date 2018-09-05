@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<script src="https://unpkg.com/hyperapp"></script>-->
+</head>
+<body>
+
+xxx
+<div id="counter"></div>
+yyy
+
+<script src="./hyperapp.js"></script>
+
+<script >
+
+    const state = {
+      count: 0
+    };
+
+    const actions = {
+      down: value => state => ({ count: state.count - value }),
+      up:   value => state => ({ count: state.count + value })
+    };
+
+    const view = (state, actions) =>
+      h("div", {}, [
+          h("h1", {}, state.count),
+          h("button", { onclick: () => actions.down(1) }, "-"),
+          h("button", { onclick: () => actions.up(1)   }, "+"),
+          ...Array.from( {length: state.count} , (v,x) => h("div", {}, x) )
+      ]);
+
+    app(state, actions, view, counter);
+
+    console.dir(view(state, actions));
+
+</script>
+zzz
+
+</body>
+
+</html>
