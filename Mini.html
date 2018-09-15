@@ -22,15 +22,15 @@
     };
 
 
-    function view(go, state) {
-        return h("div", {}, [
-              h("h1",     { style: "color:red"     }, state),
-              h("button", { click: go(actions.dec) }, "-"),                  // declarative variant
-              h("button", { click: go(actions.inc) }, "+"),
-              h("button", { click: go(_ => 0 )     }, "0"),                  // inline variant
-              ...Array.from( {length: state} , (v,x) => h("div", {}, x) ),   // dynamic element count
-              h("p",{}, state < 0 ? "negative not supported" : ""),          // conditional entries
-          ]); }
+    const view = (act, state) =>
+        h("div", {}, [
+            h("h1",     { style: "color:red"      }, state),
+            h("button", { click: act(actions.dec) }, "-"),                  // declarative variant
+            h("button", { click: act(actions.inc) }, "+"),
+            h("button", { click: act(_ => 0 )     }, "0"),                  // inline variant
+            ...Array.from( {length: state} , (v,x) => h("div", {}, x) ),    // dynamic element count
+            h("p",{}, state < 0 ? "negative not supported" : ""),           // conditional entries
+        ]);
 
     mini(view, 4, counter);
 
