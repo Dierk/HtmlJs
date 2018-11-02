@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+    <script src="gauge.js"></script>
+
+
+    <style>
+        canvas {
+            padding: 0;
+            margin: 0.1em 1em 0em 1em;
+
+            --section-divider:   0.6;
+        }
+
+        .classic {
+            --section-one-color: red;
+            --section-two-color: green;
+            --progress-color:    rgba(116,160,194,0.5);
+        }
+        .modern {
+            --section-one-color: orange;
+            --section-two-color: lightgreen;
+            --progress-color:    rgba(255,0,0,0.2);
+        }
+    </style>
+
+</head>
+<body>
+
+<canvas id="progressView" width="200" height="200" class="classic"></canvas>
+
+<script>
+    progressPie(progressView, 0.55);
+</script>
+
+
+<p>
+    <select id="colors">
+        <option>classic</option>
+        <option>modern</option>
+    </select>
+</p>
+
+
+<p>
+    <input type="range" id="range"     value="55"><br>
+    <input type="range" id="threshold" value="60">
+</p>
+
+<script>
+    range.oninput = evt => progressPie(progressView, range.value / 100);
+
+    threshold.oninput = evt => {
+        progressView.style="--section-divider:"+ (threshold.value / 100);
+        progressPie(progressView, range.value / 100);
+    }
+
+    colors.onchange = evt => {
+        progressView.className=colors.value;
+        progressPie(progressView, range.value / 100);
+    };
+
+</script>
+
+</body>
+</html>
