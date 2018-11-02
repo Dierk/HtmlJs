@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+
+	h1 {
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.holder {
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+    .bordered {
+        border: solid 1px lightgray;
+    }
+
+</style>
+	
+</head>
+<body>
+<h1> Labyrinth </h1>
+
+<div class="holder">
+    <canvas id="canvas" class="center" width="1024" height="800"></canvas>
+</div>
+
+<script>
+    const context = canvas.getContext("2d");
+    const factor  = canvas.width / canvas.height;
+
+    context.fillStyle = "lightgrey";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.fillStyle = "red";
+    const height = 100;
+    const width  = height * factor;
+    const beginx = canvas.width / 2 - width / 2;
+    const beginy = canvas.height / 2 - height / 2;
+    context.fillRect(beginx, beginy, width, height);
+
+    const beginHeight = canvas.height / 2;
+    const foo = 0.38;
+    var tileHeight = 0;
+
+    for(let i = 0; i<=10; i++ ) {
+        tileHeight = (beginHeight - tileHeight) * foo + tileHeight
+
+        context.fillStyle = 'green';
+        context.beginPath();
+        context.moveTo(0, canvas.height - tileHeight);
+        context.lineTo(canvas.width, canvas.height - tileHeight);
+        context.lineTo(canvas.width, canvas.height - tileHeight - 2);
+        context.lineTo(0, canvas.height - tileHeight - 2);
+        context.closePath();
+        context.fill();
+    }
+
+
+
+
+</script>
+</body>
+</html>
