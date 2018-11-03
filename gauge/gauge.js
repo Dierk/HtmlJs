@@ -9,7 +9,7 @@ function progressPie(canvas, progressFraction) {
 
     const getCSS = propname =>  window.getComputedStyle(canvas, null).getPropertyValue(propname).toString().trim();
 
-    // from 0-100 to position on the circle circumference, 0 should be at the top
+    // from 0-100 % to position on the circle circumference, 0 should be at the top
     const adjust = fraction => (fraction - 0.25) * 2.0 * Math.PI;
 
     const gradient = (radius, color) => {
