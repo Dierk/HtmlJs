@@ -18,7 +18,7 @@
             --section-two-color: green;
             --progress-color:    rgba(116,160,194,0.5);
         }
-        .modern {
+        .citrus {
             --section-one-color: orange;
             --section-two-color: lightgreen;
             --progress-color:    rgba(255,0,0,0.2);
@@ -28,6 +28,18 @@
 </head>
 <body>
 
+<h1>Custom Component: Progress Indicator Gauge</h1>
+
+<p>
+    A way of building a custom component in plain JavaScript
+    without a single dependency and no Web Components and no
+    Custom Elements.
+    Custom components that has been built with this approach
+    can be used inside your framework of choice.
+</p><p>
+    <a href="gauge.js">Source code</a>,<a href="gaugeTest.js">Tests</a>, Do-what-you-want-but-leave-me-alone License.
+</p>
+
 <canvas id="progressView" width="200" height="200" class="classic"></canvas>
 
 <script>
@@ -36,16 +48,21 @@
 
 
 <p>
+    Style:
     <select id="colors">
         <option>classic</option>
-        <option>modern</option>
+        <option>citrus</option>
     </select>
 </p>
 
 
 <p>
+    Progress:<br>
     <input type="range" id="range"     value="55"><br>
-    <input type="range" id="threshold" value="60">
+    Threshold:<br>
+    <input type="range" id="threshold" value="60"><br>
+    Size:<br>
+    <input type="range" id="size"      value="0"> <br>
 </p>
 
 <script>
@@ -54,7 +71,13 @@
     threshold.oninput = evt => {
         progressView.style="--section-divider:"+ (threshold.value / 100);
         progressPie(progressView, range.value / 100);
-    }
+    };
+
+    size.oninput = evt => {
+        progressView.width = 200 + 4 * size.value;
+        progressView.height = progressView.width;
+        progressPie(progressView, range.value / 100);
+    };
 
     colors.onchange = evt => {
         progressView.className=colors.value;

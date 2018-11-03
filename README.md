@@ -1,5 +1,5 @@
 # HtmlJs
-Experiments with HTML an JavaScript
+Experiments with HTML and JavaScript
 
 see HTML files e.g.
 - [All Tests Report](https://dierk.github.io/HtmlJs/allTests.html)
@@ -10,3 +10,4 @@ see HTML files e.g.
 - [Church Encoding](https://dierk.github.io/HtmlJs/church/View.html)
 - [Florian Game](https://dierk.github.io/HtmlJs/florian.html)
 - [Mini React](https://dierk.github.io/HtmlJs/Mini.html)
+- [Custom Component](https://dierk.github.io/HtmlJs/gauge/View.html)

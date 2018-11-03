@@ -38,19 +38,9 @@ function progressPie(canvas, progressFraction) {
         ctx.beginPath();
         ctx.moveTo(centerx, centery);
         ctx.arc(centerx, centery, radius * 0.9, adjust(0), adjust(progressFraction), false);
-        // ctx.fillStyle = "#74A0C2";
         ctx.fillStyle = getCSS("--progress-color");
         ctx.fill();
     }
     paint();
-    canvas.onresize = paint;
-    canvas.onclick = _ => { // onclick just shows the pie in double the initial size, second click restores
-        if (canvas.width > initialWidth) {
-            canvas.width = initialWidth;
-        } else {
-            canvas.width = initialWidth * 2;
-        }
-        canvas.height = canvas.width;
-        paint()
-    }
+
 }
