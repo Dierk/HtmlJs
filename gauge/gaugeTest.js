@@ -1,3 +1,5 @@
+// requires /util/test.js
+// requires gauge.js
 
 const gauge = Suite("gauge");
 
