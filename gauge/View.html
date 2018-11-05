@@ -37,7 +37,7 @@
     Custom Elements.
     This type of custom component is plain HTML/JS and
     can be thus be used in combination with any framework.
-    It is never subject to framework or version change.
+    It is never subject to framework or version churn.
     It never goes out of fashion. It needs no tools for building.
     This is not a library. It is just way of writing code.
 </p><p>
@@ -66,11 +66,12 @@
 
 <p>
     Progress:<br>
-    <input type="range" id="range"     value="55"><br>
+    <input type="range" id="range"     value="55">    <br>
     Threshold:<br>
-    <input type="range" id="threshold" value="60"><br>
+    <input type="range" id="threshold" value="60">    <br>
     Size:<br>
-    <input type="range" id="size"      value="0"> <br>
+    <input type="range" id="size"      value="0">     <br>
+    <button             id="animate">Animate</button> <br>
 </p>
 
 <script>
@@ -98,6 +99,19 @@
         progressView.height = progressView.width;
         repaint();
     };
+
+    //animate (gets nicer when using observables)
+    animate.onclick = evt => {
+        const update = value => {
+            range.value = value;
+            repaint();
+            if (value <= 100) {
+                setTimeout( () => update(value + 1), 10)
+            }
+        };
+        update(0)
+    };
+
 
     // initial show of the component
     repaint();
