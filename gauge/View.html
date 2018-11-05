@@ -42,8 +42,10 @@
     This is not a library. It is just way of writing code.
 </p><p>
     Style and core property values are configured via CSS.
-    The component itself is not an object. It is <strong>just a function</strong>.
-    It maintains no state. It works solely the arguments that have been passed to it.
+    The component itself is not an object. It is not using "new", "class", or "this".
+    It introduces no prototype nor any other shared mutable state.
+    It is <strong>just a function</strong>.
+    The component maintains no state. It solely works on the arguments that have been passed to it.
     This approach needs no lifecycle functions.
     All interaction with the component is set up on the calling site.
     See the source code of this page as an example.
