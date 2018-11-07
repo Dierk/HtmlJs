@@ -71,3 +71,12 @@ const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
 // identity    : x.map(id) = x
 // composition : x.map( cmp(f)(g) ) = cmp( x.map(f) )( x.map(g) )
 
+
+// generalized iteration a la "revenge of the nerds", Paul Graham
+const iterate = f => value =>
+    () => {
+        const result = value;
+        value = f(value);
+        return result
+    };
+

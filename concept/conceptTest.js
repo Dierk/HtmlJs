@@ -105,3 +105,20 @@
 
     report("concept-functor", ok);
 })();
+
+
+( () => {
+    let ok = [];
+
+    const nums = iterate(x => x+1)(0);
+    ok.push(nums() === 0);
+    ok.push(nums() === 1);
+
+
+    const evens = iterate(x => x+2)(0);
+    ok.push(evens() === 0);
+    ok.push(evens() === 2);
+    ok.push(evens() === 4);
+
+    report("concept-iterate", ok);
+})();
