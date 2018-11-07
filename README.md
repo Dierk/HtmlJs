@@ -11,3 +11,4 @@ see HTML files e.g.
 - [Florian Game](https://dierk.github.io/HtmlJs/florian.html)
 - [Mini React](https://dierk.github.io/HtmlJs/Mini.html)
 - [Custom Component](https://dierk.github.io/HtmlJs/gauge/View.html)
+- [Clifford Attractors](https://dierk.github.io/HtmlJs/concept/View.html)
