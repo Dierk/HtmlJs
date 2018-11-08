@@ -141,7 +141,6 @@
 
     const nums  = iterate (x => x+1) (0);
     const three = drop (3) (nums);
-    // console.log(three());
     ok.push(three() === 3);
     ok.push(three() === 4);
 
@@ -160,4 +159,24 @@
     ok.push( result.length === 3 ) ;
 
     report("concept-each", ok);
+})();
+
+( () => {
+    let ok = [];
+
+    const nums  = iterate (x => x+1) (0);
+    const three = take (3) (nums);
+    ok.push( toArray(three).toString() === "0,1,2" ) ;
+
+    report("concept-toArray", ok);
+})();
+
+( () => {
+    let ok = [];
+
+    ok.push( toArray(toIterable([])).toString()    === "" ) ;
+    ok.push( toArray(toIterable([1])).toString()   === "1" ) ;
+    ok.push( toArray(toIterable([1,2])).toString() === "1,2" ) ;
+
+    report("concept-toIterable", ok);
 })();

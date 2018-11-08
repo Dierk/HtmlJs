@@ -72,17 +72,17 @@ const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
 // composition : x.map( cmp(f)(g) ) = cmp( x.map(f) )( x.map(g) )
 
 
-const STOP = {}; // todo think of a better solution. maybe? either? function? module?
+const STOP = {}; // todo think of a better solution.
 
 // generalized iteration a la "revenge of the nerds", Paul Graham
 const iterate = f => value =>
     () => {
+        if (value === STOP) return STOP;
         const result = value;
         value = f(value);
         return result
     };
 
-// return a new iterable with soMany Just values and Nothing otherwise
 const take = soMany => iterable =>
     takeWhile ( e => soMany-- > 0) (iterable);
 
@@ -95,18 +95,22 @@ const takeWhile = predicate => iterable =>
 const drop = soMany => iterable =>
     dropWhile (e => soMany-- > 0) (iterable);
 
-const dropWhile = predicate => iterable => {
-    let current = iterable();
-    while  (STOP !== current && predicate(current)) current = iterable();
+const cons = value => iterable => {
     let firstCall = true;
     return () => {
         if (firstCall) {
             firstCall = false;
-            return current;
+            return value;
         } else {
             return iterable();
         }
     }
+};
+
+const dropWhile = predicate => iterable => {
+    let current = iterable();
+    while (STOP !== current && predicate(current)) current = iterable();
+    return cons (current) (iterable)
 };
 
 const each = iterable => f => {
@@ -115,3 +119,21 @@ const each = iterable => f => {
         f (current)
     }
 };
+
+const toArray = iterable => {
+    const result = [];
+    each(iterable)( e => result.push(e));
+    return result;
+};
+
+// recursive solution
+const toIterable = array =>
+    array.reduceRight( (accu, item) => cons (item) (accu), () => STOP);
+
+// imperative solution, it might be needed to fall back to this if the recursive solution is too slow.
+// const toIterable = array => {
+//     let index = 0;
+//     return (array.length < 1)
+//            ? (() => STOP)
+//            : iterate ( _ => (array.length > index) ? array[index++] : STOP ) (array[index++])
+// };
