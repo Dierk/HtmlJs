@@ -72,6 +72,8 @@ const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
 // composition : x.map( cmp(f)(g) ) = cmp( x.map(f) )( x.map(g) )
 
 
+const STOP = {}; // todo think of a better solution. maybe? either? function? module?
+
 // generalized iteration a la "revenge of the nerds", Paul Graham
 const iterate = f => value =>
     () => {
@@ -80,3 +82,36 @@ const iterate = f => value =>
         return result
     };
 
+// return a new iterable with soMany Just values and Nothing otherwise
+const take = soMany => iterable =>
+    takeWhile ( e => soMany-- > 0) (iterable);
+
+const takeWhile = predicate => iterable =>
+    () => {
+        let current = iterable();
+        return predicate(current) ? current : STOP ;
+    };
+
+const drop = soMany => iterable =>
+    dropWhile (e => soMany-- > 0) (iterable);
+
+const dropWhile = predicate => iterable => {
+    let current = iterable();
+    while  (STOP !== current && predicate(current)) current = iterable();
+    let firstCall = true;
+    return () => {
+        if (firstCall) {
+            firstCall = false;
+            return current;
+        } else {
+            return iterable();
+        }
+    }
+};
+
+const each = iterable => f => {
+    let current = null;
+    while (STOP !== (current = iterable())) {
+        f (current)
+    }
+};
