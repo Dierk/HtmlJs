@@ -12,7 +12,7 @@
     ok.push(evens() === 2);
     ok.push(evens() === 4);
 
-    report("concept-iterate", ok);
+    report("lazy-iterate", ok);
 })();
 
 ( () => {
@@ -25,7 +25,7 @@
     ok.push(three() === 2);
     ok.push(three() === STOP);
 
-    report("concept-take", ok);
+    report("lazy-take", ok);
 })();
 
 ( () => {
@@ -36,7 +36,7 @@
     ok.push(three() === 3);
     ok.push(three() === 4);
 
-    report("concept-drop", ok);
+    report("lazy-drop", ok);
 })();
 
 ( () => {
@@ -50,7 +50,7 @@
     ok.push( result[2]     === 2 ) ;
     ok.push( result.length === 3 ) ;
 
-    report("concept-each", ok);
+    report("lazy-each", ok);
 })();
 
 ( () => {
@@ -60,7 +60,7 @@
     const three = take (3) (nums);
     ok.push( toArray(three).toString() === "0,1,2" ) ;
 
-    report("concept-toArray", ok);
+    report("lazy-toArray", ok);
 })();
 
 ( () => {
@@ -70,5 +70,5 @@
     ok.push( toArray(toIterable([1])).toString()   === "1" ) ;
     ok.push( toArray(toIterable([1,2])).toString() === "1,2" ) ;
 
-    report("concept-toIterable", ok);
+    report("lazy-toIterable", ok);
 })();
