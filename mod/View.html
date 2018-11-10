@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+    <script src="mod.js"></script>
+</head>
+<body>
+
+<h1>Lazy Clifford Attractors</h1>
+
+<p>
+    More background
+    <a href="https://fronkonstin.com/2017/11/07/drawing-10-million-points-with-ggplot-clifford-attractors/">here</a>.
+</p>
+<p>
+    Iterations:
+    <input id=iterations type="number" value="1000">
+    <button onclick="paint(Number(iterations.value))">paint</button>
+    Gets a border when finished.
+</p>
+
+<canvas id="canvas" width="1000" height="1000"></canvas>
+
+<script>
+
+    const ctx = canvas.getContext('2d');
+    ctx.globalAlpha = 0.01;
+    ctx.lineWidth = 0.3;
+    const centerx = canvas.width  / 2;
+    const centery = canvas.height / 2;
+    ctx.beginPath();
+    ctx.moveTo(centerx, centery);
+
+    const a = -1.24458046630025;
+    const b = -1.25191834103316;
+    const c = -1.81590817030519;
+    const d = -1.90866735205054;
+
+    function paint(soMany) {
+        const attractor =
+            iterate ( ([x, y]) =>
+                       [Math.sin(a * y) + c * Math.cos(a * x),
+                        Math.sin(b * x) + d * Math.cos(b * y)],
+                     )
+                     ([0, 0]);
+        doPaint(take (soMany) (attractor))
+    }
+
+    function doPaint(attractor) {
+        const coord = attractor();
+        if (coord === STOP) {
+            canvas.style = "border-style: solid";
+            return;
+        }
+        [x, y] = coord;
+        ctx.lineTo(centerx + x * 150, centery + y * 150);
+        ctx.stroke();
+
+        setTimeout(()=> doPaint(attractor), 10);
+    }
+
+</script>
+
+</body>
+</html>

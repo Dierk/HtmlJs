@@ -2,63 +2,66 @@
 
 function Assert() {
     const results = [];
-    const reportStack = () => {
-        try {
-            throw new Error();
-        } catch (err) {
-            console.log(err)
-        }
-    };
     return {
         results: results,
         true: (testResult) => {
-            if (!testResult) { reportStack(); }
+            if (!testResult) { console.error("test failed") }
             results.push(testResult);
         },
         is: (actual, expected) => {
             const testResult = actual === expected;
             if (!testResult) {
-                console.log("test failure. Got '"+ actual +"', expected '" + expected +"'");
-                reportStack();
+                console.error("test failure. Got '"+ actual +"', expected '" + expected +"'");
             }
             results.push(testResult);
         }
     }
 }
 
-function Suite(suiteName) {
-    return {
-        test: (testName, callback) => {
-            const assert = Assert();
-            callback(assert);
-            report(suiteName + "-"+ testName, assert.results)
-        }
-    }
+function test(name, callback) {
+    const assert = Assert();
+    callback(assert);
+    report(name, assert.results)
 }
 
-
+function Suite(suiteName, module) {
+    const tests = [];
+    const suite = {
+        test: (testName, callback) => test(suiteName + "-"+ testName, callback),
+        add:  (testName, callback) => tests.push([testName, callback]),
+        run:  () => {
+            tests.forEach( ([testName, callback]) => suite.test(testName, callback) )
+        }
+    };
+    return suite;
+}
 
 // test result report
 // report :: String, [Bool] -> DOM ()
 function report(origin, ok) {
     const extend = 20;
     if ( ok.every( elem => elem) ) {
-        document.writeln(" "+ padLeft(ok.length, 3) +" tests in " + padRight(origin, extend) + " ok.");
+        write(" "+ padLeft(ok.length, 3) +" tests in " + padRight(origin, extend) + " ok.");
         return;
     }
     let reportLine = "    Failing tests in " + padRight(origin, extend);
     bar(reportLine.length);
-    document.writeln("|" + reportLine+ "|");
+    write("|" + reportLine+ "|");
     for (let i = 0; i < ok.length; i++) {
         if( ! ok[i]) {
-            document.writeln("|    Test #"+ padLeft(i, 3) +" failed                     |");
+            write("|    Test #"+ padLeft(i, 3) +" failed                     |");
         }
     }
     bar(reportLine.length);
 }
 
+function write(message) {
+    const out = document.getElementById('out');
+    out.innerText += message + "\n";
+}
+
 function bar(extend) {
-    document.writeln("+" + "-".repeat(extend) + "+");
+    write("+" + "-".repeat(extend) + "+");
 }
 
 // padRight :: String, Int -> String

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> All Tests </title>
+    <script src="util/test.js"></script>
+</head>
+<body>
+
+<h1>All Module Tests in HtmlJs</h1>
+
+<p>Module tests do not work from file. They must be loaded via http.</p>
+
+
+<pre id="out"></pre>
+
+<script>
+        import('./mod/modTest.js').then(m => m.suite.run())
+        .then(  m => write(' ') )
+        .catch( e => {
+            write(e);
+            console.error(e);
+        })
+</script>
+
+
+
+</body>
+</html>

@@ -3,6 +3,7 @@ Experiments with HTML and JavaScript
 
 see HTML files e.g.
 - [All Tests Report](https://dierk.github.io/HtmlJs/allTests.html)
+- [All Module Tests](https://dierk.github.io/HtmlJs/allModuleTests.html)
 - [Snake](https://dierk.github.io/HtmlJs/snake/snake.html)
 - [Async Counter](https://dierk.github.io/HtmlJs/asyncCounter.html)
 - [Canvas Animation](https://dierk.github.io/HtmlJs/canvasAnimation.html)
