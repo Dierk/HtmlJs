@@ -24,7 +24,7 @@ function test(name, callback) {
     report(name, assert.results)
 }
 
-function Suite(suiteName, module) {
+function Suite(suiteName) {
     const tests = [];
     const suite = {
         test: (testName, callback) => test(suiteName + "-"+ testName, callback),

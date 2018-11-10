@@ -1,11 +1,11 @@
 
-import * as mod from './mod.js'
+import { pi } from './mod.js'
 
-export const suite = Suite('mod', mod);
+export const suite = Suite('mod');
 
 suite.add("const", assert => {
 
-    assert.true( mod.pi > 0 ) ;
+    assert.true( pi > 0 ) ;
 
 });
 
