@@ -10,19 +10,11 @@
 
 <p>Module tests do not work from file. They must be loaded via http.</p>
 
-
 <pre id="out"></pre>
 
-<script>
-        import('./mod/modTest.js').then(m => m.suite.run())
-        .then(  m => write(' ') )
-        .catch( e => {
-            write(e);
-            console.error(e);
-        })
-</script>
+<!--For FF compatibility, we have to put this in an extra file and load async-->
 
-
+<script src="allModuleTests.js" type="module"></script>
 
 </body>
 </html>
