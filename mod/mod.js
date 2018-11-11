@@ -15,3 +15,6 @@ let b = null;
 
 const setA = v => a = v;
 const setB = v => b = v;
+
+// x = 2 // introduction of new globals is not allowed in modules
+// bundlers accept it, though, and produce code without the restriction.

@@ -1,15 +1,15 @@
 
 import { pi, a, b, setA, setB } from './mod.js'
 
-export const suite = Suite('mod');
+export const modSuite = Suite('mod');
 
-suite.add("const", assert => {
+modSuite.add("const", assert => {
 
     assert.true( pi > 0 ) ;
 
 });
 
-suite.add("singleton", assert => {
+modSuite.add("singleton", assert => {
 
     assert.is(a, null);
     assert.is(b, null);
@@ -20,13 +20,18 @@ suite.add("singleton", assert => {
     assert.is(a, "Dierk");
     assert.is(b, "König");
 
-    try {
-        a = "shall not work";
-        assert.true(false);
-    } catch (e) {
-        assert.true("exported variables are read-only.")
-    }
+    // console.log(x); // newly introduced global x should not be visible but when using bundlers, it is
+
+    // this kind of test does not work with the bundler as it checks the erroneous assignment
+    // try {
+    //     a = "shall not work";
+    //     assert.true(false);
+    // } catch (e) {
+    //     assert.true("exported variables are read-only.")
+    // }
 
 });
+
+modSuite.run();
 
 
