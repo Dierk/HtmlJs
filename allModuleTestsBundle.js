@@ -1,7 +1,20 @@
+// the mod module
 
-import { pi, a, b, setA, setB } from './mod.js'
+const pi = Math.PI;
 
-export const modSuite = Suite('mod');
+// use module as a singleton
+
+// make a single state that is only exposed as values, not references to objects
+
+let a = null; // these variables are exported as read-only
+let b = null;
+
+const setA = v => a = v;
+const setB = v => b = v;
+
+x = 2;
+
+const modSuite = Suite('mod');
 
 modSuite.add("const", assert => {
 
@@ -20,7 +33,7 @@ modSuite.add("singleton", assert => {
     assert.is(a, "Dierk");
     assert.is(b, "König");
 
-    // console.log(x); // newly introduced global x should not be visible but when using bundlers, it is
+    console.log(x);
 
     // this kind of test does not work with the bundler as it checks the erroneous assignment
     // try {
@@ -34,4 +47,4 @@ modSuite.add("singleton", assert => {
 
 modSuite.run();
 
-
+// importing all tests that make up the suite of tests that are build on the ES6 module system
