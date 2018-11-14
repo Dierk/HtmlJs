@@ -91,7 +91,7 @@
 
     // updating by setting a computed style
     threshold.oninput = evt => {
-        progressView.style="--section-divider:"+ (threshold.value / 100);
+        progressView.style.setProperty("--section-divider", threshold.value / 100);
         repaint();
     };
 
