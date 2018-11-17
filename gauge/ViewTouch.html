@@ -58,6 +58,7 @@
 <canvas id="progressView" width="200" height="200" class="classic"></canvas>
 
 <p>
+    <pre id="log"></pre>
     Style:
     <select id="colors">
         <option>classic</option>
@@ -129,13 +130,22 @@
         evt.preventDefault();
         evt.stopPropagation();
         evt.stopImmediatePropagation();
+        evt.cancelBubble = true;
+        log.innerText += "\n consumed " + evt.type + " bubbles " + evt.bubbles;
+        console.log(evt);
     };
 
     progressView.onclick     = consume;
-    progressView.onmousedown = evt => {
+    progressView.onselect     = consume;
+
+    // progressView.onmousedown = evt => {
+    //     consume(evt);
+    //     progressView.onmousemove = track;
+    // };
+    progressView.addEventListener("mousedown", evt => {
         consume(evt);
         progressView.onmousemove = track;
-    };
+    }, true); // add at capturing time
     progressView.onmouseup   = evt => progressView.onmousemove = undefined;
 
 
