@@ -24,6 +24,11 @@
             --section-two-color: lightgreen;
             --progress-color:    rgba(255,0,0,0.2);
         }
+        .elegant {
+            --section-one-color: darkgrey;
+            --section-two-color: grey;
+            --progress-color:    rgba(0,0,0,0.2);
+        }
     </style>
 
 </head>
@@ -65,6 +70,7 @@
     <select id="colors">
         <option>classic</option>
         <option>citrus</option>
+        <option>elegant</option>
     </select>
 </p>
 
@@ -109,7 +115,8 @@
         repaint();
     };
 
-    thumb.oninput = repaint;
+    thumb.onclick = repaint;
+    thumb.oninput = repaint; // when touch
 
     //animate (gets nicer when using observables)
     animate.onclick = evt => {
