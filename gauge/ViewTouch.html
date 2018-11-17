@@ -55,7 +55,7 @@
     Do-what-you-want-but-leave-me-alone License.
 </p>
 
-<canvas id="progressView" width="200" height="200" class="classic"></canvas>
+<canvas id="progressView" width="200" height="200" class="classic" draggable="false"></canvas>
 
 <p>
     <pre id="log"></pre>
@@ -136,7 +136,9 @@
     };
 
     progressView.onclick     = consume;
-    progressView.onselect     = consume;
+    progressView.ontouchstart     = consume;
+    progressView.ontouchmove     = consume;
+    progressView.ontouchend     = consume;
 
     // progressView.onmousedown = evt => {
     //     consume(evt);
