@@ -116,6 +116,8 @@
     };
 
     const track = evt => {
+        console.log("moved");
+        console.dir(evt);
         let y = 2 * (((progressView.height / 2) - evt.offsetY) / progressView.height);
         let x = 2 * (evt.offsetX / progressView.width - 0.5);
         let ng = Math.atan2(y, x) ;
