@@ -122,8 +122,8 @@
             const rect = evt.target.getBoundingClientRect();
             console.dir(rect);
             console.dir(evt.targetTouches[0]);
-            relativeX  = evt.targetTouches[0].pageX - rect.left;
-            relativeY  = evt.targetTouches[0].pageY - rect.top;
+            relativeX  = evt.targetTouches[0].clientX - rect.left;
+            relativeY  = evt.targetTouches[0].clientY - rect.top;
         }
 
         let y = 2 * (((progressView.height / 2) - relativeY) / progressView.height);
