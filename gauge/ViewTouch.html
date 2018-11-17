@@ -115,13 +115,13 @@
     };
 
     const track = evt => {
-        console.log("moved");
-        console.dir(evt);
-
+        console.log(evt.type);
         let relativeX = evt.offsetX;
         let relativeY = evt.offsetY;
         if (evt.type.startsWith("touch")) {
             const rect = evt.target.getBoundingClientRect();
+            console.dir(rect);
+            console.dir(evt.targetTouches[0]);
             relativeX  = evt.targetTouches[0].pageX - rect.left;
             relativeY  = evt.targetTouches[0].pageY - rect.top;
         }
