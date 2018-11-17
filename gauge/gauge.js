@@ -51,6 +51,7 @@ function progressPie(canvas, progressFraction, showThumb) {
     }
 
     function paint() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
         // background arcs
         const divider = Number(getCSS("--section-divider"));
         pieSlice(0, divider, radius, gradient(radius, getCSS("--section-one-color")));
