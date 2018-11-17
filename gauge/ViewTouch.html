@@ -58,7 +58,6 @@
 <canvas id="progressView" width="200" height="200" class="classic" draggable="false"></canvas>
 
 <p>
-    <pre id="log"></pre>
     Style:
     <select id="colors">
         <option>classic</option>
@@ -118,8 +117,17 @@
     const track = evt => {
         console.log("moved");
         console.dir(evt);
-        let y = 2 * (((progressView.height / 2) - evt.offsetY) / progressView.height);
-        let x = 2 * (evt.offsetX / progressView.width - 0.5);
+
+        let relativeX = evt.offsetX;
+        let relativeY = evt.offsetY;
+        if (evt.type.startsWith("touch")) {
+            const rect = e.target.getBoundingClientRect();
+            relativeX  = e.targetTouches[0].pageX - rect.left;
+            relativeY  = e.targetTouches[0].pageY - rect.top;
+        }
+
+        let y = 2 * (((progressView.height / 2) - relativeY) / progressView.height);
+        let x = 2 * (relativeX / progressView.width - 0.5);
         let ng = Math.atan2(y, x) ;
         ng = (ng < 0) ? Math.PI + (Math.PI + ng) : ng; // x-axis counterclockwise 0..2*pi
         let val = 1 - (ng / (2*Math.PI)); // normalize to 0..1, clockwise
