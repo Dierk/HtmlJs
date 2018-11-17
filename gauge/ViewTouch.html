@@ -115,6 +115,7 @@
     };
 
     const track = evt => {
+        evt.preventDefault(); // no selection on tap
         let y = 2 * (((progressView.height / 2) - evt.offsetY) / progressView.height);
         let x = 2 * (evt.offsetX / progressView.width - 0.5);
         let ng = Math.atan2(y, x) ;
