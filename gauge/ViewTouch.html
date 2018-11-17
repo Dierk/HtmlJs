@@ -126,6 +126,7 @@
         repaint();
     };
 
+    progressView.onclick = evt => evt.preventDefault();
     progressView.onmousedown = evt => {
         evt.preventDefault(); // no selection on tap
         progressView.onmousemove = track;
