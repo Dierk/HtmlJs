@@ -125,10 +125,14 @@
         range.value = val * 100; // normalize for view data
         repaint();
     };
+    const consume = evt => {
+        evt.preventDefault();
+        evt.stopPropagation();
+    };
 
-    progressView.onclick = evt => evt.preventDefault();
+    progressView.onclick     = consume;
     progressView.onmousedown = evt => {
-        evt.preventDefault(); // no selection on tap
+        consume(evt);
         progressView.onmousemove = track;
     };
     progressView.onmouseup   = evt => progressView.onmousemove = undefined;
