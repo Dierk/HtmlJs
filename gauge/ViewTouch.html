@@ -73,12 +73,16 @@
     <input type="range" id="threshold" value="60">    <br>
     Size:<br>
     <input type="range" id="size"      value="0">     <br>
+    Show thumb:
+    <input type="checkbox" id="thumb"  >              <br>
     <button             id="animate">Animate</button> <br>
 </p>
 
 <script>
     // only to avoid duplication
-    const repaint = () => progressPie(progressView, range.value / 100);
+    const repaint = () => {
+        progressPie(progressView, range.value / 100, thumb.checked);
+    };
 
     // modifying the properties through a style class
     colors.onchange = evt => {
@@ -101,6 +105,8 @@
         progressView.height = progressView.width;
         repaint();
     };
+
+    thumb.onclick = repaint;
 
     //animate (gets nicer when using observables)
     animate.onclick = evt => {

@@ -1,6 +1,6 @@
 // Using only function scope. No "class", "new", or "this".
 
-function progressPie(canvas, progressFraction) {
+function progressPie(canvas, progressFraction, showThumb) {
     const centerx   = canvas.width  / 2;
     const centery   = canvas.height / 2;
     const radius    = Math.min(centerx, centery);
@@ -27,6 +27,29 @@ function progressPie(canvas, progressFraction) {
         ctx.fill();
     }
 
+    function thumb(progressFraction) {
+        const factor = 0.7;
+        const tcentery =  factor * Math.sin(adjust(progressFraction)) * (canvas.height / 2) + centery ;
+        const tcenterx =  factor * Math.cos(adjust(progressFraction)) * (canvas.width  / 2) + centerx ;
+
+        const size = Math.min(40, canvas.height / 10);
+
+        const inner = ctx.createLinearGradient(tcenterx - size, tcentery - size, tcenterx + size, tcentery + size );
+        inner.addColorStop(0,   "rgba(0,0,0,0.3)");
+        inner.addColorStop(0.8, "rgba(255,255,255,0.7)");
+
+        const rim = ctx.createLinearGradient(tcenterx - size, tcentery - size, tcenterx + size, tcentery + size );
+        rim.addColorStop(0.2, "white");
+        rim.addColorStop(1,   "rgba(0,0,0,0.3)");
+
+        ctx.beginPath();
+        ctx.arc(tcenterx, tcentery, size, adjust(0), adjust(100));
+        ctx.strokeStyle = rim;
+        ctx.stroke();
+        ctx.fillStyle = inner;
+        ctx.fill();
+    }
+
     function paint() {
         // background arcs
         const divider = Number(getCSS("--section-divider"));
@@ -35,6 +58,8 @@ function progressPie(canvas, progressFraction) {
 
         // progress arc
         pieSlice(0, progressFraction, radius * 0.9, getCSS("--progress-color"));
+
+        if(showThumb) thumb(progressFraction);
     }
     paint();
 }
