@@ -115,7 +115,6 @@
     };
 
     const track = evt => {
-        evt.preventDefault(); // no selection on tap
         let y = 2 * (((progressView.height / 2) - evt.offsetY) / progressView.height);
         let x = 2 * (evt.offsetX / progressView.width - 0.5);
         let ng = Math.atan2(y, x) ;
@@ -127,7 +126,10 @@
         repaint();
     };
 
-    progressView.onmousedown = evt => progressView.onmousemove = track;
+    progressView.onmousedown = evt => {
+        evt.preventDefault(); // no selection on tap
+        progressView.onmousemove = track;
+    };
     progressView.onmouseup   = evt => progressView.onmousemove = undefined;
 
 
