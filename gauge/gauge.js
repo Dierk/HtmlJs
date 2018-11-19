@@ -83,3 +83,32 @@ const valueFromEvent = evt => {
     val += 0.25;                                                // set relative to top, not x axis
     return (val > 1) ? val -1 : val;
 };
+
+const registerForMouseAndTouch = progressView => {
+
+    const track = evt => {
+        range.value = valueFromEvent(evt) * 100;// normalize for view data
+        repaint();
+    };
+
+    const consume = evt => {                    // prevent click, focus, drag, and selection events
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+    };
+
+    progressView.onmousedown = evt => {         // start updating
+        consume(evt);
+        progressView.onmousemove = track;
+        progressView.ontouchmove = track;
+    };
+
+    progressView.onmouseup   = evt => {         // stop updating
+        consume(evt);
+        progressView.onmousemove = undefined;
+        progressView.ontouchmove = undefined;
+    };
+
+    progressView.ontouchstart = progressView.onmousedown;   // handle mouse and touch events identically
+    progressView.ontouchend   = progressView.onmouseup;
+
+};
