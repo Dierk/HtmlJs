@@ -66,7 +66,7 @@ function progressPie(canvas, progressFraction, showThumb) {
 }
 
 // from mouse or touch event on the canvas to a 0..1 value
-const valueFromEvent = evt => {
+const valueFromEvent = (progressView, evt) => {
     let relativeX = evt.offsetX; // selection position via mouse or touch where 0,0 is the canvas top left corner
     let relativeY = evt.offsetY;
     if (evt.type.startsWith("touch")) {
@@ -87,7 +87,7 @@ const valueFromEvent = evt => {
 const registerForMouseAndTouch = progressView => {
 
     const track = evt => {
-        range.value = valueFromEvent(evt) * 100;// normalize for view data
+        range.value = valueFromEvent(progressView, evt) * 100;// normalize for view data
         repaint();
     };
 

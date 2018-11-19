@@ -24,3 +24,14 @@ gauge.test("no-exception", assert => {
 
     document.body.removeChild(canvas);
 });
+
+gauge.test("evt-value", assert => {
+
+    const progressView = {width: 200, height: 200};
+
+    assert.is( valueFromEvent( progressView, {type: "", offsetX: 100, offsetY:  0}), 1);
+    assert.is( Math.floor( 100 * valueFromEvent( progressView, {type: "", offsetX: 101, offsetY:  0})), 0);
+    assert.is( valueFromEvent( progressView, {type: "", offsetX: 200, offsetY:100}), 0.25);
+    assert.is( valueFromEvent( progressView, {type: "", offsetX: 100, offsetY:200}), 0.5);
+    assert.is( valueFromEvent( progressView, {type: "", offsetX:   0, offsetY:  0}), 7/8);
+});
