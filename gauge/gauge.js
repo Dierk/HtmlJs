@@ -64,3 +64,22 @@ function progressPie(canvas, progressFraction, showThumb) {
     }
     paint();
 }
+
+// from mouse or touch event on the canvas to a 0..1 value
+const valueFromEvent = evt => {
+    let relativeX = evt.offsetX; // selection position via mouse or touch where 0,0 is the canvas top left corner
+    let relativeY = evt.offsetY;
+    if (evt.type.startsWith("touch")) {
+        const rect = evt.target.getBoundingClientRect();
+        relativeX  = evt.targetTouches[0].clientX - rect.left;
+        relativeY  = evt.targetTouches[0].clientY - rect.top;
+    }
+    // normalize into cartesian coords where 0,0 is at the center of a unit circle
+    let y = 2 * (((progressView.height / 2) - relativeY) / progressView.height);
+    let x = 2 * (relativeX / progressView.width - 0.5);
+    let angle = Math.atan2(y, x) ;                              // (x,y) angle to x axis as in polar coords
+    angle = (angle < 0) ? Math.PI + (Math.PI + angle) : angle;  // x-axis counterclockwise 0..2*pi
+    let val = 1 - (angle / (2*Math.PI));                        // normalize to 0..1, clockwise
+    val += 0.25;                                                // set relative to top, not x axis
+    return (val > 1) ? val -1 : val;
+};
