@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="dataflow/dataflow.js"></script>
+</head>
+<body>
+
+<pre>
+<script>
+
+    // the choice was:
+
+    // shows '9' after one second delay
+
+    const x = DataFlowVariable( async () => await y() * 3);
+    const y = DataFlowVariable( () => new Promise( ok => setTimeout( ok(3), 1000)));
+
+    x().then( val => document.writeln(val) );
+
+    // the quiz expected that this choice is correct but
+    // it is not since the '9' is shown immediately (with no delay)
+
+    // the following variant would be correct:
+
+    const x2 = DataFlowVariable( async () => await y2() * 3);
+    const y2 = DataFlowVariable( () => new Promise( ok => setTimeout( () => ok(3), 1000)));
+                                                                   // ----- must be a function
+    x2().then( val => console.log(val) );
+                   // ------------       async document writeln is not guaranteed in all browsers
+
+
+    // second variant to show the caching aspect of the DataFlowVariable
+    // shows (i.e. logs) '9 9 ' after one second delay"
+
+    x2().then( val => console.log(val) ) // no further delay
+
+</script>
+</pre>
+
+</body>
+
+</html>
