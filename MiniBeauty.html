@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Beauty</title>
+</head>
+<body>
+
+<h1>A Mini-Version of React-Elm-Style Programming</h1>
+<p>In 42 lines of JavaScript</p>
+<p>Inspired by hyperappJS/infernoJS/superfineJS.</p>
+
+<div id="counter"></div>
+
+<script src="./mini.js"></script>
+
+
+<script >
+
+    const init = {
+        slices: 10,
+        table: 2
+    };
+
+    const actions = {
+        slicePlus:  state => { state.slices++ ; return state },
+        sliceMinus: state => { state.slices-- ; return state },
+        tablePlus:  state => { state.table++  ; return state },
+        tableMinus: state => { state.table--  ; return state }
+    };
+
+    const view = (act, state) =>
+        h("div", {}, [
+            h("div", {}, [
+                h("button", { click: act(actions.slicePlus)  }, "+"),
+                h("span",   {                                }, state.slices),
+                h("button", { click: act(actions.sliceMinus) }, "-"),
+            ]),
+            h("div", {}, [
+                h("button", { click: act(actions.tablePlus)  }, "+"),
+                h("span",   {                                }, state.table),
+                h("button", { click: act(actions.tableMinus) }, "-"),
+            ]),
+            h("div", {}, [
+                h("canvas", {id:"canvas", width:"500", height:"500"} ),
+                h("script", {}, "render(" + state.slices + ","+ state.table + ")" )
+            ])
+        ]);
+
+    const render = (slices, table) => {
+        const canvas  = document.getElementById("canvas");
+        const centerx = canvas.width  / 2;
+        const centery = canvas.height / 2;
+        const radius  = Math.min(centerx, centery) - 3;
+        const ctx     = canvas.getContext('2d');
+        ctx.strokeStyle  = "papayawhip";
+        ctx.lineWidth    = 4;
+        ctx.beginPath();
+        ctx.arc(centerx, centery, radius, 0, 2 * Math.PI, true);
+        ctx.stroke();
+
+        ctx.strokeStyle  = "#A0A0F080";
+        // let
+        const origin     = n     => sliceAngle(n);
+        const target     = n     => sliceAngle(n * table);
+        const xpos       = angle => centerx + centerx * Math.cos(angle);
+        const ypos       = angle => centerx + centerx * Math.sin(angle);
+        const sliceAngle = n     => n * 2.0 * Math.PI / slices;
+
+        for (let n = 1; n <= slices; n++) {
+            ctx.beginPath();
+            ctx.moveTo(xpos(origin(n)), ypos(origin(n)));
+            ctx.lineTo(xpos(target(n)), ypos(target(n)));
+            ctx.stroke();
+        }
+    };
+
+
+    mini(view, init, counter);
+
+
+</script>
+
+
+
+</body>
+
+</html>
