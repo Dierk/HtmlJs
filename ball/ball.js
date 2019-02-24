@@ -1,6 +1,6 @@
 
 const radius = 10;
-const ball = {x:20, y:0, dx: 5, dy: 1};
+const ball = {x:Math.random()*400, y:10, dx: 5, dy: 1};
 let   old  = {x: ball.x, y: ball.y};
 
 function start() {
@@ -9,6 +9,7 @@ function start() {
     context.fillStyle = "black";
 
     setInterval(() => {
+        if (Math.abs(ball.dx) < 0.1 && Math.abs(ball.dy) < 0.1) return;
         nextBoard();
         display(context);
     }, 1000 / 20);
@@ -17,20 +18,18 @@ function start() {
 function nextBoard() {
     old.x = ball.x;
     old.y = ball.y;
-    if (ball.y > 385 && ball.dy > 0) {  // ball.y < 0 cannot occur due to conservation of energy
+    if (ball.y >= 390 && ball.dy > 0) {  // ball.y < 0 cannot occur due to conservation of energy
+        ball.dy -= 4;
         ball.dy *= -1;
-        ball.dy *= 0.7;
-        ball.y = 390;
-        return;
     }
-    if (ball.x < 20 && ball.dx < 0 || ball.x > 380 && ball.dx > 0) {
+    if (ball.x <= 10 && ball.dx < 0 || ball.x >= 390 && ball.dx > 0) {
         ball.dx *= -1;
-        ball.dx *= 0.7;
+        ball.dx *= 0.8;
     }
     ball.x  += ball.dx;
     ball.y  += ball.dy;
     ball.y = Math.min(390, ball.y);
-    ball.dy += 2 ;      // constant accelleration
+    ball.dy += 1.5 ;      // constant acceleration
 }
 
 function display(context) {
