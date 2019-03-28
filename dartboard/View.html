@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+    <script src="dartboard.js"></script>
+    <style>
+
+        canvas {
+            background: palegoldenrod;
+            margin: 0.1em 1em 0 1em;
+            --dartboard-color-ring0 :    red;
+            --dartboard-color-ring1 :    lightblue;
+            --dartboard-color-ring2 :    blue;
+            --dartboard-color-ring3 :    darkblue;
+            --dartboard-color-selected:  black;
+            --dartboard-no-color    :    rgba(255,255,255,0.2);
+        }
+    </style>
+
+</head>
+<body>
+
+
+<canvas id="dartView" width="400" height="400"></canvas>
+
+<button onclick="addSegment(0);">           add and select segment  </button>
+<button onclick="removeSelectedSegment();"> remove selected segment </button>
+
+
+<script>
+    const model = { selectedIndex:0, values:[0,0,0,0] };
+
+    const addSegment = value => {
+        model.values.push(value);
+        model.selectedIndex = model.values.length-1;
+        dartboard(dartView, model);
+    };
+    const removeSegment = index => {
+        if (index < 0 || index >= model.values.length) return;
+        model.values.splice(index,1);
+        if ( model.selectedIndex === index ) {
+            model.selectedIndex--; // when removing the selected segment the selection goes downwards
+        }
+        dartboard(dartView, model);
+    };
+    const removeSelectedSegment = () => removeSegment(model.selectedIndex);
+
+    registerForClick(dartView, model);
+
+    // initial show of the component
+    dartboard(dartView, model);
+</script>
+
+</body>
+</html>
