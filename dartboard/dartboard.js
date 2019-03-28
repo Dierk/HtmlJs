@@ -76,12 +76,3 @@ const updateModelFromEvent = (dartView, evt, model) => {
     model.values[sliceIndex] = Math.floor(1 + distanceFromOrigin * 4);
     model.selectedIndex = sliceIndex;
 };
-
-const registerForClick = (dartView, model) => {
-
-    dartView.onclick = evt => {
-        updateModelFromEvent(dartView, evt, model);
-        dartboard(dartView, model);
-    };
-
-};

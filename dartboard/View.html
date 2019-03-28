@@ -4,9 +4,10 @@
     <title>View</title>
     <script src="dartboard.js"></script>
     <style>
-
-        canvas {
+        body {
             background: palegoldenrod;
+        }
+        canvas {
             margin: 0.1em 1em 0 1em;
             --dartboard-color-ring0 :    red;
             --dartboard-color-ring1 :    lightblue;
@@ -15,40 +16,102 @@
             --dartboard-color-selected:  black;
             --dartboard-no-color    :    rgba(255,255,255,0.2);
         }
+        label {
+            padding-right: 0.8em;
+        }
+        #dartList {
+            display: grid;
+            grid: auto / auto auto;
+        }
+        div.widget {
+            float: left;
+        }
     </style>
 
 </head>
 <body>
 
 
-<canvas id="dartView" width="400" height="400"></canvas>
+<div class="widget">
+    <canvas id="dartView" width="400" height="400"></canvas>
+</div>
 
-<button onclick="addSegment(0);">           add and select segment  </button>
-<button onclick="removeSelectedSegment();"> remove selected segment </button>
+<div class="widget">
+    <div id="dartList"></div>
+</div>
+
+<div class="widget">
+    <button onclick="addSegment(0);"> add and select segment</button>
+    <button onclick="removeSelectedSegment();"> remove selected segment</button>
+</div>
 
 
 <script>
-    const model = { selectedIndex:0, values:[0,0,0,0] };
+    const model = {
+        selectedIndex: -1,                              // -1 means no selection
+        values:[0,0,0,0],                               // we have to keep both arrays at the same length
+        labels:['Coolness','Fun','Ambition','Drive']
+    };
 
     const addSegment = value => {
         model.values.push(value);
+        model.labels.push("change me");
         model.selectedIndex = model.values.length-1;
-        dartboard(dartView, model);
+        refresh();
     };
     const removeSegment = index => {
         if (index < 0 || index >= model.values.length) return;
         model.values.splice(index,1);
+        model.labels.splice(index,1);
         if ( model.selectedIndex === index ) {
             model.selectedIndex--; // when removing the selected segment the selection goes downwards
         }
-        dartboard(dartView, model);
+        refresh();
     };
     const removeSelectedSegment = () => removeSegment(model.selectedIndex);
 
-    registerForClick(dartView, model);
+    const refreshList = oldList => {
+        const newList = document.createElement("DIV");
+        newList.setAttribute("ID","dartList");
+        let selectedInput = null;
+        model.labels.forEach( (label, idx) => {
+            const $label = document.createElement("LABEL");
+            $label.innerText = model.values[idx];
+            const input = document.createElement("INPUT");
+            input.setAttribute("TYPE", "TEXT");
+            input.value = label;
+            if (idx === model.selectedIndex) {
+                selectedInput = input;
+            }
+            input.addEventListener("change", evt => {
+                model.labels[idx] = input.value ;
+                // refresh(); // we can refresh, but we don't need to atm
+            });
+            input.addEventListener("focus", evt => {
+                model.selectedIndex = idx;
+                // this is a bit tricky: we can only partly refresh or we lose the input identity
+                // (we need this only for the in-place editing of the labels)
+                dartboard(dartView, model);
+            });
+            newList.appendChild($label);
+            newList.appendChild(input);
+        });
+        oldList.replaceWith(newList);
+        selectedInput && selectedInput.focus(); // we use the input focus as the selection indicator
+    };
+
+    dartView.onclick = evt => {
+        updateModelFromEvent(dartView, evt, model);
+        refresh();
+    };
+
+    const refresh = () => {
+        refreshList(dartList);
+        dartboard(dartView, model);
+    };
 
     // initial show of the component
-    dartboard(dartView, model);
+    refresh()
 </script>
 
 </body>
