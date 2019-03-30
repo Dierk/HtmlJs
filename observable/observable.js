@@ -7,8 +7,9 @@ const Observable = value => {
         getValue: ()       => value,
         setValue: val      => {
             if (value === val) return;
+            const oldValue = value;
             value = val;
-            listeners.forEach(notify => notify(val));
+            listeners.forEach(callback => callback(val, oldValue));
         }
     }
 };
