@@ -26,10 +26,14 @@ const ObservableList = list => {
         },
         del: item => {
             const i = list.indexOf(item);
-            if (i >= 0) { list.splice(i, 1) } // essentially "remove(item)"
+            delIndex(i);
+        },
+        delIndex: index => {
+            if (index >= 0) { list.splice(index, 1) } // essentially "remove(item)" // todo: better handling of wrong indexes
             delListeners.forEach( listener => listener(item));
         },
         count:   ()   => list.length,
         countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
+        // todo: think about exposing map, filter, reduce.
     }
 };
