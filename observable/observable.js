@@ -3,7 +3,10 @@
 const Observable = value => {
     const listeners = [];
     return {
-        onChange: callback => listeners.push(callback),
+        onChange: callback => {
+            listeners.push(callback);
+            callback(value, value); // notify the listener right after subscribing
+        },
         getValue: ()       => value,
         setValue: val      => {
             if (value === val) return;

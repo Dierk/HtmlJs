@@ -30,6 +30,7 @@
         }
         .selected {
             border: 2px solid orange;
+            border-radius: 4px;
         }
     </style>
 
@@ -99,51 +100,46 @@
 
     // register the listeners ------------
 
+    // view constants:
+    const dartView = document.getElementById("dartView");
+    const dartList = document.getElementById("dartList");
+
     // dartList listeners:
 
     model.selectedIndex.onChange( (newVal, oldVal) => {
-        const dartList = document.getElementById("dartList");
         const children = dartList.childNodes;
         children[oldVal] && children[oldVal].classList.remove("selected");
         const toSelect = children[newVal];
         toSelect && toSelect.classList.add("selected");
-        // the below is somewhat silly since, especially for touch devices as putting a dart opens the keyboard
+        // the below is somewhat silly, especially for touch devices as putting a dart opens the keyboard
         // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
     });
 
     model.segments.onAdd( observableEntry => {
         const newLine = document.createElement("DIV");
-        const $label = document.createElement("LABEL");
-        $label.innerText = observableEntry.getValue().value;
-        const input = document.createElement("INPUT");
+        const label   = document.createElement("LABEL");
+        const input   = document.createElement("INPUT");
         input.setAttribute("TYPE", "TEXT");
-        input.value = observableEntry.getValue().label;
 
         input.addEventListener("change", evt => {
-            observableEntry.setValue({value: $label.innerText, label:input.value}) ;
+            observableEntry.setValue({value: label.innerText, label:input.value}) ;
         });
         newLine.addEventListener("click", evt => {
-            const dartList = document.getElementById("dartList");
             const index = [...dartList.childNodes].indexOf(newLine);
             model.selectedIndex.setValue(index);
         });
-
-        // atm we don't actually need this, but just for completeness' sake...
         observableEntry.onChange( entry => {
-           $label.innerText =  observableEntry.getValue().value;
+           label.innerText =  observableEntry.getValue().value;
            input.value      = observableEntry.getValue().label;
         });
-        // ---------- end of optional --------
 
-        newLine.appendChild($label);
+        newLine.appendChild(label);
         newLine.appendChild(input);
-        document.getElementById("dartList").appendChild(newLine);
+        dartList.appendChild(newLine);
     });
 
     model.segments.onDel( (item, index) => {
-        const dartList = document.getElementById("dartList");
-        const children = dartList.childNodes;
-        const toDelete = children[index];
+        const toDelete = dartList.childNodes[index];
         toDelete && dartList.removeChild(toDelete);
     });
 
@@ -160,7 +156,7 @@
     model.segments.onDel( _ => dartboard(dartView, model)); // segment removed -> repaint dartboard
     model.segments.onAdd( obs => {                          // segment added   ->
         obs.onChange(_ => dartboard(dartView, model));      //   add listener to value changes
-        dartboard(dartView, model);                         //   repaint dartboard
+        dartboard(dartView, model);                         //   repaint dartboard since we have a new segment to display
     });
 
     // initial state
@@ -169,6 +165,8 @@
     addSegment( 0, 'Fun');
     addSegment( 0, 'Ambition');
     addSegment( 0, 'Drive');
+
+    model.selectedIndex.setValue(0);       // todo: setters should go into a command.
 
 
 </script>
