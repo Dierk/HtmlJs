@@ -30,10 +30,13 @@ const ObservableList = list => {
         },
         delIndex: index => {
             if (index >= 0) { list.splice(index, 1) } // essentially "remove(item)" // todo: better handling of wrong indexes
-            delListeners.forEach( listener => listener(item));
+            delListeners.forEach( listener => listener(list[index], index));
         },
-        count:   ()   => list.length,
-        countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
-        // todo: think about exposing map, filter, reduce.
+        count:   ()    => list.length,
+        countIf: pred  => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0),
+        getAt:   index => list[index],
+        map:     (...args) => list.map(...args),
+        filter:  (...args) => list.filter(...args),
+        reduce:  (...args) => list.reduce(...args),
     }
 };
