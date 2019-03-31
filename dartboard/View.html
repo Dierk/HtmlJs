@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>View</title>
+    <script src="../observable/observable.js"></script>
     <script src="dartboard.js"></script>
     <style>
         body {
@@ -18,13 +19,17 @@
         }
         label {
             padding-right: 0.8em;
+            padding-left:  0.8em;
         }
         #dartList {
             display: grid;
-            grid: auto / auto auto;
+            grid: auto / auto ;
         }
         div.widget {
             float: left;
+        }
+        .selected {
+            border: 2px solid orange;
         }
     </style>
 
@@ -41,77 +46,131 @@
 </div>
 
 <div class="widget">
-    <button onclick="addSegment(0);"> add and select segment</button>
-    <button onclick="removeSelectedSegment();"> remove selected segment</button>
+    <button onclick="addSegment(0,'change me')"> add and select segment</button>
+    <button onclick="removeSelectedSegment(1);"> remove selected segment</button>
 </div>
 
+<div class="widget">
+    <pre>
+
+    Butterfly ideas:
+    - keep the model identities such that the view can bind *read-only* in a stable fashion (observable)
+    - keep the view  identities (go around issues with the view state)
+
+    - views never write into the model, they send a command to the controller
+    - commands are processed in strict sequence (special issue: callbacks from asynchronous calls)
+    - since the controller is the only one that can write into the model, he can also savely read
+
+    - a controller has no access to the view
+    - all information that a controller needs must be in the model (from previous commands) or given as command attributes
+
+
+    </pre>
+</div>
 
 <script>
+
+    // model
+
     const model = {
-        selectedIndex: -1,                              // -1 means no selection
-        values:[0,0,0,0],                               // we have to keep both arrays at the same length
-        labels:['Coolness','Fun','Ambition','Drive']
+        selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
+        segments:      ObservableList([])   // list of Observable {value: , label:} entries
     };
 
-    const addSegment = value => {
-        model.values.push(value);
-        model.labels.push("change me");
-        model.selectedIndex = model.values.length-1;
-        refresh();
+    // Controller commands
+
+    const addSegmentCmd = model => (value, label="change me") => {
+        model.segments.add( Observable( {value: value, label: label} ));
+        model.selectedIndex.setValue(model.segments.count() -1);
     };
-    const removeSegment = index => {
-        if (index < 0 || index >= model.values.length) return;
-        model.values.splice(index,1);
-        model.labels.splice(index,1);
-        if ( model.selectedIndex === index ) {
-            model.selectedIndex--; // when removing the selected segment the selection goes downwards
+    const removeSegmentCmd = model => index => {
+        if (index < 0 || index >= model.segments.count()) return;
+        model.segments.delIndex(index);
+        if ( model.selectedIndex.getValue() === index ) {
+            model.selectedIndex.setValue(index -1 ); // when removing the selected segment the selection goes downwards
         }
-        refresh();
     };
-    const removeSelectedSegment = () => removeSegment(model.selectedIndex);
+    const removeSelectedSegmentCmd = model => () => removeSegmentCmd(model)(model.selectedIndex.getValue());
 
-    const refreshList = oldList => {
-        const newList = document.createElement("DIV");
-        newList.setAttribute("ID","dartList");
-        let selectedInput = null;
-        model.labels.forEach( (label, idx) => {
-            const $label = document.createElement("LABEL");
-            $label.innerText = model.values[idx];
-            const input = document.createElement("INPUT");
-            input.setAttribute("TYPE", "TEXT");
-            input.value = label;
-            if (idx === model.selectedIndex) {
-                selectedInput = input;
-            }
-            input.addEventListener("change", evt => {
-                model.labels[idx] = input.value ;
-                // refresh(); // we can refresh, but we don't need to atm
-            });
-            input.addEventListener("focus", evt => {
-                model.selectedIndex = idx;
-                // this is a bit tricky: we can only partly refresh or we lose the input identity
-                // (we need this only for the in-place editing of the labels)
-                dartboard(dartView, model);
-            });
-            newList.appendChild($label);
-            newList.appendChild(input);
+    // dependency injection done right :-)
+    const addSegment            = addSegmentCmd(model);
+    const removeSegment         = removeSegmentCmd(model);
+    const removeSelectedSegment = removeSelectedSegmentCmd(model);
+
+    // register the listeners ------------
+
+    // dartList listeners:
+
+    model.selectedIndex.onChange( (newVal, oldVal) => {
+        const dartList = document.getElementById("dartList");
+        const children = dartList.childNodes;
+        children[oldVal] && children[oldVal].classList.remove("selected");
+        const toSelect = children[newVal];
+        toSelect && toSelect.classList.add("selected");
+        // the below is somewhat silly since, especially for touch devices as putting a dart opens the keyboard
+        // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
+    });
+
+    model.segments.onAdd( observableEntry => {
+        const newLine = document.createElement("DIV");
+        const $label = document.createElement("LABEL");
+        $label.innerText = observableEntry.getValue().value;
+        const input = document.createElement("INPUT");
+        input.setAttribute("TYPE", "TEXT");
+        input.value = observableEntry.getValue().label;
+
+        input.addEventListener("change", evt => {
+            observableEntry.setValue({value: $label.innerText, label:input.value}) ;
         });
-        oldList.replaceWith(newList);
-        selectedInput && selectedInput.focus(); // we use the input focus as the selection indicator
-    };
+        newLine.addEventListener("click", evt => {
+            const dartList = document.getElementById("dartList");
+            const index = [...dartList.childNodes].indexOf(newLine);
+            model.selectedIndex.setValue(index);
+        });
+
+        // atm we don't actually need this, but just for completeness' sake...
+        observableEntry.onChange( entry => {
+           $label.innerText =  observableEntry.getValue().value;
+           input.value      = observableEntry.getValue().label;
+        });
+        // ---------- end of optional --------
+
+        newLine.appendChild($label);
+        newLine.appendChild(input);
+        document.getElementById("dartList").appendChild(newLine);
+    });
+
+    model.segments.onDel( (item, index) => {
+        const dartList = document.getElementById("dartList");
+        const children = dartList.childNodes;
+        const toDelete = children[index];
+        toDelete && dartList.removeChild(toDelete);
+    });
+
+    // dartView listeners:
 
     dartView.onclick = evt => {
         updateModelFromEvent(dartView, evt, model);
-        refresh();
     };
 
-    const refresh = () => {
-        refreshList(dartList);
-        dartboard(dartView, model);
-    };
+    model.selectedIndex.onChange( (newVal, oldVal) => {
+        dartboard(dartView, model);                         // selection change -> repaint the dartboard
+    });
 
-    // initial show of the component
-    refresh()
+    model.segments.onDel( _ => dartboard(dartView, model)); // segment removed -> repaint dartboard
+    model.segments.onAdd( obs => {                          // segment added   ->
+        obs.onChange(_ => dartboard(dartView, model));      //   add listener to value changes
+        dartboard(dartView, model);                         //   repaint dartboard
+    });
+
+    // initial state
+
+    addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
+    addSegment( 0, 'Fun');
+    addSegment( 0, 'Ambition');
+    addSegment( 0, 'Drive');
+
+
 </script>
 
 </body>

@@ -32,22 +32,23 @@ function dartboard(canvas, model) {
     function paint() {
         ctx.clearRect(0,0,canvas.width, canvas.height);
         let start     = 0;
-        let increment = 1 / model.values.length;
+        let increment = 1 / model.segments.count();
 
-        model.values.forEach( (slice, index) => {
-            let end = start + increment;
-            pieSlice(start, end, radius * 1,    getCSS(slice >=4 ? "--dartboard-color-ring3" : '--dartboard-no-color'));
-            pieSlice(start, end, radius * 0.75, getCSS(slice >=3 ? "--dartboard-color-ring2" : '--dartboard-no-color'));
-            pieSlice(start, end, radius * 0.5,  getCSS(slice >=2 ? "--dartboard-color-ring1" : '--dartboard-no-color'));
-            pieSlice(start, end, radius * 0.25, getCSS(slice >=1 ? "--dartboard-color-ring0" : '--dartboard-no-color'));
+        model.segments.map( segment => {
+            const value = segment.getValue().value;
+            const end = start + increment;
+            pieSlice(start, end, radius * 1,    getCSS(value >=4 ? "--dartboard-color-ring3" : '--dartboard-no-color'));
+            pieSlice(start, end, radius * 0.75, getCSS(value >=3 ? "--dartboard-color-ring2" : '--dartboard-no-color'));
+            pieSlice(start, end, radius * 0.5,  getCSS(value >=2 ? "--dartboard-color-ring1" : '--dartboard-no-color'));
+            pieSlice(start, end, radius * 0.25, getCSS(value >=1 ? "--dartboard-color-ring0" : '--dartboard-no-color'));
             pieFrame(start, end, radius);
             start = end;
             }
         );
         pieFrame(0, 0, radius); // paint the closing line
 
-        if (model.selectedIndex > -1 && model.selectedIndex < model.values.length ) {
-            start = increment * model.selectedIndex;
+        if (model.selectedIndex.getValue() > -1 && model.selectedIndex.getValue() < model.segments.count() ) {
+            start = increment * model.selectedIndex.getValue();
             const end = start + increment;
             const color = getCSS("--dartboard-color-selected");
             pieFrame(start, end, radius, color);
@@ -71,8 +72,9 @@ const updateModelFromEvent = (dartView, evt, model) => {
     val += 0.25;                                                // set relative to top, not x axis
     const segmentIndicator = (val > 1) ? val -1 : val;          // between 0 and 1
     // in a model [1,1,1], a segmentIndicator 0.5 would select the slice with index 1
-    const sliceIndex = Math.floor(segmentIndicator * model.values.length);
+    const sliceIndex = Math.floor(segmentIndicator * model.segments.count());
     const distanceFromOrigin = Math.sqrt(x*x + y*y);
-    model.values[sliceIndex] = Math.floor(1 + distanceFromOrigin * 4);
-    model.selectedIndex = sliceIndex;
+    const segment = model.segments.getAt(sliceIndex);
+    segment.setValue( {value: Math.floor(1 + distanceFromOrigin * 4), label: segment.getValue().label} );
+    model.selectedIndex.setValue(sliceIndex);
 };
