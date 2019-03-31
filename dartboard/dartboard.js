@@ -60,7 +60,7 @@ function dartboard(canvas, model) {
 
 // from click event on the canvas to a 0..1 value to find out the segment,
 // then updating the respective model of the segment with the value determined by distance to center
-const updateModelFromEvent = (dartView, evt, model) => {
+const updateModelFromEvent = (dartView, evt, model, dartController) => {
     let relativeX = evt.offsetX; // selection position via mouse or touch where 0,0 is the canvas top left corner
     let relativeY = evt.offsetY;
     // normalize into cartesian coords where 0,0 is at the center of a unit circle
@@ -72,9 +72,9 @@ const updateModelFromEvent = (dartView, evt, model) => {
     val += 0.25;                                                // set relative to top, not x axis
     const segmentIndicator = (val > 1) ? val -1 : val;          // between 0 and 1
     // in a model [1,1,1], a segmentIndicator 0.5 would select the slice with index 1
-    const sliceIndex = Math.floor(segmentIndicator * model.segments.count());
+    const segmentIndex = Math.floor(segmentIndicator * model.segments.count());
     const distanceFromOrigin = Math.sqrt(x*x + y*y);
-    const segment = model.segments.getAt(sliceIndex);
-    segment.setValue( {value: Math.floor(1 + distanceFromOrigin * 4), label: segment.getValue().label} );
-    model.selectedIndex.setValue(sliceIndex);
+    const obsSegment = model.segments.getAt(segmentIndex);
+    dartController.setSegmentValue(obsSegment)(Math.floor(1 + distanceFromOrigin * 4));
+    dartController.selectIndex(segmentIndex);
 };

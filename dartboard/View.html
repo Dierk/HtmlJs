@@ -47,8 +47,8 @@
 </div>
 
 <div class="widget">
-    <button onclick="addSegment(0,'change me')"> add and select segment</button>
-    <button onclick="removeSelectedSegment(1);"> remove selected segment</button>
+    <button onclick="dartController.addSegment(0,'change me')"> add and select segment</button>
+    <button onclick="dartController.removeSelectedSegment();"> remove selected segment</button>
 </div>
 
 <div class="widget">
@@ -71,32 +71,48 @@
 
 <script>
 
-    // model
+    // model // this will later go into two modules, one for reading only (for the views) and one for read/write (for the controllers)
 
     const model = {
         selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
         segments:      ObservableList([])   // list of Observable {value: , label:} entries
     };
 
-    // Controller commands
+    // Controller      // dependency injection done right :-)
+    const Controller = model => {                           // make a local scope. This will later go into a module
 
-    const addSegmentCmd = model => (value, label="change me") => {
-        model.segments.add( Observable( {value: value, label: label} ));
-        model.selectedIndex.setValue(model.segments.count() -1);
-    };
-    const removeSegmentCmd = model => index => {
-        if (index < 0 || index >= model.segments.count()) return;
-        model.segments.delIndex(index);
-        if ( model.selectedIndex.getValue() === index ) {
-            model.selectedIndex.setValue(index -1 ); // when removing the selected segment the selection goes downwards
+        const addSegment = (value, label = "change me") => {
+            model.segments.add(Observable({value: value, label: label}));
+            selectLastIndex();
+        };
+        /** private */
+        const removeSegment = index => {
+            if (! isValidIndex(index)) return;
+            model.segments.delIndex(index);
+            if (isSelected(index)) {  // business rule: after removal we select the previous segment if any
+                selectIndex(index > 0 ? index - 1 : 0);
+            }
+        };
+
+        const removeSelectedSegment = () => removeSegment(model.selectedIndex.getValue());
+        const selectIndex  = index => isValidIndex(index) && model.selectedIndex.setValue(index);
+        const isValidIndex = index => (index >=0 && index < model.segments.count());                // private
+        const isSelected   = index => index === model.selectedIndex.getValue();                     // private
+        const selectLastIndex = () => selectIndex(model.segments.count() - 1);                      // private
+
+        const setSegmentValue = obsSegment => value => obsSegment.setValue({value: value, label: obsSegment.getValue().label} );
+        const setSegmentLabel = obsSegment => label => obsSegment.setValue({value: obsSegment.getValue().value, label: label} );
+
+        // public API for the views to work with
+        return {
+            addSegment:     addSegment,
+            removeSelectedSegment: removeSelectedSegment,
+            selectIndex:     selectIndex,
+            setSegmentValue: setSegmentValue,
+            setSegmentLabel: setSegmentLabel,
         }
     };
-    const removeSelectedSegmentCmd = model => () => removeSegmentCmd(model)(model.selectedIndex.getValue());
-
-    // dependency injection done right :-)
-    const addSegment            = addSegmentCmd(model);
-    const removeSegment         = removeSegmentCmd(model);
-    const removeSelectedSegment = removeSelectedSegmentCmd(model);
+    const dartController = Controller(model);
 
     // register the listeners ------------
 
@@ -106,47 +122,53 @@
 
     // dartList listeners:
 
-    model.selectedIndex.onChange( (newVal, oldVal) => {
+    const showSelectionInList = (newVal, oldVal) => {
         const children = dartList.childNodes;
         children[oldVal] && children[oldVal].classList.remove("selected");
         const toSelect = children[newVal];
         toSelect && toSelect.classList.add("selected");
         // the below is somewhat silly, especially for touch devices as putting a dart opens the keyboard
         // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
-    });
+    };
+    model.selectedIndex.onChange(showSelectionInList);
 
-    model.segments.onAdd( observableEntry => {
-        const newLine = document.createElement("DIV");
-        const label   = document.createElement("LABEL");
-        const input   = document.createElement("INPUT");
+    model.segments.onAdd( obsSegment => {
+        const dLine = document.createElement("DIV");
+        const label = document.createElement("LABEL");
+        const input = document.createElement("INPUT");
         input.setAttribute("TYPE", "TEXT");
 
         input.addEventListener("change", evt => {
-            observableEntry.setValue({value: label.innerText, label:input.value}) ;
+            dartController.setSegmentLabel(obsSegment)(input.value);
         });
-        newLine.addEventListener("click", evt => {
-            const index = [...dartList.childNodes].indexOf(newLine);
-            model.selectedIndex.setValue(index);
-        });
-        observableEntry.onChange( entry => {
-           label.innerText =  observableEntry.getValue().value;
-           input.value      = observableEntry.getValue().label;
+        const select = evt => dartController.selectIndex([...dartList.childNodes].indexOf(dLine));
+        input.addEventListener("focus", select);
+        dLine.addEventListener("click", select);
+
+        obsSegment.onChange( segment => {
+           label.innerText =  segment.value;
+           input.value      = segment.label;
         });
 
-        newLine.appendChild(label);
-        newLine.appendChild(input);
-        dartList.appendChild(newLine);
+        dLine.appendChild(label);
+        dLine.appendChild(input);
+        dartList.appendChild(dLine);
     });
 
     model.segments.onDel( (item, index) => {
         const toDelete = dartList.childNodes[index];
         toDelete && dartList.removeChild(toDelete);
+        // we might also need to refresh the selected line in cases where the
+        // selected index does not change (therefore no notification) but now a different
+        // line is at the selected index position. This happens e.g. when deleting the first segment
+        const newIndex = model.selectedIndex.getValue();
+        showSelectionInList(newIndex, newIndex);
     });
 
     // dartView listeners:
 
     dartView.onclick = evt => {
-        updateModelFromEvent(dartView, evt, model);
+        updateModelFromEvent(dartView, evt, model, dartController); // we read and write there ...
     };
 
     model.selectedIndex.onChange( (newVal, oldVal) => {
@@ -161,13 +183,12 @@
 
     // initial state
 
-    addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
-    addSegment( 0, 'Fun');
-    addSegment( 0, 'Ambition');
-    addSegment( 0, 'Drive');
+    dartController.addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
+    dartController.addSegment( 0, 'Fun');
+    dartController.addSegment( 0, 'Ambition');
+    dartController.addSegment( 0, 'Drive');
 
-    model.selectedIndex.setValue(0);       // todo: setters should go into a command.
-
+    dartController.selectIndex(0);
 
 </script>
 
