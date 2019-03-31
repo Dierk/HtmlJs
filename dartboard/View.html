@@ -60,11 +60,14 @@
 
     - views never write into the model, they send a command to the controller
     - commands are processed in strict sequence (special issue: callbacks from asynchronous calls)
-    - since the controller is the only one that can write into the model, he can also savely read
+    - since the controller is the only one that can write into the model, he can also safely read
 
     - a controller has no access to the view
     - all information that a controller needs must be in the model (from previous commands) or given as command attributes
 
+    --- update:
+        - trying to make the controller also the single source for _reading_.
+        - if one sees the model as an in-memory data store, the controller works like a DAO to the store.
 
     </pre>
 </div>
@@ -100,19 +103,40 @@
         const isSelected   = index => index === model.selectedIndex.getValue();                     // private
         const selectLastIndex = () => selectIndex(model.segments.count() - 1);                      // private
 
+        const segmentCount      = () => model.segments.count();
+        const selectedIndex     = () => model.selectedIndex.getValue();
+        const hasValidSelection = () => selectedIndex() > -1;
+
+        // allow mapping over segments in a read-only fashion, exposing only the raw data
+        const mapSegments = (...args) => model.segments.map( obsSegment => obsSegment.getValue()).map(...args);
+
+        // allow updating a single segment with an update function
+        const mapSegment = update => index => {
+            const obsSegment = model.segments.getAt(index);
+            const result = update(obsSegment.getValue());
+            obsSegment.setValue(result) //; } // allow for side effects (no value returned)
+        };
+
         const setSegmentValue = obsSegment => value => obsSegment.setValue({value: value, label: obsSegment.getValue().label} );
         const setSegmentLabel = obsSegment => label => obsSegment.setValue({value: obsSegment.getValue().value, label: label} );
 
         // public API for the views to work with
         return {
-            addSegment:     addSegment,
-            removeSelectedSegment: removeSelectedSegment,
-            selectIndex:     selectIndex,
-            setSegmentValue: setSegmentValue,
-            setSegmentLabel: setSegmentLabel,
+            addSegment:             addSegment,
+            removeSelectedSegment:  removeSelectedSegment,
+            selectIndex:            selectIndex,
+            setSegmentValue:        setSegmentValue,
+            setSegmentLabel:        setSegmentLabel,
+            segmentCount:           segmentCount,
+            selectedIndex:          selectedIndex,
+            hasValidSelection:      hasValidSelection,
+            mapSegments:            mapSegments,
+            mapSegment:             mapSegment,
         }
     };
     const dartController = Controller(model);
+
+    // below here, the model is no longer used for _reading_, only for setting up the listeners
 
     // register the listeners ------------
 
@@ -161,24 +185,24 @@
         // we might also need to refresh the selected line in cases where the
         // selected index does not change (therefore no notification) but now a different
         // line is at the selected index position. This happens e.g. when deleting the first segment
-        const newIndex = model.selectedIndex.getValue();
+        const newIndex = dartController.selectedIndex();
         showSelectionInList(newIndex, newIndex);
     });
 
     // dartView listeners:
 
     dartView.onclick = evt => {
-        updateModelFromEvent(dartView, evt, model, dartController); // we read and write there ...
+        updateModelFromEvent(dartView, evt, dartController);
     };
 
     model.selectedIndex.onChange( (newVal, oldVal) => {
-        dartboard(dartView, model);                         // selection change -> repaint the dartboard
+        dartboard(dartView, dartController);                         // selection change -> repaint the dartboard
     });
 
-    model.segments.onDel( _ => dartboard(dartView, model)); // segment removed -> repaint dartboard
+    model.segments.onDel( _ => dartboard(dartView, dartController)); // segment removed -> repaint dartboard
     model.segments.onAdd( obs => {                          // segment added   ->
-        obs.onChange(_ => dartboard(dartView, model));      //   add listener to value changes
-        dartboard(dartView, model);                         //   repaint dartboard since we have a new segment to display
+        obs.onChange(_ => dartboard(dartView, dartController));      //   add listener to value changes
+        dartboard(dartView, dartController);                         //   repaint dartboard since we have a new segment to display
     });
 
     // initial state
