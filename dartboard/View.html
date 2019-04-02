@@ -74,13 +74,6 @@
 
 <script>
 
-    // model // this will later go into two modules, one for reading only (for the views) and one for read/write (for the controllers)
-
-    const model = {
-        selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
-        segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
-    };
-
     // Controller      // dependency injection done right :-)
     const Controller = model => {                           // make a local scope. This will later go into a module
 
@@ -107,17 +100,14 @@
         const selectedIndex     = () => model.selectedIndex.getValue();
         const hasValidSelection = () => selectedIndex() > -1;
 
-        const setSegmentValue = segment => value => segment.value.setValue(value);                  // private
-        const setSegmentLabel = segment => label => segment.label.setValue(label);                  // private
+        const setSegmentValue = segment => value => segment.value.setValue(value);
+        const setSegmentLabel = segment => label => segment.label.setValue(label);
 
         const setSegmentByIndexValue = index => setSegmentValue(model.segments.getAt(index));
         const setSegmentByIndexLabel = index => setSegmentLabel(model.segments.getAt(index));
 
-
         const unwrap = obj => { // unwrap an obj of Observable properties to raw values             // private
-            const result = {};
-            for(const x in obj){ result[x] = obj[x].getValue() };
-            return result;
+            Object.keys(obj).reduce( (accu, key) => {accu[key] = obj[key].getValue(); return accu}, {});
         };
         // allow mapping over segments in a read-only fashion, exposing only the raw data
         const mapSegments = (...args) => model.segments.map( unwrap ).map(...args);
@@ -128,15 +118,24 @@
             addSegment:             addSegment,
             removeSelectedSegment:  removeSelectedSegment,
             selectIndex:            selectIndex,
+            setSegmentValue:        setSegmentValue,
+            setSegmentLabel:        setSegmentLabel,
             setSegmentByIndexValue: setSegmentByIndexValue,
             setSegmentByIndexLabel: setSegmentByIndexLabel,
             segmentCount:           segmentCount,
             selectedIndex:          selectedIndex,
             hasValidSelection:      hasValidSelection,
             mapSegments:            mapSegments,
+            onSelectionChange:      model.selectedIndex.onChange,
+            onSegmentAdd:           model.segments.onAdd,
+            onSegmentDelete:        model.segments.onDel,
         }
     };
-    const dartController = Controller(model);
+
+    const dartController = Controller( {    // model is local to the controller
+        selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
+        segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
+    });
 
     // below here, the model is no longer used for _reading_, only for setting up the listeners
 
@@ -156,9 +155,9 @@
         // the below is somewhat silly, especially for touch devices as putting a dart opens the keyboard
         // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
     };
-    model.selectedIndex.onChange(showSelectionInList);
+    dartController.onSelectionChange(showSelectionInList);
 
-    model.segments.onAdd( segment => {
+    dartController.onSegmentAdd( segment => {
         const dLine = document.createElement("DIV");
         const label = document.createElement("LABEL");
         const input = document.createElement("INPUT");
@@ -179,7 +178,7 @@
         dartList.appendChild(dLine);
     });
 
-    model.segments.onDel( (item, index) => {
+    dartController.onSegmentDelete( (item, index) => {
         const toDelete = dartList.childNodes[index];
         toDelete && dartList.removeChild(toDelete);
         // we might also need to refresh the selected line in cases where the
@@ -195,14 +194,12 @@
         updateModelFromEvent(dartView, evt, dartController);
     };
 
-    model.selectedIndex.onChange( (newVal, oldVal) => {
-        dartboard(dartView, dartController);                         // selection change -> repaint the dartboard
-    });
+    dartController.onSelectionChange( _ => dartboard(dartView, dartController) );  // selection change -> repaint the dartboard
 
-    model.segments.onDel( _ => dartboard(dartView, dartController)); // segment removed -> repaint dartboard
-    model.segments.onAdd( segment => {                          // segment added   ->
+    dartController.onSegmentDelete( _ => dartboard(dartView, dartController)); // segment removed -> repaint dartboard
+    dartController.onSegmentAdd( segment => {                                  // segment added   ->
         segment.value.onChange(_ => dartboard(dartView, dartController));      //   add listener to value changes
-        dartboard(dartView, dartController);                         //   repaint dartboard since we have a new segment to display
+        dartboard(dartView, dartController);                                   //   repaint dartboard since we have a new segment to display
     });
 
     // initial state
