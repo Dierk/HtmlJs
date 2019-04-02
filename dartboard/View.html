@@ -78,14 +78,14 @@
 
     const model = {
         selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
-        segments:      ObservableList([])   // list of Observable {value: , label:} entries
+        segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
     };
 
     // Controller      // dependency injection done right :-)
     const Controller = model => {                           // make a local scope. This will later go into a module
 
         const addSegment = (value, label = "change me") => {
-            model.segments.add(Observable({value: value, label: label}));
+            model.segments.add({value: Observable(value), label: Observable(label)});
             selectLastIndex();
         };
         /** private */
@@ -107,31 +107,33 @@
         const selectedIndex     = () => model.selectedIndex.getValue();
         const hasValidSelection = () => selectedIndex() > -1;
 
-        // allow mapping over segments in a read-only fashion, exposing only the raw data
-        const mapSegments = (...args) => model.segments.map( obsSegment => obsSegment.getValue()).map(...args);
+        const setSegmentValue = segment => value => segment.value.setValue(value);                  // private
+        const setSegmentLabel = segment => label => segment.label.setValue(label);                  // private
 
-        // allow updating a single segment with an update function
-        const mapSegment = update => index => {
-            const obsSegment = model.segments.getAt(index);
-            const result = update(obsSegment.getValue());
-            obsSegment.setValue(result) //; } // allow for side effects (no value returned)
+        const setSegmentByIndexValue = index => setSegmentValue(model.segments.getAt(index));
+        const setSegmentByIndexLabel = index => setSegmentLabel(model.segments.getAt(index));
+
+
+        const unwrap = obj => { // unwrap an obj of Observable properties to raw values             // private
+            const result = {};
+            for(const x in obj){ result[x] = obj[x].getValue() };
+            return result;
         };
+        // allow mapping over segments in a read-only fashion, exposing only the raw data
+        const mapSegments = (...args) => model.segments.map( unwrap ).map(...args);
 
-        const setSegmentValue = obsSegment => value => obsSegment.setValue({value: value, label: obsSegment.getValue().label} );
-        const setSegmentLabel = obsSegment => label => obsSegment.setValue({value: obsSegment.getValue().value, label: label} );
 
         // public API for the views to work with
         return {
             addSegment:             addSegment,
             removeSelectedSegment:  removeSelectedSegment,
             selectIndex:            selectIndex,
-            setSegmentValue:        setSegmentValue,
-            setSegmentLabel:        setSegmentLabel,
+            setSegmentByIndexValue: setSegmentByIndexValue,
+            setSegmentByIndexLabel: setSegmentByIndexLabel,
             segmentCount:           segmentCount,
             selectedIndex:          selectedIndex,
             hasValidSelection:      hasValidSelection,
             mapSegments:            mapSegments,
-            mapSegment:             mapSegment,
         }
     };
     const dartController = Controller(model);
@@ -156,23 +158,21 @@
     };
     model.selectedIndex.onChange(showSelectionInList);
 
-    model.segments.onAdd( obsSegment => {
+    model.segments.onAdd( segment => {
         const dLine = document.createElement("DIV");
         const label = document.createElement("LABEL");
         const input = document.createElement("INPUT");
         input.setAttribute("TYPE", "TEXT");
 
         input.addEventListener("change", evt => {
-            dartController.setSegmentLabel(obsSegment)(input.value);
+            dartController.setSegmentLabel(segment)(input.value);
         });
         const select = evt => dartController.selectIndex([...dartList.childNodes].indexOf(dLine));
         input.addEventListener("focus", select);
         dLine.addEventListener("click", select);
 
-        obsSegment.onChange( segment => {
-           label.innerText =  segment.value;
-           input.value      = segment.label;
-        });
+        segment.value.onChange( value => label.innerText = value);
+        segment.label.onChange( label => input.value     = label);
 
         dLine.appendChild(label);
         dLine.appendChild(input);
@@ -200,8 +200,8 @@
     });
 
     model.segments.onDel( _ => dartboard(dartView, dartController)); // segment removed -> repaint dartboard
-    model.segments.onAdd( obs => {                          // segment added   ->
-        obs.onChange(_ => dartboard(dartView, dartController));      //   add listener to value changes
+    model.segments.onAdd( segment => {                          // segment added   ->
+        segment.value.onChange(_ => dartboard(dartView, dartController));      //   add listener to value changes
         dartboard(dartView, dartController);                         //   repaint dartboard since we have a new segment to display
     });
 

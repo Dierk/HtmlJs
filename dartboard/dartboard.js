@@ -73,7 +73,7 @@ const updateModelFromEvent = (view, evt, controller) => {
     // in a model [1,1,1], a segmentIndicator 0.5 would select the slice with index 1
     const segmentIndex = Math.floor(segmentIndicator * controller.segmentCount());
     const distanceFromOrigin = Math.sqrt(x*x + y*y);
-    const update = ({value,label}) => ({ value: Math.floor(1 + distanceFromOrigin * 4), label: label });
-    controller.mapSegment(update)(segmentIndex);
+
+    controller.setSegmentByIndexValue(segmentIndex)(Math.floor(1 + distanceFromOrigin * 4));
     controller.selectIndex(segmentIndex);
 };
