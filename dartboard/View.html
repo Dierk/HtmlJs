@@ -47,8 +47,8 @@
 </div>
 
 <div class="widget">
-    <button onclick="dartAPI.addSegment(0,'change me')"> add and select segment</button>
-    <button onclick="dartAPI.removeSelectedSegment();"> remove selected segment</button>
+    <button onclick="dartAPI.addSegment(0,'change me')"> + </button>
+    <button onclick="dartAPI.removeSelectedSegment();" > - </button>
 </div>
 
 <div class="widget">
@@ -107,9 +107,8 @@
         const setSegmentByIndexValue = index => setSegmentValue(model.segments.getAt(index));
         const setSegmentByIndexLabel = index => setSegmentLabel(model.segments.getAt(index));
 
-        const unwrap = obj => { // unwrap an obj of Observable properties to raw values             // private
+        const unwrap = obj =>  // unwrap an obj of Observable properties to raw values             // private
             Object.keys(obj).reduce( (accu, key) => {accu[key] = obj[key].getValue(); return accu}, {});
-        };
         // allow mapping over segments in a read-only fashion, exposing only the raw data
         const mapSegments = (...args) => model.segments.map( unwrap ).map(...args);
 
@@ -133,18 +132,16 @@
         }
     };
 
-    const dartAPI = Controller( {    // model is local to the controller
+    const dartAPI = Controller( {           // model is local to the controller
         selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
         segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
     });
 
-    // below here, the model is no longer used for _reading_, only for setting up the listeners
-
     // register the listeners ------------
 
     // view constants:
-    const dartView = document.getElementById("dartView");
-    const dartList = document.getElementById("dartList");
+    const dartView     = document.getElementById("dartView");
+    const dartList     = document.getElementById("dartList");
 
     // dartList listeners:
 
@@ -153,8 +150,6 @@
         children[oldVal] && children[oldVal].classList.remove("selected");
         const toSelect = children[newVal];
         toSelect && toSelect.classList.add("selected");
-        // the below is somewhat silly, especially for touch devices as putting a dart opens the keyboard
-        // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
     };
     dartAPI.onSelectionChange(showSelectionInList);
 
@@ -205,7 +200,7 @@
 
     // initial state
 
-    dartAPI.addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
+    dartAPI.addSegment( 0, 'Coolness');
     dartAPI.addSegment( 0, 'Fun');
     dartAPI.addSegment( 0, 'Ambition');
     dartAPI.addSegment( 0, 'Drive');
