@@ -1,5 +1,5 @@
 
-function dartboard(canvas, controller) {
+function dartboard(canvas, api) {
     const centerx   = canvas.width  / 2;
     const centery   = canvas.height / 2;
     const radius    = Math.min(centerx, centery);
@@ -32,9 +32,9 @@ function dartboard(canvas, controller) {
     function paint() {
         ctx.clearRect(0,0,canvas.width, canvas.height);
         let start     = 0;
-        let increment = 1 / controller.segmentCount();
+        let increment = 1 / api.segmentCount();
 
-        controller.mapSegments( ({value}) => {
+        api.mapSegments( ({value}) => {
             const end = start + increment;
             pieSlice(start, end, radius * 1,    getCSS(value >=4 ? "--dartboard-color-ring3" : '--dartboard-no-color'));
             pieSlice(start, end, radius * 0.75, getCSS(value >=3 ? "--dartboard-color-ring2" : '--dartboard-no-color'));
@@ -46,8 +46,8 @@ function dartboard(canvas, controller) {
         );
         pieFrame(0, 0, radius); // paint the closing line
 
-        if (controller.hasValidSelection() ) {
-            start = increment * controller.selectedIndex();
+        if (api.hasValidSelection() ) {
+            start = increment * api.selectedIndex();
             const end = start + increment;
             const color = getCSS("--dartboard-color-selected");
             pieFrame(start, end, radius, color);
@@ -59,7 +59,7 @@ function dartboard(canvas, controller) {
 
 // from click event on the canvas to a 0..1 value to find out the segment,
 // then updating the respective model of the segment with the value determined by distance to center
-const updateModelFromEvent = (view, evt, controller) => {
+const updateModelFromEvent = (view, evt, api) => {
     let relativeX = evt.offsetX; // selection position via mouse or touch where 0,0 is the canvas top left corner
     let relativeY = evt.offsetY;
     // normalize into cartesian coords where 0,0 is at the center of a unit circle
@@ -71,9 +71,9 @@ const updateModelFromEvent = (view, evt, controller) => {
     val += 0.25;                                                // set relative to top, not x axis
     const segmentIndicator = (val > 1) ? val -1 : val;          // between 0 and 1
     // in a model [1,1,1], a segmentIndicator 0.5 would select the slice with index 1
-    const segmentIndex = Math.floor(segmentIndicator * controller.segmentCount());
+    const segmentIndex = Math.floor(segmentIndicator * api.segmentCount());
     const distanceFromOrigin = Math.sqrt(x*x + y*y);
 
-    controller.setSegmentByIndexValue(segmentIndex)(Math.floor(1 + distanceFromOrigin * 4));
-    controller.selectIndex(segmentIndex);
+    api.setSegmentByIndexValue(segmentIndex)(Math.floor(1 + distanceFromOrigin * 4));
+    api.selectIndex(segmentIndex);
 };

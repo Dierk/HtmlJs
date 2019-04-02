@@ -47,8 +47,8 @@
 </div>
 
 <div class="widget">
-    <button onclick="dartController.addSegment(0,'change me')"> add and select segment</button>
-    <button onclick="dartController.removeSelectedSegment();"> remove selected segment</button>
+    <button onclick="dartAPI.addSegment(0,'change me')"> add and select segment</button>
+    <button onclick="dartAPI.removeSelectedSegment();"> remove selected segment</button>
 </div>
 
 <div class="widget">
@@ -133,7 +133,7 @@
         }
     };
 
-    const dartController = Controller( {    // model is local to the controller
+    const dartAPI = Controller( {    // model is local to the controller
         selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
         segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
     });
@@ -156,18 +156,18 @@
         // the below is somewhat silly, especially for touch devices as putting a dart opens the keyboard
         // toSelect && toSelect.lastChild && toSelect.lastChild.focus(); // selection change -> focus the input
     };
-    dartController.onSelectionChange(showSelectionInList);
+    dartAPI.onSelectionChange(showSelectionInList);
 
-    dartController.onSegmentAdd( segment => {
+    dartAPI.onSegmentAdd( segment => {
         const dLine = document.createElement("DIV");
         const label = document.createElement("LABEL");
         const input = document.createElement("INPUT");
         input.setAttribute("TYPE", "TEXT");
 
         input.addEventListener("change", evt => {
-            dartController.setSegmentLabel(segment)(input.value);
+            dartAPI.setSegmentLabel(segment)(input.value);
         });
-        const select = evt => dartController.selectIndex([...dartList.childNodes].indexOf(dLine));
+        const select = evt => dartAPI.selectIndex([...dartList.childNodes].indexOf(dLine));
         input.addEventListener("focus", select);
         dLine.addEventListener("click", select);
 
@@ -179,38 +179,38 @@
         dartList.appendChild(dLine);
     });
 
-    dartController.onSegmentDelete( (item, index) => {
+    dartAPI.onSegmentDelete( (item, index) => {
         const toDelete = dartList.childNodes[index];
         toDelete && dartList.removeChild(toDelete);
         // we might also need to refresh the selected line in cases where the
         // selected index does not change (therefore no notification) but now a different
         // line is at the selected index position. This happens e.g. when deleting the first segment
-        const newIndex = dartController.selectedIndex();
+        const newIndex = dartAPI.selectedIndex();
         showSelectionInList(newIndex, newIndex);
     });
 
     // dartView listeners:
 
     dartView.onclick = evt => {
-        updateModelFromEvent(dartView, evt, dartController);
+        updateModelFromEvent(dartView, evt, dartAPI);
     };
 
-    dartController.onSelectionChange( _ => dartboard(dartView, dartController) );  // selection change -> repaint the dartboard
+    dartAPI.onSelectionChange( _ => dartboard(dartView, dartAPI) );  // selection change -> repaint the dartboard
 
-    dartController.onSegmentDelete( _ => dartboard(dartView, dartController)); // segment removed -> repaint dartboard
-    dartController.onSegmentAdd( segment => {                                  // segment added   ->
-        segment.value.onChange(_ => dartboard(dartView, dartController));      //   add listener to value changes
-        dartboard(dartView, dartController);                                   //   repaint dartboard since we have a new segment to display
+    dartAPI.onSegmentDelete( _ => dartboard(dartView, dartAPI)); // segment removed -> repaint dartboard
+    dartAPI.onSegmentAdd( segment => {                                  // segment added   ->
+        segment.value.onChange(_ => dartboard(dartView, dartAPI));      //   add listener to value changes
+        dartboard(dartView, dartAPI);                                   //   repaint dartboard since we have a new segment to display
     });
 
     // initial state
 
-    dartController.addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
-    dartController.addSegment( 0, 'Fun');
-    dartController.addSegment( 0, 'Ambition');
-    dartController.addSegment( 0, 'Drive');
+    dartAPI.addSegment( 0, 'Coolness');            // todo: consider [Segment, value, label] = Tuple(2)
+    dartAPI.addSegment( 0, 'Fun');
+    dartAPI.addSegment( 0, 'Ambition');
+    dartAPI.addSegment( 0, 'Drive');
 
-    dartController.selectIndex(0);
+    dartAPI.selectIndex(0);
 
 </script>
 
