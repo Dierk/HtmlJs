@@ -5,7 +5,7 @@
  * @export fooFunction (add info on export purposes)
  */
 
-export { fooFunction, fooClosure, konst, triple }
+export { fooFunction, fooClosure, konst, triple, SomeObject }
 
 /**
  * Generic Types
@@ -44,3 +44,16 @@ const triple =
         /** a */ x =>
         /** b */ y =>
         /** c */ z => [x,y,z];
+
+/**
+ * Just Some Object with a getter and setter
+ * @param {a} someArg
+ * @returns {{setArg: (function({a}): {a}), getArg: (function(): {a})}}
+ * @constructor
+ */
+const SomeObject = someArg => {
+    return {
+        getArg : () => someArg,
+        setArg : val => someArg = val
+    }
+};

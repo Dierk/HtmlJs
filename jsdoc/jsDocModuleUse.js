@@ -1,5 +1,5 @@
 
-import {fooFunction, fooClosure, konst, triple} from "./jsDocModule.js"
+import {fooFunction, fooClosure, konst, triple, SomeObject} from "./jsDocModule.js"
 
 // idea shortcuts:
 // Shift-Alt I   : inspection window (errors, warning)
@@ -17,3 +17,8 @@ const f42 = konst(42);
 const a3 = f42("öalsj") === 42;
 
 const a4 = triple(1)(2)('foo');
+
+const someObject = SomeObject(1);
+
+someObject.setArg(2);   // flow typing
+someObject.getArg();
