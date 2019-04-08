@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    const id = x => x;
+
+    // standard either
+    const Left   = x => f => g => f (x);
+    const Right  = x => f => g => g (x);
+    const either = e => f => g => e (f) (g);
+
+    // mapEither :: Either a b -> (b -> c) -> Either a c
+    const emap = e => f => either (e) (x => Left(x)) (x => Right(f(x)));
+
+    // eshow :: Either a b -> " a or b " ???
+    const eshow = e => either (e) (id) (id);
+
+    // safeDiv :: Number -> Number -> Either String Number
+    const safeDiv = num => divisor =>
+        divisor === 0
+            ? Left("Cannot divide by 0")
+            : Right(num / divisor);
+
+    const result = safeDiv(12)(3);
+
+    document.writeln(eshow(safeDiv(12)(3)));
+    document.writeln(eshow(emap(safeDiv(12)(3))(x=> x*4)));
+    document.writeln(eshow(safeDiv(12)(0)));
+    document.writeln(eshow(emap(safeDiv(12)(0))(x=> x*4)));
+
+</script>
+
+
+</body>
+
+</html>
