@@ -5,12 +5,15 @@
     <title>Title</title>
     <style>
 
+        body {
+            margin: 2em;
+        }
 
         div.toggle {
             padding-left: 0.5em; /* half the arrow width */
         }
 
-        input[type=checkbox]:checked + label.toggle + div {
+        input[type=checkbox].hidden:checked + label.toggle + div {
             display: none;
         }
 
@@ -21,9 +24,11 @@
         input[type=checkbox].hidden + label.toggle:before {
             content:    '';
             display:    inline-block;
+            position:    relative;
+            top:        0.2em;
             width:      1em;
             height:     1em;
-            background: grey;
+            background: blue;
             --arrow-down: polygon(0 0, 100% 0%, 50% 100%);
             -webkit-clip-path: var(--arrow-down);
             clip-path:         var(--arrow-down);
@@ -39,9 +44,9 @@
 </head>
 <body>
 
-<p>A section the can be collapsed in pure HTML and CSS.</p>
+<p>A section that can be collapsed in pure HTML and CSS.</p>
 <p>The section is preceded with an invisible checkbox and a label for that checkbox.</p>
-<p>The checkbox is controlled via the label. The label has the arrow as a :before pseudo element</p>
+<p>The checkbox is controlled via the label. The label has the arrow as a :before pseudo element.</p>
 
 
 <input id ="toggle" class="hidden" type="checkbox">
