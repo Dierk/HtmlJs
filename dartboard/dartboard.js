@@ -34,7 +34,8 @@ function dartboard(canvas, api) {
         let start     = 0;
         let increment = 1 / api.segmentCount();
 
-        api.mapSegments( ({value}) => {
+        api.mapSegments( segment => {
+            const value = segment.getValue();
             const end = start + increment;
             pieSlice(start, end, radius * 1,    getCSS(value >=4 ? "--dartboard-color-ring3" : '--dartboard-no-color'));
             pieSlice(start, end, radius * 0.75, getCSS(value >=3 ? "--dartboard-color-ring2" : '--dartboard-no-color'));

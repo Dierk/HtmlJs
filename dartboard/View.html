@@ -75,17 +75,36 @@
         - trying to make the controller also the single source for _reading_.
         - if one sees the model as an in-memory data store, the controller works like a DAO to the store.
         - the controller now totally captures the model and exposes a restricted API to it.
+        - make the model contained in the controller
+        - expose only a segment veneer to the view
 
     </pre>
 </div>
 
 <script>
 
-    // Controller      // dependency injection done right :-)
-    const Controller = model => {                           // make a local scope. This will later go into a module
+    const Controller = () => {                          // make a local scope. This will later go into a module
+
+        const model = {                                 // model is local to the controller
+            selectedIndex: Observable(-1),              // -1 means no selection, todo: consider Nothing
+            segments:      ObservableList([])           // list of Segments entries
+        };
+
+        const Segment = (value, label) => {             // veneer
+            const valueAttr = Observable(value);
+            const labelAttr = Observable(label);
+            return {                                    // veneer API
+                setValue: valueAttr.setValue,
+                getValue: valueAttr.getValue,
+                setLabel: labelAttr.setValue,
+                getLabel: labelAttr.getValue,
+                onValueChange: valueAttr.onChange,
+                onLabelChange: labelAttr.onChange,
+            }
+        };
 
         const addSegment = (value, label = "change me") => {
-            model.segments.add({value: Observable(value), label: Observable(label)});
+            model.segments.add(Segment(value, label));
             selectLastIndex();
         };
         /** private */
@@ -103,45 +122,29 @@
         const isSelected   = index => index === model.selectedIndex.getValue();                     // private
         const selectLastIndex = () => selectIndex(model.segments.count() - 1);                      // private
 
-        const segmentCount      = () => model.segments.count();
         const selectedIndex     = () => model.selectedIndex.getValue();
         const hasValidSelection = () => selectedIndex() > -1;
 
-        const setSegmentValue = segment => value => segment.value.setValue(value);
-        const setSegmentLabel = segment => label => segment.label.setValue(label);
+        const setSegmentByIndexValue = index => model.segments.getAt(index).setValue;
+        const setSegmentByIndexLabel = index => model.segments.getAt(index).setLabel;
 
-        const setSegmentByIndexValue = index => setSegmentValue(model.segments.getAt(index));
-        const setSegmentByIndexLabel = index => setSegmentLabel(model.segments.getAt(index));
-
-        const unwrap = obj =>  // unwrap an obj of Observable properties to raw values             // private
-            Object.keys(obj).reduce( (accu, key) => {accu[key] = obj[key].getValue(); return accu}, {});
-        // allow mapping over segments in a read-only fashion, exposing only the raw data
-        const mapSegments = (...args) => model.segments.map( unwrap ).map(...args);
-
-
-        // public API for the views to work with
-        return {
+        return {                                            // public API for the views to work with
             addSegment:             addSegment,
             removeSelectedSegment:  removeSelectedSegment,
             selectIndex:            selectIndex,
-            setSegmentValue:        setSegmentValue,
-            setSegmentLabel:        setSegmentLabel,
             setSegmentByIndexValue: setSegmentByIndexValue,
             setSegmentByIndexLabel: setSegmentByIndexLabel,
-            segmentCount:           segmentCount,
             selectedIndex:          selectedIndex,
             hasValidSelection:      hasValidSelection,
-            mapSegments:            mapSegments,
+            segmentCount:           model.segments.count,
+            mapSegments:            model.segments.map,
             onSelectionChange:      model.selectedIndex.onChange,
             onSegmentAdd:           model.segments.onAdd,
             onSegmentDelete:        model.segments.onDel,
         }
     };
 
-    const dartAPI = Controller( {           // model is local to the controller
-        selectedIndex: Observable(-1),      // -1 means no selection, todo: consider Nothing
-        segments:      ObservableList([])   // list of {value: Observable , label: Observable} entries
-    });
+    const dartAPI = Controller();
 
     // register the listeners ------------
 
@@ -161,22 +164,22 @@
 
     dartAPI.onSegmentAdd( segment => {
         const dLine = document.createElement("DIV");
-        const label = document.createElement("LABEL");
-        const input = document.createElement("INPUT");
-        input.setAttribute("TYPE", "TEXT");
+        dLine.innerHTML = `
+            <LABEL></LABEL>
+            <INPUT TYPE="TEXT">
+        `;
+        const [label, input] = dLine.children;
 
         input.addEventListener("change", evt => {
-            dartAPI.setSegmentLabel(segment)(input.value);
+            segment.setLabel(input.value);
         });
         const select = evt => dartAPI.selectIndex([...dartList.childNodes].indexOf(dLine));
         input.addEventListener("focus", select);
         dLine.addEventListener("click", select);
 
-        segment.value.onChange( value => label.innerText = value);
-        segment.label.onChange( label => input.value     = label);
+        segment.onValueChange( value => label.innerText = value);
+        segment.onLabelChange( label => input.value     = label);
 
-        dLine.appendChild(label);
-        dLine.appendChild(input);
         dartList.appendChild(dLine);
     });
 
@@ -200,7 +203,7 @@
 
     dartAPI.onSegmentDelete( _ => dartboard(dartView, dartAPI)); // segment removed -> repaint dartboard
     dartAPI.onSegmentAdd( segment => {                                  // segment added   ->
-        segment.value.onChange(_ => dartboard(dartView, dartAPI));      //   add listener to value changes
+        segment.onValueChange(_ => dartboard(dartView, dartAPI));      //   add listener to value changes
         dartboard(dartView, dartAPI);                                   //   repaint dartboard since we have a new segment to display
     });
 
