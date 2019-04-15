@@ -114,6 +114,9 @@
             if (isSelected(index)) {  // business rule: after removal we select the previous segment if any
                 selectIndex(index > 0 ? index - 1 : 0);
             }
+            if(model.segments.count() === 0) {    // if there is no more segment to select, remove selection
+                model.selectedIndex.setValue(-1);
+            }
         };
 
         const removeSelectedSegment = () => removeSegment(model.selectedIndex.getValue());
