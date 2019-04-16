@@ -9,12 +9,18 @@
             margin: 2em;
         }
 
+        /* expanded div */
         div.toggle {
-            padding-left: 0.5em; /* half the arrow width */
+            padding-left: 0.5em;    /* half the arrow width */
+            max-height:   10em;     /* must be absolute for the transition to work, adapt as needed */
+            overflow:     hidden;   /* when height is lowered, do not paint outside */
+            transition:   max-height 0.5s ease-out;
         }
 
+        /* collapsed div */
         input[type=checkbox].hidden:checked + label.toggle + div {
-            display: none;
+            max-height: 0;
+            transition:  max-height 0.5s ease-out;
         }
 
         input[type=checkbox].hidden {
@@ -28,16 +34,16 @@
             top:        0.2em;
             width:      1em;
             height:     1em;
-            background: blue;
+            background: darkgray;
             --arrow-down: polygon(0 0, 100% 0%, 50% 100%);
             -webkit-clip-path: var(--arrow-down);
             clip-path:         var(--arrow-down);
+            transition: transform 0.5s;
         }
 
         input[type=checkbox].hidden:checked + label.toggle:before {
-            --arrow-right: polygon(0 0, 100% 50%, 0 100%);
-            -webkit-clip-path: var(--arrow-right);
-            clip-path:         var(--arrow-right);
+            transform:  rotate(-90deg);
+            transition: transform 0.5s;
         }
 
     </style>
