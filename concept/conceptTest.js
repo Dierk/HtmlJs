@@ -105,3 +105,22 @@
 
     report("concept-functor", ok);
 })();
+
+( () => {
+    let ok = [];
+
+    let x_ = Math.random();
+    let y_ = null;
+
+    NullSafe(x_)
+      .then( x => x * 2)        // must auto-promote
+      .then( x => NullSafe(x))  // must not auto-promote
+      .then( x => y_ = x + 1)   // store value, check no double promotion
+      .then( x => null)         // jump over rest
+      .then( x => x.mustNotBeCalled)  // would throw error if called.
+      .value();
+
+    ok.push(y_ === x_ * 2 + 1);
+
+    report("concept-nullsafe", ok);
+})();

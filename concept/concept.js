@@ -70,3 +70,16 @@ const mfoldMap = monoid => array => foldMap(monoid)(m => m.apply)(array);
 // ----------- functor laws:
 // identity    : x.map(id) = x
 // composition : x.map( cmp(f)(g) ) = cmp( x.map(f) )( x.map(g) )
+
+
+// Null-safe "Monad"
+
+const isNull = it => null === it || undefined === it;
+
+const NullSafe = x => {
+    const maywrap = y => !isNull(y) && y.then ? y : NullSafe(y) ;
+    return {
+       then:  fn => maywrap( isNull(x) ? x : fn(x) ),
+       value: () => x,
+    }
+};
