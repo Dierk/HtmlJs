@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+
+    <style>
+        .ball {
+            width: 40px;
+            height: 40px;
+            background-color: black;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Animate</h1>
+
+Linear
+<div id="toMove1" class="ball"></div>
+Ease in
+<div id="toMove2" class="ball"></div>
+Ease both
+<div id="toMove3" class="ball"></div>
+Ease out
+<div id="toMove4" class="ball"></div>
+Offset
+<div id="toMove5" class="ball"></div>
+
+<script>
+
+    const linear = (beginValue, endValue, fraction) =>
+        beginValue + fraction * (endValue - beginValue);
+
+    // https://math.stackexchange.com/questions/121720/ease-in-out-function
+    const slope = (alpha, x) => {
+        const nom = Math.pow(x,alpha);
+        return nom / (nom + Math.pow(1-x, alpha));
+    };
+
+    const easeBoth = (beginValue, endValue, fraction) =>
+        beginValue + (endValue - beginValue) * slope(1.3, fraction) ;
+
+    const easeIn = (beginValue, endValue, fraction) =>
+        fraction < 0.5
+        ? easeBoth(beginValue, endValue, fraction)
+        : linear  (beginValue, endValue, fraction);
+
+    const easeOut = (beginValue, endValue, fraction) =>
+        fraction > 0.5
+        ? easeBoth(beginValue, endValue, fraction)
+        : linear  (beginValue, endValue, fraction);
+
+
+    const animate = (beginValue, endValue, tweening, millisecs, callback) => {
+        let start = null;
+        function paint(timestamp) {
+          if (!start) start = timestamp;
+          const progress = timestamp - start;
+          const fraction = progress / millisecs;
+          const value = tweening(beginValue, endValue, fraction);
+          callback(value);
+          if (progress < millisecs) {
+            window.requestAnimationFrame(paint);
+          } else {
+            callback(endValue);
+          }
+        }
+        callback(beginValue);
+        window.requestAnimationFrame(paint);
+    };
+
+    animate(0,   1000, linear,   2000, value => toMove1.style.transform = 'translateX(' + value + 'px)');
+    animate(0,   1000, easeIn,   2000, value => toMove2.style.transform = 'translateX(' + value + 'px)');
+    animate(0,   1000, easeBoth, 2000, value => toMove3.style.transform = 'translateX(' + value + 'px)');
+    animate(0,   1000, easeOut,  2000, value => toMove4.style.transform = 'translateX(' + value + 'px)');
+    animate(500, 1000, linear,   2000, value => toMove5.style.transform = 'translateX(' + value + 'px)');
+
+</script>
+
+</body>
+</html>
