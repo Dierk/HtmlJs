@@ -10,14 +10,6 @@
             width:  100%;
             height: 100%;
         }
-        #glassPane {  /* keep track of all mouse movements in the browser window even where there is no document*/
-            position: absolute;
-            top: 0;
-            left: 0;
-            width:  100vw;
-            height: 100vh;
-            z-index: 1;
-        }
         svg {
             width:  100px;
             height: 100px;
@@ -34,7 +26,6 @@
     </style>
 </head>
 <body>
-<div id="glassPane"></div>
 
 <h1 style="margin-left: 3em;">I see where you go...</h1>
 
@@ -59,7 +50,6 @@
     document.writeln(eyeView('leftEye'));
     document.writeln(eyeView('rightEye'));
 
-    const glass = document.getElementById("glassPane");
     const v  = 80; // versatz - Abstand des Pupillenzentrums vom Augenzentrum in SVG units
 
     const eyeBinding = eyeId => {
@@ -84,7 +74,7 @@
     const leftListener  = eyeBinding('#leftEye');
     const rightListener = eyeBinding('#rightEye');
 
-    glass.onmousemove = evt => { // highlander pattern
+    document.onmousemove = evt => { // highlander pattern
         leftListener(evt);
         rightListener(evt);
     }
