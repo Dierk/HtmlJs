@@ -48,8 +48,12 @@ Wiggle
         ? 2 - fn(x)
         : scale(0, fn(2 - span), x * (2-span), fn);
 
+    const combine = f => g => x => (f(x) + g(x)) / 2;
+
     // https://math.stackexchange.com/questions/121720/ease-in-out-function
     const slope = alpha => x => {
+        if (x < 0) return 0;
+        if (x > 1) return 1;
         const nom = Math.pow(x,alpha);
         return nom / (nom + Math.pow(1-x, alpha));
     };
@@ -89,9 +93,10 @@ Wiggle
         window.requestAnimationFrame(paint);
     };
 
-    const bounceLeft  = undertow(0.3)(linear);
-    const bounceRight = overtow(0.7)(linear);
-    const wiggle = overtow(0.9)( undertow(0.1)(linear) );
+    const bounceLeft  = undertow(0.2)(linear);
+    const bounceRight = overtow(0.8)(linear);
+    const bounce      = overtow(0.8)(undertow(0.2)( linear )) ;
+    const wiggle      = combine(easeBoth)(bounce);
 
     animate(0,   1000, linear,   2000, value => toMove1.style.transform = 'translateX(' + value + 'px)');
     animate(0,   1000, easeIn,   2000, value => toMove2.style.transform = 'translateX(' + value + 'px)');
