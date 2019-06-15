@@ -35,6 +35,7 @@ Wiggle
 <script>
 
     // cmp alternative: https://css-tricks.com/emulating-css-timing-functions-javascript/
+    // gsap, greensock, anime
 
     const linear = x => x;
 
@@ -97,6 +98,7 @@ Wiggle
     const bounceRight = overtow(0.8)(linear);
     const bounce      = overtow(0.8)(undertow(0.2)( linear )) ;
     const wiggle      = combine(easeBoth)(bounce);
+    // const wiggle      = bounce;
 
     animate(0,   1000, linear,   2000, value => toMove1.style.transform = 'translateX(' + value + 'px)');
     animate(0,   1000, easeIn,   2000, value => toMove2.style.transform = 'translateX(' + value + 'px)');
