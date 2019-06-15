@@ -59,6 +59,9 @@
         const xo = rect.x + rect.width/2;  // x-origin
         const yo = rect.y + rect.height/2; // y-origin
 
+        iris.children[1].style['pointer-events'] = 'none'; // let a click on the highlight fall trough
+        iris.children[0].onclick = evt => iris.children[0].style.fill = "blue"; // inner svg nodes respond
+
         return evt => {
             const xm = evt.clientX - xo; // the normalized x/y coords to work with
             const ym = evt.clientY - yo;
