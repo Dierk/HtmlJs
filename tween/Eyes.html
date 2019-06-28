@@ -12,7 +12,7 @@
         }
         svg {
             width:  100px;
-            height: 100px;
+            height: 80px;
             position: absolute;
         }
         #leftEye {
@@ -32,35 +32,60 @@
 <script>
 
     const eyeView = id => `
-        <svg id="${id}" version="1.1" viewBox="-3 -3 289.4646 289.4646" xmlns:xlink="http://www.w3.org/1999/xlink"
-         xmlns="http://www.w3.org/2000/svg">
-        <defs/>
-        <g>
-            <ellipse cx="141.7323" cy="141.7323" rx="141.7323" ry="141.7323" stroke="#000000" stroke-opacity="1"
-                     stroke-width="2" fill-opacity="1" fill="#FFFFFF"/>
-        </g>
-        <g>
-            <ellipse cx="141.7323" cy="141.7323" rx="56.69292" ry="56.69292" fill="#000000" fill-opacity="1"/>
-            <ellipse cx="127.5591" cy="120.4725" rx="14.17323" ry="21.25985" fill="#FFFFFF" fill-opacity="1"
-                     transform="rotate(45 127.5591 120.4725)"/>
-        </g>
+    <svg id="${id}" viewBox="0 0 120 120">
+      <defs>
+        <filter id="shadow1" width="150%" height="150%">
+          <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation="5" />
+          <feOffset dx="0" dy="8" in="blur" result="offsetBlur" />
+          <feMerge>
+            <feMergeNode in="offsetBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <radialGradient id="gradient1" gradientUnits="objectBoundingBox" cx="50%" cy="50%" r="50%">
+        <stop offset="38%" stop-color="#000000" stop-opacity="1" />
+        <stop offset="46%" stop-color= "#073F80" stop-opacity="1" />
+        <stop offset="90%" stop-color="#8EC0DD" stop-opacity="1" />
+        <stop offset="100%" stop-color="#2F3A46" stop-opacity="1" />
+      </radialGradient>
+      <g id="${id}_iris">
+        <ellipse cx="60" cy="60" rx="30" ry="30" opacity="1" fill="url(#gradient1)" />
+        <ellipse cx="50" cy="50" rx="7"  ry="7"  opacity="1" fill="#FFFFFF" fill-opacity="0.8"/>
+      </g>
+      <g id="${id}_openLids">
+        <path d="M0 60 A60,60 0 0,1 120,60 A60,30 0 0,0 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" filter="url(#shadow1)" />
+        <path d="M0 60 A60,60 0 0,0 120,60 A60,40 0 0,1 0,60Z " opacity="1" fill="#F4CB76" fill-opacity="1" />
+      </g>
+      <g id="${id}_closeLid">
+        <path d="M0 60 A60,60 0 0,1 120,60 A60,30 0 0,1 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" filter="url(#shadow1)" />
+      </g>
     </svg>
     `;
 
     document.writeln(eyeView('leftEye'));
     document.writeln(eyeView('rightEye'));
 
-    const v  = 80; // versatz - Abstand des Pupillenzentrums vom Augenzentrum in SVG units
+    const v  = 14; // versatz - Abstand des Pupillenzentrums vom Augenzentrum in SVG units
 
     const eyeBinding = eyeId => {
-        const rect = document.querySelectorAll(eyeId + " ellipse")[0].getBoundingClientRect();
-        const iris = document.querySelectorAll(eyeId + " g")[1];
+        const rect = document.querySelectorAll(eyeId + "_iris ellipse")[0].getBoundingClientRect();
+        const iris = document.querySelector(eyeId + "_iris");
+        const closeLidLayer = document.querySelector(eyeId + "_closeLid");
+        closeLidLayer.style.opacity = 0;
+
+
+        setInterval( evt => {
+            closeLidLayer.style.opacity = 1;
+            setTimeout(evt => closeLidLayer.style.opacity = 0, 100)
+
+        }, 5 * 1000);
 
         const xo = rect.x + rect.width/2;  // x-origin
         const yo = rect.y + rect.height/2; // y-origin
 
         iris.children[1].style['pointer-events'] = 'none'; // let a click on the highlight fall trough
-        iris.children[0].onclick = evt => iris.children[0].style.fill = "blue"; // inner svg nodes respond
+        iris.children[0].onclick = evt => {console.log(1);iris.children[0].style.fill = "blue";} // inner svg nodes respond
 
         return evt => {
             const xm = evt.clientX - xo; // the normalized x/y coords to work with
