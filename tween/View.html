@@ -14,6 +14,7 @@
             border-radius: 50%;
         }
     </style>
+    <script src="./tween.js"></script>
 </head>
 <body>
 
@@ -31,68 +32,12 @@ Offset
 <div id="toMove5" class="ball"></div>
 Wiggle
 <div id="toMove6" class="ball"></div>
+Quad Bezier
+<div id="toMove7" class="ball"></div>
+Cubic Bezier
+<div id="toMove8" class="ball"></div>
 
 <script>
-
-    // cmp alternative: https://css-tricks.com/emulating-css-timing-functions-javascript/
-    // gsap, greensock, anime
-
-    const linear = x => x;
-
-    const undertow = span => fn => x =>
-        x < span
-        ? -fn(x)
-        : scale(fn(-span), 1, (x - span) / (1-span), fn );
-
-    const overtow = span => fn => x =>
-        x > span
-        ? 2 - fn(x)
-        : scale(0, fn(2 - span), x * (2-span), fn);
-
-    const combine = f => g => x => (f(x) + g(x)) / 2;
-
-    // https://math.stackexchange.com/questions/121720/ease-in-out-function
-    const slope = alpha => x => {
-        if (x < 0) return 0;
-        if (x > 1) return 1;
-        const nom = Math.pow(x,alpha);
-        return nom / (nom + Math.pow(1-x, alpha));
-    };
-
-    const easeBoth = slope(1.3);
-
-    const easeIn = fraction =>
-        fraction < 0.5
-        ? easeBoth(fraction)
-        : linear  (fraction);
-
-    const easeOut = fraction =>
-        fraction > 0.5
-        ? easeBoth(fraction)
-        : linear  (fraction);
-
-
-    // scale results of a function 0..1 to values between begin and end
-    const scale = (beginValue, endValue, fraction, fn) =>
-        beginValue + (endValue - beginValue) * fn(fraction);
-
-    const animate = (beginValue, endValue, tweening, millisecs, callback) => {
-        let start = null;
-        function paint(timestamp) {
-          if (!start) start = timestamp;
-          const progress = timestamp - start;
-          const fraction = progress / millisecs;
-          const value = scale(beginValue, endValue, fraction, tweening);
-          callback(value);
-          if (progress < millisecs) {
-            window.requestAnimationFrame(paint);
-          } else {
-            callback(endValue);
-          }
-        }
-        callback(beginValue);
-        window.requestAnimationFrame(paint);
-    };
 
     const bounceLeft  = undertow(0.2)(linear);
     const bounceRight = overtow(0.8)(linear);
@@ -100,12 +45,22 @@ Wiggle
     const wiggle      = combine(easeBoth)(bounce);
     // const wiggle      = bounce;
 
-    animate(0,   1000, linear,   2000, value => toMove1.style.transform = 'translateX(' + value + 'px)');
-    animate(0,   1000, easeIn,   2000, value => toMove2.style.transform = 'translateX(' + value + 'px)');
-    animate(0,   1000, easeBoth, 2000, value => toMove3.style.transform = 'translateX(' + value + 'px)');
-    animate(0,   1000, easeOut,  2000, value => toMove4.style.transform = 'translateX(' + value + 'px)');
-    animate(500, 1000, linear,   2000, value => toMove5.style.transform = 'translateX(' + value + 'px)');
-    animate(0  , 1000, wiggle,   2000, value => toMove6.style.transform = 'translateX(' + value + 'px)');
+    animate(linear,   2000, value => toMove1.style.transform = 'translateX(' + value*1000 + 'px)');
+    animate(easeIn,   2000, value => toMove2.style.transform = 'translateX(' + value*1000 + 'px)');
+    animate(easeBoth, 2000, value => toMove3.style.transform = 'translateX(' + value*1000 + 'px)');
+    animate(easeOut,  2000, value => toMove4.style.transform = 'translateX(' + value*1000 + 'px)');
+    animate(linear,   2000, value => toMove5.style.transform = 'translateX(500px) translateX(' + value*500 + 'px)');
+    animate(wiggle,   2000, value => toMove6.style.transform = 'translateX(' + value*1000 + 'px)');
+
+    animate(quadBezier(0,0)(0.5,1)(1,0), 2000,
+            value => {
+               toMove7.style.transform = 'translateX(' + value[0]*1000 + 'px) translateY(' + value[1]*200 + 'px)'
+            });
+
+    animate(cubeBezier(0,0)(0.33,1)(0.66,-1)(1,0), 2000,
+            value => {
+               toMove8.style.transform = 'translateX(' + value[0]*1000 + 'px) translateY(' + value[1]*200 + 'px)'
+            });
 
 </script>
 
