@@ -59,7 +59,7 @@ const animate = (tweening, millisecs, callback) => {
 
 
 const interpol = (beginValue, endValue, fraction) =>
-    beginValue + (endValue - beginValue) * fraction;
+    beginValue + (endValue - beginValue) * (fraction < 1 ? fraction : 1);
 
 const interPoint = (x1, y1) => (x2, y2) => fraction =>
     [interpol(x1, x2, fraction), interpol(y1, y2, fraction) ];
