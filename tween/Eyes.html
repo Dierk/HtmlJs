@@ -34,19 +34,21 @@
     const eyeView = id => `
     <svg id="${id}" viewBox="0 0 120 120">
       <defs>
-        <filter id="shadow1" width="150%" height="150%">
-          <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation="5" />
-          <feOffset dx="0" dy="8" in="blur" result="offsetBlur" />
-          <feMerge>
-            <feMergeNode in="offsetBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <filter id="shadow" width="140" height="140">
+          <feGaussianBlur in="SourceAlpha" result="blur-out"   stdDeviation="3" />
+          <feOffset       in="blur-out"    result="the-shadow" dx="0" dy="8"/>
+          <feColorMatrix  in="the-shadow"  result="color-out"  type="matrix"
+                            values="0 0 0 0  0
+                                    0 0 0 0  0
+                                    0 0 0 0  0
+                                    0 0 0 .5 0"/>
+          <feBlend        in="SourceGraphic" in2="color-out" mode="normal"/>
         </filter>
       </defs>
       <radialGradient id="gradient1" gradientUnits="objectBoundingBox" cx="50%" cy="50%" r="50%">
-        <stop offset="38%" stop-color="#000000" stop-opacity="1" />
-        <stop offset="46%" stop-color= "#073F80" stop-opacity="1" />
-        <stop offset="90%" stop-color="#8EC0DD" stop-opacity="1" />
+        <stop offset= "38%" stop-color="#000000" stop-opacity="1" />
+        <stop offset= "46%" stop-color="#073F80" stop-opacity="1" />
+        <stop offset= "90%" stop-color="#8EC0DD" stop-opacity="1" />
         <stop offset="100%" stop-color="#2F3A46" stop-opacity="1" />
       </radialGradient>
       <g id="${id}_iris">
@@ -54,11 +56,11 @@
         <ellipse cx="50" cy="50" rx="7"  ry="7"  opacity="1" fill="#FFFFFF" fill-opacity="0.8"/>
       </g>
       <g id="${id}_openLids">
-        <path d="M0 60 A60,60 0 0,1 120,60 A60,30 0 0,0 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" filter="url(#shadow1)" />
-        <path d="M0 60 A60,60 0 0,0 120,60 A60,40 0 0,1 0,60Z " opacity="1" fill="#F4CB76" fill-opacity="1" />
+        <path d="M0 60 A60,60 0 0,1 120,60 A60,30 0 0,0 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" filter="url(#shadow)" />
+        <path d="M0 60 A60,60 0 0,0 120,60 A60,40 0 0,1 0,60 Z" opacity="1" fill="#F4CB76" fill-opacity="1" />
       </g>
       <g id="${id}_closeLid">
-        <path d="M0 60 A60,60 0 0,1 120,60 A60,30 0 0,1 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" filter="url(#shadow1)" />
+        <path d="M0 60 A60,60 0 0,1 120,60 A60,40 0 0,1 0,60 Z" opacity="1" fill="#FDDC99" fill-opacity="1" />
       </g>
     </svg>
     `;
@@ -77,7 +79,7 @@
 
         setInterval( evt => {
             closeLidLayer.style.opacity = 1;
-            setTimeout(evt => closeLidLayer.style.opacity = 0, 100)
+            setTimeout(evt => closeLidLayer.style.opacity = 0, 300)
 
         }, 5 * 1000);
 
