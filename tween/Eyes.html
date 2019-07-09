@@ -33,18 +33,18 @@
 
     const eyeView = id => `
     <svg id="${id}" viewBox="0 0 120 120">
-      <defs>
-        <filter id="shadow" width="140" height="140">
-          <feGaussianBlur in="SourceAlpha" result="blur-out"   stdDeviation="3" />
-          <feOffset       in="blur-out"    result="the-shadow" dx="0" dy="8"/>
-          <feColorMatrix  in="the-shadow"  result="color-out"  type="matrix"
-                            values="0 0 0 0  0
-                                    0 0 0 0  0
-                                    0 0 0 0  0
-                                    0 0 0 .5 0"/>
-          <feBlend        in="SourceGraphic" in2="color-out" mode="normal"/>
-        </filter>
-      </defs>
+
+      <filter id="shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+        <feOffset       dx="0" dy="8" />
+        <feColorMatrix  type="matrix"
+                        values="0 0 0 0  0
+                                0 0 0 0  0
+                                0 0 0 0  0
+                                0 0 0 .5 0"/>
+        <feBlend        in="SourceGraphic" mode="normal"/>
+      </filter>
+
       <radialGradient id="gradient1" gradientUnits="objectBoundingBox" cx="50%" cy="50%" r="50%">
         <stop offset= "38%" stop-color="#000000" stop-opacity="1" />
         <stop offset= "46%" stop-color="#073F80" stop-opacity="1" />
