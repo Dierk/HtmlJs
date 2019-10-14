@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        :root {
+            margin:     0;
+            padding:    0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", "sans-serif";
+        }
+
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .rainbow {
+            /*display: inline-block;*/
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            background: lightblue;
+            padding: 1em;
+            border-radius: 2em;
+            position: relative;
+            z-index: 0;
+        }
+
+        .rainbow::before {
+            content: '';
+            background: linear-gradient(90deg, blue, green, yellow, orange, red, violet);
+            filter: blur(0.5em);
+            position: absolute;
+            top:    0px;
+            bottom: 0px;
+            left:   0px;
+            right:  0px;
+            z-index: -1;
+            border-radius: 2em;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<main>
+    <div><a class="rainbow" href="#">Button</a></div>
+</main>
+
+
+
+</body>
+
+</html>
