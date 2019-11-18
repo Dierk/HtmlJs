@@ -1,5 +1,5 @@
 // cmp alternative: https://css-tricks.com/emulating-css-timing-functions-javascript/
-// gsap, greensock, anime
+// gsap, greensock, anime, svgator
 
 const linear = x => x;
 
