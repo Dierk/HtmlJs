@@ -50,6 +50,11 @@
             /* assume we have display: block; or inline-block*/
             position:relative;
         }
+        .glossy:hover::before {
+            opacity: 0.3;
+            background-size: var(--glossy-stretch, 600%) 200%;
+            transition: all .7s;
+        }
         .glossy::before {
             content: ' ';
             position: absolute;
@@ -59,8 +64,8 @@
             background-image: radial-gradient(circle at 100% 100%, transparent 0%, transparent 90%, white 90%, white 100%);
             top: 0;
             left: 0;
-            opacity: .3;
-            background-size: var(--glossy-stretch, 600%) 200%;
+            opacity: 0;
+            background-size: 100% 100%;
         }
 
     </style>
