@@ -4,6 +4,7 @@ Experiments with HTML and JavaScript
 see HTML files e.g.
 - [All Tests Report](https://dierk.github.io/HtmlJs/allTests.html)
 - [All Module Tests](https://dierk.github.io/HtmlJs/allModuleTests.html)
+- [Ball](https://dierk.github.io/HtmlJs/ball/ball.html)
 - [Snake](https://dierk.github.io/HtmlJs/snake/snake.html)
 - [Florian](https://dierk.github.io/HtmlJs/florian/Snake.html)
 - [Async Counter](https://dierk.github.io/HtmlJs/asyncCounter.html)
