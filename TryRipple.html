@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        :root {
+            margin:     0;
+            padding:    0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", "sans-serif";
+        }
+
+        main {
+            display:            flex;
+            flex-direction:     column;
+            justify-content:    center;
+            min-height:         100vh;
+        }
+
+        button.ripple {
+            margin:         auto;
+            text-transform: uppercase;
+            letter-spacing: .5em;
+            transform:      scale(3);
+            background:     linear-gradient(135deg, lightblue, dodgerblue, lightblue);
+            position:       relative;
+            --ripple-radius:      0%;
+            --ripple-x:     0px;
+            --ripple-y:     0px;
+        }
+
+        button.clicked::before {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            opacity: .7;
+            background-image: radial-gradient(
+                    circle farthest-side at var(--ripple-x) var(--ripple-y),
+                    white,
+                    white var(--ripple-radius),
+                    transparent 100%);
+            background-repeat: no-repeat;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<main>
+        <button class="ripple" >Ripple</button>
+        <button class="ripple" >Ripple</button>
+
+</main>
+
+<script>
+    const buttons = document.querySelectorAll("button.ripple");
+    buttons.forEach( button => {
+        button.onclick = event => {
+            button.style.setProperty("--ripple-x", event.offsetX+"px");
+            button.style.setProperty("--ripple-y", event.offsetY+"px");
+            button.classList.add("clicked");
+            let pct = 0;
+            const handle = setInterval( _ => {
+                button.style.setProperty("--ripple-radius", pct+"%");
+                pct += 5;
+                if (pct > 100) {
+                    clearInterval(handle);
+                    button.classList.remove("clicked");
+                }
+            }, 300 / 20);
+        }
+    })
+
+</script>
+
+</body>
+
+</html>
