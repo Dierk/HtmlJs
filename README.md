@@ -17,4 +17,4 @@ see HTML files e.g.
 - [Clifford Attractors](https://dierk.github.io/HtmlJs/concept/View.html)
 - [Dartboard](https://dierk.github.io/HtmlJs/dartboard/View.html)
 - [CSS Collapse Section](https://dierk.github.io/HtmlJs/TryCollapse.html)
-- [Tweening](https://dierk.github.io/tween/View.html)
+- [Tweening](https://dierk.github.io/HtmlJs/tween/View.html)
