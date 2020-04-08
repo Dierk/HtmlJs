@@ -16,7 +16,7 @@ const machGross = (tisch, prozent) => {
 };
 const ball = {rechts:50, unten:50};
 const rechts = wieviel => x => {
-    if (x > tisch.width) { wieviel = -wieviel }
+    if (x > 270 - 5 - 3 ) { wieviel = -wieviel }
     if (x < 0)           { wieviel = -wieviel }
     return x + wieviel
 };
@@ -38,3 +38,14 @@ const bewege = (ball, bewegung) => {
     }, 1000 / 50 );
 
 };
+
+const machSchläger = () => {
+
+
+    zeichenflaeche.fillStyle = rot;
+    zeichenflaeche.beginPath();
+    zeichenflaeche.fillRect( 270, 10, 20, 40);
+    zeichenflaeche.fill();
+
+    // alert("Hallo Florian, ich habe gerade einen Schläger für Dich gemacht! 😎 ");
+}
