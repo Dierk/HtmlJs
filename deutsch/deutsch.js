@@ -40,12 +40,23 @@ const bewege = (ball, bewegung) => {
 };
 
 const machSchläger = () => {
-
-
     zeichenflaeche.fillStyle = rot;
     zeichenflaeche.beginPath();
     zeichenflaeche.fillRect( 270, 10, 20, 40);
     zeichenflaeche.fill();
-
     // alert("Hallo Florian, ich habe gerade einen Schläger für Dich gemacht! 😎 ");
 }
+
+const taste = buchstabe => buchstabe;
+const schläger_hoch     = () => alert("ich schiebe jetzt den Schläger hoch!");
+const schläger_runter   = () => alert("ich schiebe jetzt den Schläger runter!");
+
+const immer_wenn = (ereignis, was_gemacht_werden_soll) => {
+    window.addEventListener("keydown", event => {
+        // alert("event key ist " + event.key + " ereignis ist " + ereignis )
+
+        if (event.key === ereignis)  {
+            was_gemacht_werden_soll()
+        }
+    });
+};
