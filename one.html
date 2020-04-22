@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+
+    body {
+        margin: 1em;
+    }
+	main {
+		display: grid;
+        grid-template-columns: repeat(10, 10%);
+        min-width: calc(100vh - 2em);
+        min-height: calc(100vh - 2em);
+	}
+	button {
+		max-height: 10vh;
+        /*border-radius: 10%;*/
+	}
+    .field {
+        background: cornflowerblue;
+        color: white;
+        font-weight: bold;
+        border-radius: 20%;
+    }
+
+</style>
+	
+</head>
+<body>
+
+<main id="container">
+</main>
+
+<script>
+    const cellId = (col, row) => col + '_' + row;
+
+    const forAllCells = fn => {
+        for(let col = 1; col<=10; col++) {
+            for(let row = 1; row<=10; row++) {
+                fn(col, row);
+            }
+        }
+    }
+
+    forAllCells( (col, row) =>
+        container.innerHTML += `<button id='${cellId(col,row)}' onclick="formulaDisplay(${col},${row})"></button>`
+    )
+
+    const formulaDisplay = (maxcol, maxrow) =>
+        forAllCells( (col, row) => {
+             const element = document.getElementById(cellId(col, row));
+             if (col <= maxcol && row <= maxrow) {
+                 element.innerText = "" + col * row;
+                 element.className = "field";
+             } else {
+                 element.innerText = col + ' * ' + row;
+                 element.className = "";
+             }
+        })
+
+    formulaDisplay(0,0);
+
+</script>
+</body>
+</html>
