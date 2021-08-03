@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snake</title>
+<style> 
+
+	h1 {
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.holder {
+		text-align: center;
+        position: relative;
+	}
+	.center {
+		display: inline-block;
+	}
+    .bordered {
+        border: solid 1px lightgray;
+    }
+    #gameover {
+        position: absolute;
+        top: 50%;
+        left: 30%;
+        font-size: 100px;
+        color: red;
+        font-weight: bolder;
+    }
+
+</style>
+	
+</head>
+<body>
+<h1>Snake </h1>
+
+<div class="holder">
+    <canvas id="canvas" class="center bordered" width="800" height="800"></canvas>
+    <div id="gameover" style="display:none;"> GAME OVER !!!</div>
+</div>
+
+<script>
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.fillStyle = "white";
+    const tileWidth   = canvas.width / 16 ;
+    const tileHeight  = tileWidth;
+
+    const colRow2coords = ({col, row}) => ({
+        x: col * tileWidth,
+        y: row * tileHeight
+    });
+    const coords2colRow = ({x, y}) => ({
+        col: Math.floor(x / tileWidth) ,
+        row: Math.floor(y / tileHeight)
+    });
+    const paintTile = ({col, row}) => {
+        const {x,y} = colRow2coords({col,row});
+        context.fillRect(x+1, y+1, tileWidth - 2, tileHeight - 2);
+    };
+
+
+    const snake = [{col:0,row:0}];
+
+    const paint = () => {
+        for (let row=0; row < 16 ; row++) {
+            for (let col = 0; col < 16; col++) {
+                context.fillStyle = "green";
+                paintTile({col,row});
+            }
+        }
+        context.fillStyle = "black";
+        snake.forEach( tile => {
+            paintTile(tile);
+        });
+    }
+    paint();
+
+    const EAST  = {col: 1,row: 0};
+    const SOUTH = {col: 0,row: 1};
+    const WEST  = {col:-1,row: 0};
+    const NORTH = {col: 0,row:-1};
+    let   direction = EAST;
+
+    const intervalNumber = setInterval( () => {
+        snake[0] = {
+            col: snake[0].col + direction.col,
+            row: snake[0].row + direction.row
+        }
+        if (snake[0].col > 15  || snake[0].row > 15 ) {
+            clearInterval(intervalNumber);
+            gameover.style.display = "inherit";
+        }
+        paint();
+    }, 750);
+
+
+    window.addEventListener("keydown", evt => {
+       if (evt.key.toString() === "ArrowRight") {
+           if (direction === EAST) {
+               direction = SOUTH;
+               return;
+           }
+           if (direction === SOUTH) {
+               direction = WEST;
+               return;
+           }
+           if (direction === WEST) {
+               direction =NORTH;
+               return;
+           }
+           if (direction === NORTH) {
+               direction =EAST;
+           }
+       }
+    });
+
+</script>
+</body>
+</html>
