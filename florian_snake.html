@@ -21,10 +21,13 @@
     #gameover {
         position: absolute;
         top: 50%;
-        left: 30%;
+        left: 50%;
         font-size: 100px;
-        color: red;
+        color: orange;
         font-weight: bolder;
+        transform: translateX(-50%) translateY(-50%);
+        background: hsla(120,50%,30%,0.5);
+        padding: 50px;
     }
 
 </style>
@@ -35,7 +38,7 @@
 
 <div class="holder">
     <canvas id="canvas" class="center bordered" width="800" height="800"></canvas>
-    <div id="gameover" style="display:none;"> GAME OVER !!!</div>
+    <div id="gameover" style="display:none;"> GAME OVER !!! :(</div>
 </div>
 
 <script>
