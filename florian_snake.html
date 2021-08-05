@@ -64,6 +64,7 @@
         context.fillRect(x+1, y+1, tileWidth - 2, tileHeight - 2);
     };
 
+    let   apple = {col:7,row:7};
     const snake = [
         {col:2,row:0},
         {col:1,row:0},
@@ -81,8 +82,10 @@
         snake.forEach( tile => {
             paintTile(tile);
         });
-        context.fillStyle = "red";
+        context.fillStyle = "orange";
         paintTile(snake[0]);
+        context.fillStyle = "red";
+        paintTile(apple);
     }
     paint();
 
@@ -107,7 +110,12 @@
             return;
         }
         snake.unshift(snakeHead);
-        snake.pop();
+        if ( snakeHead.col === apple.col && snakeHead.row === apple.row ) {
+            apple.row = Math.floor(Math.random() * 15);
+            apple.col = Math.floor(Math.random() * 15);
+        } else {
+            snake.pop();
+        }
         paint();
     }, 750);
 
