@@ -62,7 +62,11 @@
     };
 
 
-    const snake = [{col:0,row:0}];
+    const snake = [
+
+        {col:1,row:0},
+        {col:0,row:0},
+    ];
 
     const paint = () => {
         for (let row=0; row < 16 ; row++) {
@@ -85,36 +89,61 @@
     let   direction = EAST;
 
     const intervalNumber = setInterval( () => {
-        snake[0] = {
+        const snakeHead = {
             col: snake[0].col + direction.col,
             row: snake[0].row + direction.row
         }
-        if (snake[0].col > 15  || snake[0].row > 15 ) {
+        if (   snake[0].col > 15
+            || snake[0].col <  0
+            || snake[0].row > 15
+            || snake[0].row < 0
+           ) {
             clearInterval(intervalNumber);
-            gameover.style.display = "inherit";
+            gameover.style.display = "initial";
+            return;
         }
+        snake.unshift(snakeHead);
+        snake.pop();
         paint();
     }, 750);
 
 
     window.addEventListener("keydown", evt => {
-       if (evt.key.toString() === "ArrowRight") {
-           if (direction === EAST) {
-               direction = SOUTH;
-               return;
-           }
-           if (direction === SOUTH) {
-               direction = WEST;
-               return;
-           }
-           if (direction === WEST) {
-               direction =NORTH;
-               return;
-           }
-           if (direction === NORTH) {
-               direction =EAST;
-           }
-       }
+
+        if (evt.key.toString() === "ArrowRight") {
+                   if (direction === EAST) {
+                       direction = SOUTH;
+                       return;
+                   }
+                   if (direction === SOUTH) {
+                       direction = WEST;
+                       return;
+                   }
+                   if (direction === WEST) {
+                       direction =NORTH;
+                       return;
+                   }
+                   if (direction === NORTH) {
+                       direction =EAST;
+                   }
+               }
+        if (evt.key.toString() === "ArrowLeft") {
+                   if (direction === SOUTH) {
+                       direction = EAST;
+                       return;
+                   }
+                   if (direction === WEST) {
+                       direction = SOUTH;
+                       return;
+                   }
+                   if (direction === NORTH) {
+                       direction =WEST;
+                       return;
+                   }
+                   if (direction === EAST) {
+                       direction =NORTH;
+                   }
+               }
     });
 
 </script>
