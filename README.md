@@ -11,6 +11,7 @@ see HTML files e.g.
 - [Canvas Animation](https://dierk.github.io/HtmlJs/canvasAnimation.html)
 - [Observables](https://dierk.github.io/HtmlJs/observable/View.html)
 - [Church Encoding](https://dierk.github.io/HtmlJs/church/View.html)
+- [Florian Snake](https://dierk.github.io/HtmlJs/florian_snake.html)
 - [Florian Game](https://dierk.github.io/HtmlJs/florian.html)
 - [Mini React](https://dierk.github.io/HtmlJs/Mini.html)
 - [Custom Component](https://dierk.github.io/HtmlJs/gauge/View.html)
@@ -19,3 +20,5 @@ see HTML files e.g.
 - [CSS Collapse Section](https://dierk.github.io/HtmlJs/TryCollapse.html)
 - [Tweening](https://dierk.github.io/HtmlJs/tween/View.html)
 - [101](https://dierk.github.io/HtmlJs/one.html)
+
+
