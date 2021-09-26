@@ -34,7 +34,7 @@
 	
 </head>
 <body>
-<h1>Snake </h1>
+<h1>Snake (<span id="snakeSize">3</span>)</h1>
 
 <div class="holder">
     <canvas id="canvas" class="center bordered" width="800" height="800"></canvas>
@@ -72,6 +72,7 @@
     ];
 
     const paint = () => {
+        snakeSize.textContent = snake.length
         for (let row=0; row < 16 ; row++) {
             for (let col = 0; col < 16; col++) {
                 context.fillStyle = "green";
