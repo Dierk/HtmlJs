@@ -64,8 +64,8 @@
         context.fillRect(x+1, y+1, tileWidth - 2, tileHeight - 2);
     };
 
-    let   apple = {col:7,row:7};
-    const snake = [
+    let apple = {col:7,row:7};
+    let snake = [
         {col:2,row:0},
         {col:1,row:0},
         {col:0,row:0},
@@ -100,6 +100,7 @@
             col: snake[0].col + direction.col,
             row: snake[0].row + direction.row
         }
+        // did we hit the edges?
         if (   snake[0].col > 15
             || snake[0].col <  0
             || snake[0].row > 15
@@ -109,6 +110,8 @@
             gameover.style.display = "initial";
             return;
         }
+
+
         snake.unshift(snakeHead);
         if ( snakeHead.col === apple.col && snakeHead.row === apple.row ) {
             apple.row = Math.floor(Math.random() * 15);
@@ -117,6 +120,18 @@
             snake.pop();
         }
         paint();
+
+        // did we hit ourselves
+        // snakeHead is in snake
+        const index = snake
+                      .slice(1)
+                      .findIndex( pos => pos.col === snakeHead.col
+                                      && pos.row === snakeHead.row)
+        if (index > 0) {
+            // alert("Aua!Ich dachte das sei ein Apfel!")
+            snake = snake.slice(0, index)
+        }
+
     }, 750);
 
 
