@@ -59,11 +59,12 @@
                                   ")";
                 const radius = (max - p.life) / max * (size / 2) + (size / 2);
 
-                const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
-                gradient.addColorStop(0, color);
-                gradient.addColorStop(1, "transparent");
+                // const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
+                // gradient.addColorStop(0, color);
+                // gradient.addColorStop(1, "transparent");
 
-                stage.fillStyle = gradient;
+                // stage.fillStyle = gradient;
+                stage.fillStyle = color;  // in Safari better use color only or rendering is too slow
                 //Draw the particle as a circle, which gets slightly smaller the longer it's been alive for
 
                 stage.beginPath();
