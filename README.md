@@ -20,5 +20,6 @@ see HTML files e.g.
 - [CSS Collapse Section](https://dierk.github.io/HtmlJs/TryCollapse.html)
 - [Tweening](https://dierk.github.io/HtmlJs/tween/View.html)
 - [101](https://dierk.github.io/HtmlJs/one.html)
+- [Fire](https://dierk.github.io/HtmlJs/Fire.html)
 
 
