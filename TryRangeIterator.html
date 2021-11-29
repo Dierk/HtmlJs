@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+
+
+<main>
+
+</main>
+
+
+
+<script>
+
+    const range = (end, start = 0, stride = 1) => {
+        if (end < start && stride > 0) { // possibly got the sequence wrong
+            [end, start] = [start, end];  // swap param values
+        }
+        if (end > start && stride < 0) { // possibly got the sequence wrong
+            [end, start] = [start, end];  // swap param values
+        }
+        return {
+            [Symbol.iterator]: () => (
+                {
+                    next() {
+                        if (start <= end && stride > 0 || start >= end && stride < 0) {
+                            const current = start;
+                            start += stride;
+                            return {value: current, done: false};
+                        }
+                        return {value: undefined, done: true};
+                    }
+                }
+            )
+        }
+    };
+    for (const value of range(3)) {
+        console.log(value);
+    }
+    for (const value of range(3,2,1)) {
+        console.log(value);
+    }
+    for (const value of range(2,3)) {
+        console.log(value);
+    }
+    for (const value of range(4,6,-2)) {
+        console.log(value);
+    }
+    for (const value of range(6,4,-2)) {
+        console.log(value);
+    }
+    for (const value of range(7)) {
+        console.log(value);
+        break;
+    }
+    console.log("one can only iterate once over a constant iterator");
+    const threetimes = range(3);
+    for (const value of threetimes) {
+        console.log(value);
+    }
+    for (const value of threetimes) {
+        console.log(value);
+    }
+
+</script>
+
+
+</body>
+
+</html>
