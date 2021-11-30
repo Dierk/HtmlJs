@@ -27,6 +27,7 @@
         
         canvas {
             filter: blur(3px);
+            opacity: 95%;
         }
         
         #canvas1 {
@@ -55,18 +56,17 @@
         <canvas id="canvas1" style="background-color: transparent;" width="400" height="400"></canvas>
         <canvas id="canvas2" style="background-color: black;" width="400" height="400"></canvas>
         <canvas id="canvas3" style="background-color: blue;" width="200" height="400"></canvas>
-        <canvas id="canvas4" style="background-color: rgb(115, 230, 115);" width="400" height="100"></canvas>
+        <canvas id="canvas4" style="background-color: transparent;" width="400" height="100"></canvas>
 
         <script>
             const animateFire = canvas => {
-                const width = Number(canvas.width);
+                const width  = Number(canvas.width);
                 const height = Number(canvas.height);
-                const area = width * height;
-                const stage = canvas.getContext("2d");
+                const stage  = canvas.getContext("2d");
                 stage.globalCompositeOperation = "lighter";
-                const size = width * 4 / 100 + height * 4 / 100;
+                const size   = width * 2 / 100 + height * 4 / 100;
                 const particlesPerIteration = width * 4 / 100;
-                const maxTTL = 1000; // max ms that a particle lives
+                const maxTTL = 1000; // max ms that a particle lives, the time from bottom to top
 
 
                 let particles = [];
@@ -90,8 +90,6 @@
                     })
                     particles = particles.filter(particle => particle.ttl > 0);  // clean the outlived
 
-
-                    // todo: we might want to create more particles if more time has passed    
                     for (let i = 1; i < particlesPerIteration; i++) {
                         const p = Particle(i * width / particlesPerIteration, height, maxTTL);
                         particles.push(p);
@@ -99,33 +97,20 @@
 
                     stage.clearRect(0, 0, width, height);
 
-                    //Cycle through all the particles to draw them
-
                     particles.forEach(p => {
                         const fractionToLive = p.ttl / maxTTL;
-                        const fractionLived = 1- fractionToLive;
-
-                        //Set the file colour to an RGBA value where it starts off red-orange, but progressively gets more grey and transparent the longer the particle has been alive for
+                        const fractionLived  = 1 - fractionToLive;
                         const color = "hsla(" +
-                            (60 * fractionToLive) + "," + // 60 down to 0 , yellow to red
-                            (40 + 40 * fractionToLive ) + "%," + // 80 down to 40
-                            (20) + "%," +                       // since lightness comes from overshine, we can keep this low
-                            (0.5 * fractionToLive) +
+                            (60 * fractionToLive) + "," +           // 60 down to 0 , yellow to red
+                            (40 + 40 * fractionToLive ) + "%," +    // 80 down to 40
+                            "20%," +                                // since lightness comes from overshine, we can keep this low
+                            (0.5 * fractionToLive) +                // 50% down to 0
                             ")";
                         const radius = size - size / 2 * fractionLived; // size down to half the size
-
-                        // const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
-                        // gradient.addColorStop(0, color);
-                        // gradient.addColorStop(1, "transparent");
-
-                        // stage.fillStyle = gradient;
-                        stage.fillStyle = color; // in Safari better use color only or rendering is too slow
-                        //Draw the particle as a circle, which gets slightly smaller the longer it's been alive for
-
+                        stage.fillStyle = color;
                         stage.beginPath();
                         stage.arc(p.x, p.y, radius, 0, 2 * Math.PI);
                         stage.fill();
-
                     });
                     requestAnimationFrame(render);
                 }
