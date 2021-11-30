@@ -1,87 +1,134 @@
 <!DOCTYPE HTML>
 <html lang="en">
-<head><title>Working Hours</title>
+
+<head>
+    <title>Working Hours</title>
     <style>
-        body {
-            max-width: 60em;
-            margin: auto;
-            background-color: black;
+        * {
+            /* margin: 0; */
+            /* padding: 0; */
+            box-sizing: border-box;
         }
+        
+        body {
+            /* max-width: 60em; */
+            margin: auto;
+            background-color: rgb(184, 202, 208);
+        }
+        
         main {
             margin: 2em;
+            position: relative;
         }
-
+        
+        fieldset {
+            max-width: 400px;
+        }
+        
         canvas {
             filter: blur(3px);
         }
+        
+        #canvas1 {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* z-index: -1; */
+        }
     </style>
 </head>
+
 <body>
-<main>
-
-    <canvas id="canvas" width="600" height="800"></canvas>
-
-    <script>
-
-        const canvas = document.getElementById("canvas");
-        const width = Number(canvas.width);
-        const height = Number(canvas.height);
-        const stage  = canvas.getContext("2d");
-        stage.globalCompositeOperation = "lighter";
-        let   particles = [];
-        const max = 60;
-        const speed=3;
-        const size=40;
-
-        const Particle = (x, y, dx, dy, life) => ({x, y, dx, dy, life});
-
-        function update() {
-            for (let i = 1; i < 15; i++) {
-                //Adds a particle with random horizontal and vertical speeds
-                const dx = (Math.random() * 3 * speed - speed) / 2;
-                const dy = 0 - Math.random() * 4 * speed;
-                const p = Particle(i * width / 15, height, dx, dy, 0);
-                particles.push(p);
+    <main>
+        <script>
+            for (let i = 0; i < 10; i++) {
+                document.writeln(`        
+                <fieldset>
+                    <input type="text" value="some text">
+                    <input type="submit" value="some button">
+                </fieldset>`);
             }
-
-            stage.clearRect(0, 0, width, height);
-
-            //Cycle through all the particles to draw them
-
-            particles.forEach(p => {
-
-                //Set the file colour to an RGBA value where it starts off red-orange, but progressively gets more grey and transparent the longer the particle has been alive for
-                const color = "hsla(" +
-                                  (60-(p.life * 2))  + "," +
-                                  (100-(p.life/2))  + "%," +
-                                  (60-p.life)  +"%," +
-                                  (((max - p.life) / max) * 0.4) +
-                                  ")";
-                const radius = (max - p.life) / max * (size / 2) + (size / 2);
-
-                // const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
-                // gradient.addColorStop(0, color);
-                // gradient.addColorStop(1, "transparent");
-
-                // stage.fillStyle = gradient;
-                stage.fillStyle = color;  // in Safari better use color only or rendering is too slow
-                //Draw the particle as a circle, which gets slightly smaller the longer it's been alive for
-
-                stage.beginPath();
-                stage.arc(p.x, p.y, radius, 0, 2 * Math.PI);
-                stage.fill();
-
-                p.x += p.dx;
-                p.y = p.y * 1.001 + p.dy;
-                p.life++;
-            });
-            particles = particles.filter( p => p.life < max);
-            requestAnimationFrame( time => update());
-        }
-        update();
+        </script>
 
 
-    </script>
+        <canvas id="canvas1" style="background-color: transparent;" width="400" height="400"></canvas>
+        <canvas id="canvas2" style="background-color: black;" width="400" height="400"></canvas>
+        <canvas id="canvas3" style="background-color: blue;" width="200" height="400"></canvas>
+        <canvas id="canvas4" style="background-color: green;" width="400" height="100"></canvas>
 
-</main></body>
+        <script>
+            const animateFire = canvas => {
+                const width = Number(canvas.width);
+                const height = Number(canvas.height);
+                const stage = canvas.getContext("2d");
+                stage.globalCompositeOperation = "lighter";
+                const size = 40;
+                const max = 60;
+                const speed = 3;
+
+                let particles = [];
+                const Particle = (x, y, dx, dy, life) => ({
+                    x,
+                    y,
+                    dx,
+                    dy,
+                    life
+                });
+
+                function update() {
+                    for (let i = 1; i < 15; i++) {
+                        //Adds a particle with random horizontal and vertical speeds
+                        const dx = (Math.random() * 3 * speed - speed) / 2;
+                        const dy = 0 - Math.random() * 4 * speed;
+                        const p = Particle(i * width / 15, height, dx, dy, 0);
+                        particles.push(p);
+                    }
+
+                    stage.clearRect(0, 0, width, height);
+
+                    //Cycle through all the particles to draw them
+
+                    particles.forEach(p => {
+
+                        //Set the file colour to an RGBA value where it starts off red-orange, but progressively gets more grey and transparent the longer the particle has been alive for
+                        const color = "hsla(" +
+                            (60 - (p.life * 2)) + "," +
+                            (100 - (p.life / 2)) + "%," +
+                            (60 - p.life) + "%," +
+                            (((max - p.life) / max) * 0.4) +
+                            ")";
+                        const radius = (max - p.life) / max * (size / 2) + (size / 2);
+
+                        // const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
+                        // gradient.addColorStop(0, color);
+                        // gradient.addColorStop(1, "transparent");
+
+                        // stage.fillStyle = gradient;
+                        stage.fillStyle = color; // in Safari better use color only or rendering is too slow
+                        //Draw the particle as a circle, which gets slightly smaller the longer it's been alive for
+
+                        stage.beginPath();
+                        stage.arc(p.x, p.y, radius, 0, 2 * Math.PI);
+                        stage.fill();
+
+                        p.x += p.dx;
+                        p.y = p.y * 1.001 + p.dy; // slightly accelerate vertically
+                        p.life++;
+                    });
+                    particles = particles.filter(p => p.life < max);
+                    requestAnimationFrame(time => update());
+                }
+                update();
+            };
+
+            animateFire(document.getElementById("canvas1"));
+            animateFire(document.getElementById("canvas2"));
+            animateFire(document.getElementById("canvas3"));
+            animateFire(document.getElementById("canvas4"));
+        </script>
+
+    </main>
+</body>
+
 </html>
