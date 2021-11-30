@@ -55,33 +55,45 @@
         <canvas id="canvas1" style="background-color: transparent;" width="400" height="400"></canvas>
         <canvas id="canvas2" style="background-color: black;" width="400" height="400"></canvas>
         <canvas id="canvas3" style="background-color: blue;" width="200" height="400"></canvas>
-        <canvas id="canvas4" style="background-color: green;" width="400" height="100"></canvas>
+        <canvas id="canvas4" style="background-color: rgb(115, 230, 115);" width="400" height="100"></canvas>
 
         <script>
             const animateFire = canvas => {
                 const width = Number(canvas.width);
                 const height = Number(canvas.height);
+                const area = width * height;
                 const stage = canvas.getContext("2d");
                 stage.globalCompositeOperation = "lighter";
-                const size = 40;
-                const max = 60;
-                const speed = 3;
+                const size = width * 4 / 100 + height * 4 / 100;
+                const particlesPerIteration = width * 4 / 100;
+                const maxTTL = 1000; // max ms that a particle lives
+
 
                 let particles = [];
-                const Particle = (x, y, dx, dy, life) => ({
-                    x,
-                    y,
-                    dx,
-                    dy,
-                    life
-                });
+                const Particle = (x, y, ttl) => ({x, y, ttl /* remaining time to live in ms*/});
 
-                function update() {
-                    for (let i = 1; i < 15; i++) {
-                        //Adds a particle with random horizontal and vertical speeds
-                        const dx = (Math.random() * 3 * speed - speed) / 2;
-                        const dy = 0 - Math.random() * 4 * speed;
-                        const p = Particle(i * width / 15, height, dx, dy, 0);
+                const jitter = () => 2 * Math.random() - 1; // random value between -1 and 1
+
+                let lastTimeRendered = Date.now();
+
+                const render = now => {
+                    const msPassedSinceLastRender = now - lastTimeRendered;
+                    lastTimeRendered = now;
+                    const fraction = msPassedSinceLastRender / maxTTL; // fraction of a lifetime that has passed
+
+                    // prepare the next particle data 
+                    particles.forEach((particle, idx) => {
+                        particle.ttl -= msPassedSinceLastRender;
+                        if (particle.ttl < 0) return;
+                        particle.x = particle.x + jitter() * 10;
+                        particle.y = particle.y - (fraction * height);
+                    })
+                    particles = particles.filter(particle => particle.ttl > 0);  // clean the outlived
+
+
+                    // todo: we might want to create more particles if more time has passed    
+                    for (let i = 1; i < particlesPerIteration; i++) {
+                        const p = Particle(i * width / particlesPerIteration, height, maxTTL);
                         particles.push(p);
                     }
 
@@ -90,15 +102,17 @@
                     //Cycle through all the particles to draw them
 
                     particles.forEach(p => {
+                        const fractionToLive = p.ttl / maxTTL;
+                        const fractionLived = 1- fractionToLive;
 
                         //Set the file colour to an RGBA value where it starts off red-orange, but progressively gets more grey and transparent the longer the particle has been alive for
                         const color = "hsla(" +
-                            (60 - (p.life * 2)) + "," +
-                            (100 - (p.life / 2)) + "%," +
-                            (60 - p.life) + "%," +
-                            (((max - p.life) / max) * 0.4) +
+                            (60 * fractionToLive) + "," + // 60 down to 0 , yellow to red
+                            (40 + 40 * fractionToLive ) + "%," + // 80 down to 40
+                            (20) + "%," +                       // since lightness comes from overshine, we can keep this low
+                            (0.5 * fractionToLive) +
                             ")";
-                        const radius = (max - p.life) / max * (size / 2) + (size / 2);
+                        const radius = size - size / 2 * fractionLived; // size down to half the size
 
                         // const gradient = stage.createRadialGradient(p.x, p.y, 1, p.x , p.y , radius*2);
                         // gradient.addColorStop(0, color);
@@ -112,14 +126,10 @@
                         stage.arc(p.x, p.y, radius, 0, 2 * Math.PI);
                         stage.fill();
 
-                        p.x += p.dx;
-                        p.y = p.y * 1.001 + p.dy; // slightly accelerate vertically
-                        p.life++;
                     });
-                    particles = particles.filter(p => p.life < max);
-                    requestAnimationFrame(time => update());
+                    requestAnimationFrame(render);
                 }
-                update();
+                render(Date.now());
             };
 
             animateFire(document.getElementById("canvas1"));
