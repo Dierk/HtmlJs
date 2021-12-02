@@ -77,6 +77,13 @@
     negRange.forEach(console.log);
     negRange.forEach(console.log); // never shown
 
+    for (const value of range(Number.MAX_VALUE)) {
+        if (value < 10_000) continue;        // dropWhile
+        if (value < 10_003 === false) break; // takeWhile
+        console.log(value);
+    }
+
+
 </script>
 
 
