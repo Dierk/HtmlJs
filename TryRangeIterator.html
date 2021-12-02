@@ -73,7 +73,10 @@
         console.log(value);
     }
 
-    range(0,-2,-1).forEach(console.log);
+    const negRange = range(0,-2,-1);
+    negRange.forEach(console.log);
+    negRange.forEach(console.log); // never shown
+
 </script>
 
 
