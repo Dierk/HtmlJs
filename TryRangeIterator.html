@@ -24,7 +24,7 @@
         if (end > start && stride < 0) { // possibly got the sequence wrong
             [end, start] = [start, end];  // swap param values
         }
-        return {
+        const result = {
             [Symbol.iterator]: () => (
                 {
                     next() {
@@ -36,8 +36,14 @@
                         return {value: undefined, done: true};
                     }
                 }
-            )
-        }
+            ),
+            forEach: callback => {
+                for (const i of result) {
+                    callback(i);
+                }
+            }
+        };
+        return result;
     };
     for (const value of range(3)) {
         console.log(value);
@@ -67,6 +73,7 @@
         console.log(value);
     }
 
+    range(0,-2,-1).forEach(console.log);
 </script>
 
 
