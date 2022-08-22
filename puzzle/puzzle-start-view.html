@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle</title>
+    <style>
+        main > div {
+            margin-bottom: 2em;
+        }
+        .cell {
+            width:  2em;
+            height: 2rem;
+        }
+        .board > div.cell {
+            border: 1px solid black;
+            background-color: lightgray;
+        }
+        .piece > div.cell {
+            border: 1px solid slateblue;
+            background-color: burlywood;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            max-width: fit-content;
+        }
+        .piece {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: fit-content;
+        }
+        .pieces {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+
+    </style>
+</head>
+<body>
+<main>
+
+    <div class="board">
+        <script>
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    document.writeln("<" + `div class="cell" id="board-cell-${row}-${col}"> </div` + ">");
+                }
+            }
+        </script>
+    </div>
+    <div class="pieces">
+
+        <script>
+            for (let piece = 0; piece < 4; piece++) {
+                document.writeln("<" + `div class="piece" id="piece-${piece}">`);
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        document.writeln("<" + `div class="cell" id="piece-${piece}-${row}-${col}"> </div` + ">");
+                    }
+                }
+                document.writeln("</div" + ">");
+            }
+        </script>
+    </div>
+</main>
+</body>
+</html>

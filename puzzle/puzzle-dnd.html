@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle</title>
+    <style>
+        main > div {
+            margin-bottom: 2em;
+        }
+        .cell {
+            width:  2em;
+            height: 2rem;
+        }
+        #board > div.cell {
+            border: 1px solid black;
+            background-color: lightgray;
+        }
+        .piece > div.cell {
+            border: 1px solid slateblue;
+            background-color: burlywood;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            max-width: fit-content;
+        }
+        .piece {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: fit-content;
+        }
+        #pieces {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+
+    </style>
+</head>
+<body>
+<main>
+
+    <div id="board">
+        <script>
+            const boardDrop = event => {
+                const data = event.dataTransfer.getData("application/json");
+                const droppedAt = document.elementFromPoint(event.clientX, event.clientY);
+                const [_, boardRow, boardCol] = droppedAt.id.split("-");
+                const {piece, pieceRow, pieceCol} = JSON.parse(data);
+                console.log({boardRow, boardCol, piece, pieceRow, pieceCol});
+            }
+            const boardDragOver = event => {
+                event.preventDefault();
+            }
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    document.writeln("<" + `div class="cell" id="boardCell-${row}-${col}"> </div` + ">");
+                }
+            }
+            const board = document.getElementById("board");
+            board.addEventListener("drop", boardDrop);
+            board.addEventListener("dragover", boardDragOver);
+        </script>
+    </div>
+    <div id="pieces">
+
+        <script>
+            const pieceDragStart = evt => {
+                const draggedAt                      = document.elementFromPoint(evt.clientX, evt.clientY);
+                const [_, piece, pieceRow, pieceCol] = draggedAt.id.split("-");
+                const draggedInfo                    = {piece, pieceRow, pieceCol};
+                // console.log("pieceDragStart", draggedInfo);
+                evt.dataTransfer.setData("application/json", JSON.stringify(draggedInfo));
+            };
+
+            for (let piece = 0; piece < 4; piece++) {
+                document.writeln("<" + `div class="piece" id="piece-${piece}" draggable='true'>`);
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        document.writeln("<" + `div class="cell" id="piece-${piece}-${row}-${col}"> </div` + ">");
+                    }
+                }
+                document.writeln("</div" + ">");
+                document.getElementById(`piece-${piece}`).addEventListener("dragstart", pieceDragStart);
+            }
+        </script>
+    </div>
+</main>
+</body>
+</html>
