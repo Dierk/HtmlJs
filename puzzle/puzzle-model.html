@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle</title>
+    <style>
+        main > div {
+            margin: auto;
+            margin-bottom: 2em;
+        }
+        .cell {
+            width:  2em;
+            height: 2rem;
+        }
+        #board > div.cell {
+            background-color: lightgray;
+        }
+        #board > div.cell.filled {
+            background-color: burlywood;
+        }
+        .piece > div.cell {
+            background-color: transparent;
+        }
+        .piece > div.filled {
+            background-color: burlywood;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            max-width: fit-content;
+        }
+        .piece {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: fit-content;
+            filter: drop-shadow(0 0 3px saddlebrown);
+        }
+        .piece.hidden {
+            display: none;
+        }
+        #pieces {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+
+    </style>
+</head>
+<body>
+<main>
+    <script>
+        const boardModel    =       Array.from({length: 8}, () => Array.from({length: 8}, () => 0));
+        const newPieceCells = () => Array.from({length: 4}, () => Array.from({length: 4}, () => 1));
+        const piecesModel   =       Array.from({length: 7}, () => ({
+            display: true,
+            cells: newPieceCells()
+        }));
+
+        piecesModel[0].cells = [
+            [1, 1, 1, 1],
+            [1, 1, 0, 0],
+            [1, 1, 0, 0],
+            [0, 0, 0, 0]
+        ];
+        piecesModel[1].cells = [
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 0, 1, 1],
+            [1, 1, 1, 1]
+        ];
+        piecesModel[2].cells = [
+            [0, 0, 0, 0],
+            [0, 0, 1, 1],
+            [0, 0, 1, 1],
+            [1, 1, 1, 1]
+        ];
+        piecesModel[3].cells = [
+            [1, 1, 1, 0],
+            [1, 1, 1, 0],
+            [1, 1, 0, 0],
+            [0, 0, 0, 0]
+        ];
+        piecesModel[5].cells = [
+            [1, 1, 1, 1],
+            [1, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+        piecesModel[6].cells = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 1],
+            [0, 1, 1, 1],
+            [1, 1, 1, 1]
+        ];
+
+        const update = () => {
+            boardModel.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellElement     = document.getElementById(`boardCell-${rowIndex}-${colIndex}`);
+                    if (cell === 1) {
+                        cellElement.classList.add('filled');
+                    } else {
+                        cellElement.classList.remove('filled');
+                    }
+                });
+            });
+            piecesModel.forEach((piece, pieceIndex) => {
+                const pieceElement = document.getElementById(`piece-${pieceIndex}`);
+                if (!piece.display) {
+                    pieceElement.classList.add('hidden');
+                    return;
+                }
+                pieceElement.classList.remove('hidden');
+                piece.cells.forEach((row, rowIndex) => {
+                    row.forEach((cell, colIndex) => {
+                        const cellElement     = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
+                        if (cell === 1) {
+                            cellElement.classList.add('filled');
+                        } else {
+                            cellElement.classList.remove('filled');
+                        }
+                    });
+                });
+            });
+        };
+
+    </script>
+
+    <div id="board">
+        <script>
+            const boardDrop = event => {
+                const data = event.dataTransfer.getData("application/json");
+                const droppedAt = document.elementFromPoint(event.clientX, event.clientY);
+                const [_, boardRow, boardCol] = droppedAt.id.split("-").map(Number);
+                let {piece, pieceRow, pieceCol} = JSON.parse(data);
+                [piece, pieceRow, pieceCol] = [piece, pieceRow, pieceCol].map(Number); // string to number
+                // console.log({boardRow, boardCol, piece, pieceRow, pieceCol});
+                const startRow = boardRow - pieceRow;
+                const startCol = boardCol - pieceCol;
+                if (startRow < 0 || startCol < 0 || startRow > 4 || startCol > 4) { // must become more flexible
+                    return;
+                }
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        boardModel[startRow + row][startCol + col] += piecesModel[piece].cells[row][col];
+                    }
+                }
+                piecesModel[piece].display = false;
+                update();
+            }
+            const boardDragOver = event => {
+                event.preventDefault();
+            }
+            boardModel.forEach((rowModel, row) =>
+                rowModel.forEach((_, col) =>
+                    document.writeln("<" + `div class="cell" id="boardCell-${row}-${col}"> </div` + ">")
+            ));
+            const board = document.getElementById("board");
+            board.addEventListener("drop", boardDrop);
+            board.addEventListener("dragover", boardDragOver);
+        </script>
+    </div>
+    <div id="pieces">
+
+        <script>
+            const pieceDragStart = evt => {
+                const draggedAt                      = document.elementFromPoint(evt.clientX, evt.clientY);
+                const [_, piece, pieceRow, pieceCol] = draggedAt.id.split("-");
+                const draggedInfo                    = {piece, pieceRow, pieceCol};
+                // console.log("pieceDragStart", draggedInfo);
+                evt.dataTransfer.setData("application/json", JSON.stringify(draggedInfo));
+            };
+
+            piecesModel.forEach((pieceModel, piece) => {
+                document.writeln("<" + `div class="piece" id="piece-${piece}" draggable='true'>`);
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        document.writeln("<" + `div class="cell" id="piece-${piece}-${row}-${col}"> </div` + ">");
+                    }
+                }
+                document.writeln("</div" + ">");
+                document.getElementById(`piece-${piece}`).addEventListener("dragstart", pieceDragStart);
+            });
+
+            update();
+        </script>
+    </div>
+</main>
+</body>
+</html>
