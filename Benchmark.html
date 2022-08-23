@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    const benchmark = f => {
+        const start = (new Date()).getMilliseconds();
+        const x = f();
+        const stop  = (new Date()).getMilliseconds();
+        return stop - start;
+    };
+
+    const count = 1000 * 100;
+
+for (let i = 0; i < 100; i++) {
+
+    const timeObj = benchmark(() => {
+        const obj = {};
+        for (let i = 0; i < count; i++) {
+            obj["key-" + i] = i;
+        }
+        for (let i = 0; i < count; i++) {
+            if (obj["key-" + i] != i) throw new Error();
+        }
+        return obj;
+    });
+
+    document.writeln(timeObj);
+
+    const timeMap = benchmark(() => {
+        const map = new Map();
+        for (let i = 0; i < count; i++) {
+            map.set("key-" + i, i);
+        }
+        for (let i = 0; i < count; i++) {
+            if (map.get("key-" + i) != i) throw new Error();
+        }
+        return map;
+    });
+
+    document.writeln(timeMap);
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
