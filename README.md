@@ -21,5 +21,6 @@ see HTML files e.g.
 - [Tweening](https://dierk.github.io/HtmlJs/tween/View.html)
 - [101](https://dierk.github.io/HtmlJs/one.html)
 - [Fire](https://dierk.github.io/HtmlJs/Fire.html)
+- [Puzzle](https://dierk.github.io/HtmlJs/puzzle/puzzle-model.html)
 
 
