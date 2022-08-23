@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+
+	h1 {
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.holder {
+		text-align: center;
+	}
+	.center {
+		display: inline-block;
+	}
+    .bordered {
+        border: solid 1px lightgray;
+    }
+
+</style>
+	
+</head>
+<body>
+<h1>  Die Kugel darf nicht verbrennen! </h1>
+
+<div class="holder">
+    <canvas id="canvas" class="center bordered" width="800" height="800"></canvas>
+</div>
+
+<script>
+    const squareOf = 3;
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = "white";
+    const tileWidth   = canvas.width / 16 ;
+    const tileHeight  = tileWidth;
+
+    const colRow2coords = ({col, row}) => ({
+        x: col * tileWidth,
+        y: row * tileHeight
+    });
+    const coords2colRow = ({x, y}) => ({
+        col: Math.floor(x / tileWidth) ,
+        row: Math.floor(y / tileHeight)
+    });
+    const paintTile = ({col, row}) => {
+        const {x,y} = colRow2coords({col,row});
+        context.fillRect(x+1, y+1, tileWidth - 2, tileHeight - 2);
+    };
+    const paintBall = ({col, row}) => {
+        const {x,y} = colRow2coords({col,row});
+        context.beginPath();
+        context.arc(x+ tileWidth / 2, y+tileHeight / 2, tileWidth / 2 - 4, 0, 6.3, false);
+        context.fill();
+    };
+
+    function paintInit(size) {
+        context.fillStyle = "lightgrey";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        for (let row=0; row < size ; row++) {
+            for (let col = 0; col < size; col++) {
+                context.fillStyle = "red";
+                paintTile({col,row});
+            }
+        }
+    }
+
+    let pathColRows = [];
+
+    let nextToSelect = 0;
+
+    paintInit(squareOf);
+
+    const guessing = evt => {
+        context.fillStyle = "black";
+        const colRow = coords2colRow({x: evt.offsetX, y: evt.offsetY});
+
+        if ( colRow.col === pathColRows[nextToSelect].col &&
+             colRow.row === pathColRows[nextToSelect].row) {
+            paintBall(colRow);
+            nextToSelect++;
+        } else {
+            nextToSelect = 0;
+            paintInit(squareOf);
+        }
+    };
+
+    let lastColRow = {col: squareOf-1, row:0};
+
+    const preparing = evt => {
+
+        const colRow = coords2colRow({x: evt.offsetX, y: evt.offsetY});
+
+        if(Math.abs(colRow.col - lastColRow.col) > 1 || Math.abs(colRow.row - lastColRow.row) > 1) {
+            return;
+        }
+        lastColRow = colRow;
+
+        pathColRows.push(colRow);
+
+        context.fillStyle = "blue";
+        paintBall(colRow);
+
+        if ( colRow.col === 0 &&
+             colRow.row === squareOf-1) {
+            paintInit(squareOf);
+            canvas.onclick = guessing;
+        }
+    };
+    canvas.onclick = preparing;
+
+</script>
+</body>
+</html>
