@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Null Safe </title>
+
+</head>
+<body>
+
+
+<script>
+
+    const range = ({step=1, from=0, to}) => (
+        {   [Symbol.iterator] :()=> (
+                {   next :()=> {
+                        const result = {value: from, done: from > to};
+                        from += step;
+                        return result;
+                 }  }
+            )
+        });
+    for(const x of range({to:2})) {
+        console.log(x);
+    }
+
+    const to = x => range({to:x});
+    const [a,b,c] = to(3);
+    console.log(a,b,c);
+    const [...ns] = to(2);
+    console.log(ns);
+    for(const x of to(4)) {
+        console.log(x);
+    }
+
+</script>
+
+</body>
+</html>
