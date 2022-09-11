@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle</title>
+    <style>
+        main > div {
+            margin: auto;
+            margin-bottom: 2em;
+        }
+        .cell {
+            width:  2em;
+            height: 2rem;
+        }
+        #board > div.cell {
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #board > div.cell.filled {
+            background-color: burlywood;
+        }
+        .piece > div.cell {
+            background-color: transparent;
+        }
+        .piece > div.filled {
+            background-color: burlywood;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            max-width: fit-content;
+        }
+        .piece {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: fit-content;
+            filter: drop-shadow(0 0 3px saddlebrown);
+        }
+        .piece.hidden {
+            display: none;
+        }
+        #pieces {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+
+    </style>
+    <script src="starter.js" type="module"></script>
+</head>
+<body>
+<main>
+
+    <div id="board">
+    </div>
+
+    <div id="pieces">
+    </div>
+
+</main>
+</body>
+</html>
