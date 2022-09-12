@@ -12,14 +12,20 @@
             margin-bottom: 2em;
         }
         .cell {
-            width:  2em;
-            height: 2rem;
+            width:  2.4em;
+            height: 2.4em;
+        }
+        #board {
+            filter: drop-shadow(0 0 4px saddlebrown);
         }
         #board > div.cell {
-            background-color: lightgray;
+            background-color: floralwhite;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        #board > div.cell.omit {
+            background-color: transparent;
         }
         #board > div.cell.filled {
             background-color: var(--piece-base-color);

@@ -4,7 +4,7 @@
 
 import {piecesModel, boardModel} from "./model.js";
 
-export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell, canDrop };
+export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell, canDrop, removePieceAt };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
 
@@ -51,6 +51,23 @@ const flip = piece =>
 
 const flipPiece = pieceIndex => {
     piecesModel[pieceIndex].cells = flip(piecesModel[pieceIndex].cells);
+}
+
+/** @private */
+const removePiece = pieceIndex => {
+    forEachBoardCell((cell, row, col) => {
+        if (cell === pieceIndex) {
+            boardModel[row][col] = undefined;
+        }
+    });
+    piecesModel[pieceIndex].display = true; // we removed the piece from the board, show again in the list of pieces
+}
+
+const removePieceAt = (row, col) => {
+    const pieceIndex = boardModel[row][col];
+    if (pieceIndex !== undefined) {
+        removePiece(pieceIndex);
+    }
 }
 
 const dropPieceOnBoard = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex) =>

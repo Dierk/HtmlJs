@@ -2,7 +2,7 @@
  * @module controllerTest
  */
 
-import {leftTurn, flip, canDrop, dropPieceOnBoard} from "./controller.js";
+import {leftTurn, flip, canDrop, dropPieceOnBoard, removePieceAt} from "./controller.js";
 
 const test = predicate => {
     document.getElementById("out").textContent += predicate ? " _" : " x";
@@ -57,6 +57,9 @@ test(canDrop(5,0,6,2,0) === false); // not below the entries
 dropPieceOnBoard(0,0,0,0,0);        // after dropping a piece
 test(canDrop(0,0,0,0,0) === false); // I can't drop it again
 test(canDrop(1,0,0,0,0) === false); // or overlapping
+
+removePieceAt(0,1);                 // after removing the piece again
+test(canDrop(0,0,0,0,0));           // we can drop again
 
 
 

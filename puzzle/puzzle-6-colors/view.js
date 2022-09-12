@@ -2,9 +2,9 @@
  * @module view
  */
 
-import {canDrop, dropPieceOnBoard, forEachPiece, forEachBoardCell, leftTurnPiece, flipPiece} from "./controller.js";
+import {canDrop, dropPieceOnBoard, forEachPiece, forEachBoardCell, leftTurnPiece, flipPiece, removePieceAt } from "./controller.js";
 
-export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop };
+export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack };
 
 const boardView = boardRoot => {
     const boardBackground = [
@@ -18,7 +18,8 @@ const boardView = boardRoot => {
     ];
     boardBackground.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            boardRoot.innerHTML += `<div class="cell" id="boardCell-${rowIndex}-${colIndex}">${cell}</div>`;
+            const mayOmit = cell === ' ' ? ' omit' : '';
+            boardRoot.innerHTML += `<div class="cell${mayOmit}" id="boardCell-${rowIndex}-${colIndex}">${cell}</div>`;
         })
     })
 };
@@ -73,6 +74,16 @@ const bindPiecesDragStart = () => {
     });
 }
 
+const bindBoardTakeBack = boardElement => {
+    boardElement.querySelectorAll('.cell').forEach(cellElement => {
+        cellElement.addEventListener('click', evt => {
+            const [_, rowIndex, colIndex] = cellElement.id.split("-").map(Number);
+            removePieceAt(rowIndex, colIndex);
+            update();
+        })
+    });
+}
+
 const bindBoardDrop = boardElement => {
     const boardDrop = event => {
         const data = event.dataTransfer.getData("application/json");
@@ -96,8 +107,7 @@ function updateBoard() {
             cellElement.classList.add(`filled`);
             cellElement.classList.add(`piece-color-${mayPieceIndex}`);
         } else {
-            cellElement.classList.remove(`filled`);
-            cellElement.classList.remove(`piece-color-${mayPieceIndex}`);
+            cellElement.setAttribute('class', 'cell');
         }
     });
 }
