@@ -90,12 +90,14 @@ const bindBoardDrop = boardElement => {
 }
 
 function updateBoard() {
-    forEachBoardCell((cell, rowIndex, colIndex) => {
+    forEachBoardCell((mayPieceIndex, rowIndex, colIndex) => {
         const cellElement = document.getElementById(`boardCell-${rowIndex}-${colIndex}`);
-        if (cell !== undefined) {
-            cellElement.classList.add('filled');
+        if (mayPieceIndex !== undefined) {
+            cellElement.classList.add(`filled`);
+            cellElement.classList.add(`piece-color-${mayPieceIndex}`);
         } else {
-            cellElement.classList.remove('filled');
+            cellElement.classList.remove(`filled`);
+            cellElement.classList.remove(`piece-color-${mayPieceIndex}`);
         }
     });
 }
@@ -112,9 +114,11 @@ function updatePieces() {
             row.forEach((cell, colIndex) => {
                 const cellElement = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
                 if (cell === 1) {
-                    cellElement.classList.add('filled');
+                    cellElement.classList.add(`filled`);
+                    cellElement.classList.add(`piece-color-${pieceIndex}`);
                 } else {
-                    cellElement.classList.remove('filled');
+                    cellElement.classList.remove(`filled`);
+                    cellElement.classList.remove(`piece-color-${pieceIndex}`);
                 }
             });
         });

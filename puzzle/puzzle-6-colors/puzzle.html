@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Puzzle</title>
     <style>
+        main {
+            --piece-base-color: #f3cf45;
+        }
         main > div {
             margin: auto;
             margin-bottom: 2em;
@@ -19,13 +22,13 @@
             align-items: center;
         }
         #board > div.cell.filled {
-            background-color: burlywood;
+            background-color: var(--piece-base-color);
         }
         .piece > div.cell {
             background-color: transparent;
         }
         .piece > div.filled {
-            background-color: burlywood;
+            background-color: var(--piece-base-color);
         }
         #board {
             display: grid;
@@ -40,6 +43,30 @@
         }
         .pieceholder.hidden {
             display: none;
+        }
+        .piece-color-0 {
+            filter: hue-rotate(calc(0 * 360deg / 8));
+        }
+        .piece-color-1 {
+            filter: hue-rotate(calc(1 * 360deg / 8));
+        }
+        .piece-color-2 {
+            filter: hue-rotate(calc(2 * 360deg / 8));
+        }
+        .piece-color-3 {
+            filter: hue-rotate(calc(3 * 360deg / 8));
+        }
+        .piece-color-4 {
+            filter: hue-rotate(calc(4 * 360deg / 8));
+        }
+        .piece-color-5 {
+            filter: hue-rotate(calc(5 * 360deg / 8));
+        }
+        .piece-color-6{
+            filter: hue-rotate(calc(6 * 360deg / 8));
+        }
+        .piece-color-7 {
+            filter: hue-rotate(calc(7 * 360deg / 8));
         }
         #pieces {
             display: flex;
