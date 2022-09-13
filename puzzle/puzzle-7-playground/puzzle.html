@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle</title>
+    <style>
+        main {
+            --piece-base-color: #f3cf45;
+        }
+        main > div {
+            margin: auto;
+            margin-bottom: 2em;
+        }
+        .cell {
+            width:  2.4em;
+            height: 2.4em;
+        }
+        #board {
+            filter: drop-shadow(0 0 4px saddlebrown);
+        }
+        #board > div.cell {
+            background-color: floralwhite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #board > div.cell.omit {
+            background-color: transparent;
+        }
+        #board > div.cell.filled {
+            background-color: var(--piece-base-color);
+        }
+        .piece > div.cell {
+            background-color: transparent;
+        }
+        .piece > div.filled {
+            background-color: var(--piece-base-color);
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            max-width: fit-content;
+        }
+        .piece {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: fit-content;
+            filter: drop-shadow(0 0 3px saddlebrown);
+        }
+        .pieceholder.hidden {
+            display: none;
+        }
+        .piece-color-0 {
+            filter: hue-rotate(calc(0 * 360deg / 8));
+        }
+        .piece-color-1 {
+            filter: hue-rotate(calc(1 * 360deg / 8));
+        }
+        .piece-color-2 {
+            filter: hue-rotate(calc(2 * 360deg / 8));
+        }
+        .piece-color-3 {
+            filter: hue-rotate(calc(3 * 360deg / 8));
+        }
+        .piece-color-4 {
+            filter: hue-rotate(calc(4 * 360deg / 8));
+        }
+        .piece-color-5 {
+            filter: hue-rotate(calc(5 * 360deg / 8));
+        }
+        .piece-color-6{
+            filter: hue-rotate(calc(6 * 360deg / 8));
+        }
+        .piece-color-7 {
+            filter: hue-rotate(calc(7 * 360deg / 8));
+        }
+        #board > div.cell.filled.piece-color-8,
+        #board > div.cell.filled.piece-color-9,
+        .piece > div.cell.filled.piece-color-8,
+        .piece > div.cell.filled.piece-color-9 {
+            background-color: white;
+            box-shadow: inset 0 0 4px 1px saddlebrown;
+        }
+        #pieces {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+        button {
+            margin: 1em 0 0 1em;
+        }
+
+    </style>
+    <script src="starter.js" type="module"></script>
+</head>
+<body>
+<main>
+
+    <div id="board">
+    </div>
+    <div>
+        <button id="try">Try</button>
+    </div>
+    <div id="pieces">
+    </div>
+
+</main>
+</body>
+</html>
