@@ -5,9 +5,13 @@
 import {piecesModel, boardModel} from "./model.js";
 
 export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
-    canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf };
+    canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf,
+    maxTurns, maxFlips };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
+
+const maxTurns = pieceIndex => piecesModel[pieceIndex].turns;
+const maxFlips = pieceIndex => piecesModel[pieceIndex].flips;
 
 const forEachBoardCell = callback => {
     boardModel.forEach((row, rowIndex) => {

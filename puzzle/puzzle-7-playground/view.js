@@ -11,7 +11,9 @@ import {
     forEachPiece,
     leftTurnPiece,
     removePiece,
-    removePieceAt
+    removePieceAt,
+    maxTurns,
+    maxFlips
 } from "./controller.js";
 
 export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton };
@@ -79,7 +81,7 @@ const animateStraightPlacements = (pieceIndex, onDone = x => x) => {
 
 const animateTurnedPlacements = (pieceIndex, onDone = x => x) => {
     const animateAllTurns = turn => {
-        if (turn >= 4) {
+        if (turn >= maxTurns(pieceIndex)) {
             onDone();
             return;
         }
@@ -93,7 +95,7 @@ const animateTurnedPlacements = (pieceIndex, onDone = x => x) => {
 }
 const animateAllPlacements = (pieceIndex, onDone = x => x) => {
     const animateFlips = flip => {
-        if (flip >= 2) {
+        if (flip >= maxFlips(pieceIndex)) {
             onDone();
             return;
         }
