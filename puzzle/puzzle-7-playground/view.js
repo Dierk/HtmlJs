@@ -91,10 +91,24 @@ const animateTurnedPlacements = (pieceIndex, onDone = x => x) => {
     }
     animateAllTurns(0);
 }
+const animateAllPlacements = (pieceIndex, onDone = x => x) => {
+    const animateFlips = flip => {
+        if (flip >= 2) {
+            onDone();
+            return;
+        }
+        animateTurnedPlacements(pieceIndex, () => {
+            flipPiece(pieceIndex);
+            updatePieces();
+            animateFlips(flip + 1);
+        })
+    }
+    animateFlips(0);
+}
 
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
-        animateTurnedPlacements(0);
+        animateAllPlacements(0);
     })
 }
 
@@ -112,7 +126,7 @@ const bindPiecesLeftFlipTry = piecesRoot => {
         });
         const tryButton = piecesRoot.querySelector(`#piece-try-${pieceIndex}`);
         tryButton.addEventListener('click', () => {
-            animateTurnedPlacements(pieceIndex);
+            animateAllPlacements(pieceIndex);
         });
     });
 }
