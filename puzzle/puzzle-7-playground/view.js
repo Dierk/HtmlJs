@@ -3,15 +3,15 @@
  */
 
 import {
+    candidatePlacements,
     canDrop,
     dropPieceOnBoard,
-    forEachPiece,
-    forEachBoardCell,
-    leftTurnPiece,
     flipPiece,
+    forEachBoardCell,
+    forEachPiece,
+    leftTurnPiece,
     removePiece,
-    removePieceAt,
-    allPlacementsOf, candidatePlacements
+    removePieceAt
 } from "./controller.js";
 
 export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton };
@@ -47,37 +47,40 @@ const piecesView = piecesRoot => {
         result += "</div>" ; // end of piece
         result += `<button id="piece-left-${pieceIndex}">left</button>`;
         result += `<button id="piece-flip-${pieceIndex}">flip</button>`;
+        result += `<button id="piece-try-${pieceIndex}">try</button>`;
         result += "</div>"; // end of pieceholder
     });
     piecesRoot.innerHTML += result ;
-    bindPiecesLeftFlip(piecesRoot);
+    bindPiecesLeftFlipTry(piecesRoot);
     updatePieces();
 };
 
+const animateStraightPlacements = pieceIndex => {
+    const placements = candidatePlacements(pieceIndex);
+    const showPlacementNumber = placementNumber => {
+        if (placementNumber >= placements.length) { return; }
+
+        const {row, col} = placements[placementNumber];
+
+        dropPieceOnBoard(row, 0, col, 0, pieceIndex);
+        update();
+
+        setTimeout(() => {
+            removePiece(pieceIndex);
+            update();
+            showPlacementNumber(placementNumber + 1);
+        }, 100);
+    }
+    showPlacementNumber(0);
+}
+
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
-
-        const placements = candidatePlacements(0);
-        const showPlacementNumber = placementNumber => {
-            if (placementNumber >= placements.length) { return; }
-
-            const {row, col} = placements[placementNumber];
-
-            dropPieceOnBoard(row, 0, col, 0, 0);
-            update();
-
-            setTimeout(() => {
-                const nextPlacementNumber = placementNumber + 1;
-                removePiece(0);
-                update();
-                showPlacementNumber(nextPlacementNumber);
-            }, 100);
-        }
-        showPlacementNumber(0);
+        animateStraightPlacements(0);
     })
 }
 
-const bindPiecesLeftFlip = piecesRoot => {
+const bindPiecesLeftFlipTry = piecesRoot => {
     forEachPiece((_, pieceIndex) => {
         const leftButton = piecesRoot.querySelector(`#piece-left-${pieceIndex}`);
         leftButton.addEventListener('click', () => {
@@ -88,6 +91,10 @@ const bindPiecesLeftFlip = piecesRoot => {
         flipButton.addEventListener('click', () => {
             flipPiece(pieceIndex);
             updatePieces();
+        });
+        const tryButton = piecesRoot.querySelector(`#piece-try-${pieceIndex}`);
+        tryButton.addEventListener('click', () => {
+            animateStraightPlacements(pieceIndex);
         });
     });
 }
