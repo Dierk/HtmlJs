@@ -55,10 +55,13 @@ const piecesView = piecesRoot => {
     updatePieces();
 };
 
-const animateStraightPlacements = pieceIndex => {
+const animateStraightPlacements = (pieceIndex, onDone = x => x) => {
     const placements = candidatePlacements(pieceIndex);
     const showPlacementNumber = placementNumber => {
-        if (placementNumber >= placements.length) { return; }
+        if (placementNumber >= placements.length) {
+            onDone();
+            return;
+        }
 
         const {row, col} = placements[placementNumber];
 
@@ -74,9 +77,24 @@ const animateStraightPlacements = pieceIndex => {
     showPlacementNumber(0);
 }
 
+const animateTurnedPlacements = (pieceIndex, onDone = x => x) => {
+    const animateAllTurns = turn => {
+        if (turn >= 4) {
+            onDone();
+            return;
+        }
+        animateStraightPlacements(pieceIndex, () => {
+            leftTurnPiece(pieceIndex);
+            updatePieces();
+            animateAllTurns(turn + 1);
+        })
+    }
+    animateAllTurns(0);
+}
+
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
-        animateStraightPlacements(0);
+        animateTurnedPlacements(0);
     })
 }
 
@@ -94,7 +112,7 @@ const bindPiecesLeftFlipTry = piecesRoot => {
         });
         const tryButton = piecesRoot.querySelector(`#piece-try-${pieceIndex}`);
         tryButton.addEventListener('click', () => {
-            animateStraightPlacements(pieceIndex);
+            animateTurnedPlacements(pieceIndex);
         });
     });
 }
