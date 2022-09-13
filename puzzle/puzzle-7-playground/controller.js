@@ -5,7 +5,7 @@
 import {piecesModel, boardModel} from "./model.js";
 
 export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
-    canDrop, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf };
+    canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
 
@@ -54,7 +54,6 @@ const flipPiece = pieceIndex => {
     piecesModel[pieceIndex].cells = flip(piecesModel[pieceIndex].cells);
 }
 
-/** @private */
 const removePiece = pieceIndex => {
     forEachBoardCell((cell, row, col) => {
         if (cell === pieceIndex) {

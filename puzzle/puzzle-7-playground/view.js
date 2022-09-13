@@ -9,8 +9,9 @@ import {
     forEachBoardCell,
     leftTurnPiece,
     flipPiece,
+    removePiece,
     removePieceAt,
-    allPlacementsOf
+    allPlacementsOf, candidatePlacements
 } from "./controller.js";
 
 export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton };
@@ -54,27 +55,25 @@ const piecesView = piecesRoot => {
 };
 
 const bindTryButton = buttonElement => {
-    let lastTurn = 0;
-    let lastFlip = 0;
     buttonElement.addEventListener('click', () => {
 
+        const placements = candidatePlacements(0);
         const showPlacementNumber = placementNumber => {
-            const {row, col, turn, flip} = allPlacementsOf(0)[placementNumber];
+            if (placementNumber >= placements.length) { return; }
 
-            if (lastTurn !== turn) {
-                leftTurnPiece(0);
-                lastTurn = turn;
-            }
-            if (lastFlip !== flip) {
-                flipPiece(0);
-                lastFlip = flip;
-            }
+            const {row, col} = placements[placementNumber];
+
             dropPieceOnBoard(row, 0, col, 0, 0);
             update();
+
+            setTimeout(() => {
+                const nextPlacementNumber = placementNumber + 1;
+                removePiece(0);
+                update();
+                showPlacementNumber(nextPlacementNumber);
+            }, 100);
         }
         showPlacementNumber(0);
-
-
     })
 }
 
