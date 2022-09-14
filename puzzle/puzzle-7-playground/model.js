@@ -26,8 +26,8 @@ const boardModel    = [
  * longer displayed in that list. */
 const piecesModel   = Array.from({length: 10}, () => ({
     display: true,
-    turns:   4,     // default number of turns that lead to distinct positions
-    flips:   2,     // default number of flips that lead to distinct positions
+    turns:   4,     // default number of distinct turned positions
+    flips:   2,     // default number of distinct flipped positions
 }));
 
 piecesModel[0].flips = 1;

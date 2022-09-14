@@ -16,7 +16,11 @@ import {
     maxFlips
 } from "./controller.js";
 
+import { Scheduler } from "./dataflow.js";
+
 export { boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton };
+
+const tasks = Scheduler();
 
 const boardView = boardRoot => {
     const boardBackground = [
@@ -57,60 +61,93 @@ const piecesView = piecesRoot => {
     updatePieces();
 };
 
-const animateStraightPlacements = (pieceIndex, onDone = x => x) => {
-    const placements = candidatePlacements(pieceIndex);
-    const showPlacementNumber = placementNumber => {
-        if (placementNumber >= placements.length) {
-            onDone();
-            return;
-        }
-
-        const {row, col} = placements[placementNumber];
-
-        dropPieceOnBoard(row, 0, col, 0, pieceIndex);
-        update();
-
-        setTimeout(() => {
-            removePiece(pieceIndex);
-            update();
-            showPlacementNumber(placementNumber + 1);
+const addAnimationTask = task => {
+    tasks.add( ok => {
+        setTimeout( () => {
+            task();
+            ok();
         }, 100);
-    }
-    showPlacementNumber(0);
+    });
 }
 
-const animateTurnedPlacements = (pieceIndex, onDone = x => x) => {
-    const animateAllTurns = turn => {
-        if (turn >= maxTurns(pieceIndex)) {
-            onDone();
-            return;
-        }
-        animateStraightPlacements(pieceIndex, () => {
-            leftTurnPiece(pieceIndex);
-            updatePieces();
-            animateAllTurns(turn + 1);
-        })
+const animateStraightPlacements = (pieceIndex, postActions = [], postActionsIndex = 0) => {
+
+    if (postActionsIndex >= postActions.length) {
+        return;
     }
-    animateAllTurns(0);
+
+    const placements = candidatePlacements(pieceIndex);
+    placements.forEach(placement => {
+        addAnimationTask( () => {
+            dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
+            updateBoard();
+        });
+        addAnimationTask( () => {
+            removePiece(pieceIndex);
+            updateBoard();
+        });
+    });
+
+    addAnimationTask( () => {
+        postActions[postActionsIndex]();
+        animateStraightPlacements(pieceIndex, postActions, postActionsIndex + 1);
+    });
+
 }
-const animateAllPlacements = (pieceIndex, onDone = x => x) => {
-    const animateFlips = flip => {
-        if (flip >= maxFlips(pieceIndex)) {
-            onDone();
-            return;
+
+const animateTurnedFlippedPlacements = (pieceIndex) => {
+    const actions = [];
+    let flip      = 0;
+    while (flip < maxFlips(pieceIndex)) {
+        let turn = 1;
+        while (turn < maxTurns(pieceIndex)) {
+            actions.push(() => {
+                leftTurnPiece(pieceIndex);
+                update();
+            })
+            turn++;
         }
-        animateTurnedPlacements(pieceIndex, () => {
+        actions.push(() => {
             flipPiece(pieceIndex);
-            updatePieces();
-            animateFlips(flip + 1);
-        })
+            update();
+        });
+        flip++;
     }
-    animateFlips(0);
+    animateStraightPlacements(pieceIndex, actions, 0);
 }
+
+
+const animateNextPiece = (availablePieceIndexes, arrayIndex ) => {
+    if (arrayIndex >= availablePieceIndexes.length) {
+        return;
+    }
+    console.log(">".repeat(arrayIndex+1), "depth", arrayIndex, "piece", availablePieceIndexes[arrayIndex]);
+    animateAllPlacements(
+         availablePieceIndexes[arrayIndex],
+         x => x,
+         continuation => {
+             const nextIndex = arrayIndex + 1;
+             if (nextIndex < availablePieceIndexes.length) { // we have no solution yet
+                 animateNextPiece(availablePieceIndexes, nextIndex);
+                 continuation();
+             }
+         });
+}
+
+const animatePiece = pieceIndex => {
+    animateTurnedFlippedPlacements(pieceIndex);
+}
+
 
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
-        animateAllPlacements(0);
+        const availablePieceIndexes = [];
+        forEachPiece((piece, pieceIndex) => {
+            if (piece.display) {
+                availablePieceIndexes.push(pieceIndex);
+            }
+        });
+        animateNextPiece(availablePieceIndexes, availablePieceIndexes.length - 2);
     })
 }
 
@@ -128,7 +165,7 @@ const bindPiecesLeftFlipTry = piecesRoot => {
         });
         const tryButton = piecesRoot.querySelector(`#piece-try-${pieceIndex}`);
         tryButton.addEventListener('click', () => {
-            animateAllPlacements(pieceIndex);
+            animatePiece(pieceIndex);
         });
     });
 }
