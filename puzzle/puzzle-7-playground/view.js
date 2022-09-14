@@ -72,23 +72,25 @@ const piecesView = piecesRoot => {
     updatePieces();
 };
 
-const addAnimationTask = task => {
+const addAnimationTask = action => {
     if (globalStop) return;
     tasks.add(ok => {
         setTimeout(() => {
-            task();
+            console.debug(action.message);
+            action.task();
             ok();
-        }, 100);
+        }, action.waitMS);
     });
 };
 
-const preorderAnimationTask = task => {
+const preorderAnimationTask = action => {
     if (globalStop) return;
     tasks.preorder(ok => {
         setTimeout(() => {
-            task();
+            console.debug(action.message);
+            action.task();
             ok();
-        }, 100);
+        }, action.waitMS);
     });
 };
 
@@ -98,30 +100,40 @@ const straightPlacementActions = (pieceIndex, postActions = [], postActionsIndex
 
     const placements = candidatePlacements(pieceIndex);
     placements.forEach(placement => {
-        actions.push(() => {
-            dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
-            updateBoard();
-            checkHandleSolved();
+        actions.push({
+            waitMS: 0,
+            message: `drop piece ${pieceIndex} at ${placement.row} ${placement.col}`,
+            task: () => {
+                dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
+                updateBoard();
+                checkHandleSolved();
+            }
         });
 
         nestedAction(actions, pieceIndex);
 
-        actions.push(() => {
-            removePiece(pieceIndex);
-            updateBoard();
+        actions.push({
+            waitMS: 50,
+            message: `remove piece ${pieceIndex} from ${placement.row} ${placement.col}`,
+            task: () => {
+                removePiece(pieceIndex);
+                updateBoard();
+            }
         });
 
     });
 
     if (postActionsIndex < postActions.length) {
-        actions.push(() => {
-            postActions[postActionsIndex]();
-            animateStraightPlacements(pieceIndex, postActions, postActionsIndex + 1, nestedAction);
+        actions.push({
+            waitMS: 0,
+            message: `post action ${postActionsIndex}: ${postActions[postActionsIndex].message}`,
+            task: () => {
+                postActions[postActionsIndex].task();
+                animateStraightPlacements(pieceIndex, postActions, postActionsIndex + 1, nestedAction);
+            }
         });
     }
-
     return actions;
-
 };
 
 const preorderStraightPlacements = (pieceIndex, postActions = [], postActionsIndex = 0, nestedAction = x => x) => {
@@ -144,20 +156,27 @@ function turnedFlippedActions(pieceIndex) {
     while (flip < maxFlips(pieceIndex)) {
         let turn = 1;
         while (turn < maxTurns(pieceIndex)) {
-            actions.push(() => {
-                leftTurnPiece(pieceIndex);
-                updatePieces();
+            actions.push({
+                waitMS:  0,
+                message: `turn ${turn} of piece ${pieceIndex} --------`,
+                task:    () => {
+                    leftTurnPiece(pieceIndex);
+                    updatePieces();
+                }
             });
             turn++;
         }
         flip++;
         if (flip < maxFlips(pieceIndex)) {
-            actions.push(() => {
-                flipPiece(pieceIndex);
-                updatePieces();
+            actions.push({
+                waitMS:0,
+                message: `flip ${flip} of piece ${pieceIndex} ========`,
+                task: () => {
+                    flipPiece(pieceIndex);
+                    updatePieces();
+                }
             });
         }
-
     }
     return actions;
 }
@@ -165,23 +184,6 @@ function turnedFlippedActions(pieceIndex) {
 const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
     const actions = turnedFlippedActions(pieceIndex);
     animateStraightPlacements(pieceIndex, actions, 0, nestedAction);
-};
-
-const animateNextPiece = (availablePieceIndexes, arrayIndex) => {
-    if (arrayIndex >= availablePieceIndexes.length) {
-        return;
-    }
-    console.log(">".repeat(arrayIndex + 1), "depth", arrayIndex, "piece", availablePieceIndexes[arrayIndex]);
-    animateAllPlacements(
-        availablePieceIndexes[arrayIndex],
-        x => x,
-        continuation => {
-            const nextIndex = arrayIndex + 1;
-            if (nextIndex < availablePieceIndexes.length) { // we have no solution yet
-                animateNextPiece(availablePieceIndexes, nextIndex);
-                continuation();
-            }
-        });
 };
 
 const animatePiece = pieceIndex => {
@@ -209,13 +211,16 @@ const bindTryButton = buttonElement => {
             }
             const nextPieceIndex = availablePieceIndexes[nextAvailableArrayIndex];
 
-            actions.push(() => preorderStraightPlacements(nextPieceIndex, turnedFlippedActions(nextPieceIndex), 0, recurseCallback));
-
+            actions.push( {
+                  waitMS:0,
+                  message: `recursed into piece ${nextPieceIndex} <<<<<<<<<`,
+                  task: () =>
+                        preorderStraightPlacements(nextPieceIndex, turnedFlippedActions(nextPieceIndex), 0, recurseCallback)
+            });
         }
 
         const startPieceIndex = availablePieceIndexes[0];
         animateStraightPlacements(startPieceIndex, turnedFlippedActions(startPieceIndex), 0, recurseCallback);
-
 
     });
 };
