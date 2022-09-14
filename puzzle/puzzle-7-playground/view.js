@@ -174,15 +174,21 @@ const bindTryButton = buttonElement => {
                 availablePieceIndexes.push(pieceIndex);
             }
         });
+        const recurseCallback = (actions, pieceIndex) => {
+                        console.log("called", pieceIndex);
+                        if(pieceIndex === 0) {
+                            console.log("callback", pieceIndex);
+                            actions.push(() => preorderStraightPlacements(1, [], 0, recurseCallback));
+                        }
+                        if(pieceIndex === 1) {
+                            console.log("callback", pieceIndex);
+                            actions.push(() => preorderStraightPlacements(2, [], 0, recurseCallback));
+                        }
+                    }
 
-        animateStraightPlacements(0, [], 0,
-            (actions, pieceIndex) => {
-                console.log("called", pieceIndex);
-                if(pieceIndex === 0) {
-                    actions.push(() => preorderStraightPlacements(1, [], 0));
-                }
-            }
-        );
+        animateStraightPlacements(0, [], 0, recurseCallback);
+
+
     });
 };
 
