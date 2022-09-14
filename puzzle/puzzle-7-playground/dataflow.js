@@ -24,8 +24,12 @@ const Scheduler = () => {
         tasks.push(task);
         process();
     }
+    function stop() {
+        tasks.length = 0;
+    }
     return {
         add,
-        preorder
+        preorder,
+        stop
     }
 };

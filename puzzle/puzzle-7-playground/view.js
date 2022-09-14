@@ -13,7 +13,8 @@ import {
     removePiece,
     removePieceAt,
     maxTurns,
-    maxFlips
+    maxFlips,
+    isSolved
 } from "./controller.js";
 
 import {Scheduler} from "./dataflow.js";
@@ -21,6 +22,16 @@ import {Scheduler} from "./dataflow.js";
 export {boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton};
 
 const tasks = Scheduler();
+let   globalStop = false;
+
+const checkHandleSolved = () => {
+    if (isSolved()) {
+        console.log("all pieces placed -> we found a solution!");
+        globalStop = true; // no more new entries
+        tasks.stop();      // remove old entries
+        updatePieces();
+    }
+}
 
 const boardView = boardRoot => {
     const boardBackground = [
@@ -62,6 +73,7 @@ const piecesView = piecesRoot => {
 };
 
 const addAnimationTask = task => {
+    if (globalStop) return;
     tasks.add(ok => {
         setTimeout(() => {
             task();
@@ -71,6 +83,7 @@ const addAnimationTask = task => {
 };
 
 const preorderAnimationTask = task => {
+    if (globalStop) return;
     tasks.preorder(ok => {
         setTimeout(() => {
             task();
@@ -88,6 +101,7 @@ const straightPlacementActions = (pieceIndex, postActions = [], postActionsIndex
         actions.push(() => {
             dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
             updateBoard();
+            checkHandleSolved();
         });
 
         nestedAction(actions, pieceIndex);
@@ -124,7 +138,7 @@ const animateStraightPlacements = (pieceIndex, postActions = [], postActionsInde
     });
 };
 
-const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
+function turnedFlippedActions(pieceIndex) {
     const actions = [];
     let flip      = 0;
     while (flip < maxFlips(pieceIndex)) {
@@ -132,16 +146,24 @@ const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
         while (turn < maxTurns(pieceIndex)) {
             actions.push(() => {
                 leftTurnPiece(pieceIndex);
-                update();
+                updatePieces();
             });
             turn++;
         }
-        actions.push(() => {
-            flipPiece(pieceIndex);
-            update();
-        });
         flip++;
+        if (flip < maxFlips(pieceIndex)) {
+            actions.push(() => {
+                flipPiece(pieceIndex);
+                updatePieces();
+            });
+        }
+
     }
+    return actions;
+}
+
+const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
+    const actions = turnedFlippedActions(pieceIndex);
     animateStraightPlacements(pieceIndex, actions, 0, nestedAction);
 };
 
@@ -168,25 +190,31 @@ const animatePiece = pieceIndex => {
 
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
+
+        globalStop = false;
+
         const availablePieceIndexes = [];
         forEachPiece((piece, pieceIndex) => {
             if (piece.display) {
                 availablePieceIndexes.push(pieceIndex);
             }
         });
-        const recurseCallback = (actions, pieceIndex) => {
-                        console.log("called", pieceIndex);
-                        if(pieceIndex === 0) {
-                            console.log("callback", pieceIndex);
-                            actions.push(() => preorderStraightPlacements(1, [], 0, recurseCallback));
-                        }
-                        if(pieceIndex === 1) {
-                            console.log("callback", pieceIndex);
-                            actions.push(() => preorderStraightPlacements(2, [], 0, recurseCallback));
-                        }
-                    }
 
-        animateStraightPlacements(0, [], 0, recurseCallback);
+        const recurseCallback = (actions, pieceIndex) => {
+            if (globalStop) return;
+            const currentAvailableArrayIndex = availablePieceIndexes.indexOf(pieceIndex);
+            const nextAvailableArrayIndex = currentAvailableArrayIndex + 1;
+            if (nextAvailableArrayIndex >= availablePieceIndexes.length) {
+                return;
+            }
+            const nextPieceIndex = availablePieceIndexes[nextAvailableArrayIndex];
+
+            actions.push(() => preorderStraightPlacements(nextPieceIndex, turnedFlippedActions(nextPieceIndex), 0, recurseCallback));
+
+        }
+
+        const startPieceIndex = availablePieceIndexes[0];
+        animateStraightPlacements(startPieceIndex, turnedFlippedActions(startPieceIndex), 0, recurseCallback);
 
 
     });
@@ -272,7 +300,7 @@ function updatePieces() {
             return;
         }
         pieceElement.classList.remove('hidden');
-        piece.cells.forEach((row, rowIndex) => {
+        piece.cells.forEach((row, rowIndex) => {  // todo: be more selective when to call this (flip, turn)
             row.forEach((cell, colIndex) => {
                 const cellElement = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
                 if (cell === 1) {

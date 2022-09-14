@@ -6,7 +6,7 @@ import {piecesModel, boardModel} from "./model.js";
 
 export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
     canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf,
-    maxTurns, maxFlips };
+    maxTurns, maxFlips, isSolved };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
 
@@ -40,6 +40,11 @@ const leftTurn = piece =>
     );
 
 const leftTurnPiece = pieceIndex => {
+
+    if(piecesModel[pieceIndex].display === false) {
+        console.error("Cannot turn a piece that is on the board");
+    }
+
     piecesModel[pieceIndex].cells = leftTurn(piecesModel[pieceIndex].cells);
 }
 
@@ -55,6 +60,11 @@ const flip = piece =>
     );
 
 const flipPiece = pieceIndex => {
+
+    if(piecesModel[pieceIndex].display === false) {
+        console.error("Cannot flip a piece that is on the board");
+    }
+
     piecesModel[pieceIndex].cells = flip(piecesModel[pieceIndex].cells);
 }
 
@@ -72,6 +82,10 @@ const removePieceAt = (row, col) => {
     if (pieceIndex !== undefined) {
         removePiece(pieceIndex);
     }
+}
+
+const isSolved = () => {
+    return piecesModel.every(piece => piece.display === false);
 }
 
 const dropPieceOnBoard = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex) =>
