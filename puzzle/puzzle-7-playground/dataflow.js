@@ -20,7 +20,12 @@ const Scheduler = () => {
         tasks.unshift(task);
         process();
     }
+    function preorder(task) {
+        tasks.push(task);
+        process();
+    }
     return {
-        add: add,
+        add,
+        preorder
     }
 };
