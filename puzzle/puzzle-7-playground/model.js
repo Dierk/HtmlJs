@@ -30,7 +30,7 @@ const piecesModel   = Array.from({length: 10}, () => ({
     flips:   2,     // default number of distinct flipped positions
 }));
 
-piecesModel[0].flips = 1;
+piecesModel[0].flips = 0;
 piecesModel[0].cells = [
     [1, 1, 1, 0],
     [1, 0, 1, 0],
@@ -67,31 +67,28 @@ piecesModel[5].cells = [
     [1, 1, 0, 0],
     [1, 0, 0, 0]
 ];
-piecesModel[6].turns = 2;
-piecesModel[6].flips = 1;
+piecesModel[6].flips = 0;
 piecesModel[6].cells = [
     [1, 1, 0, 0],
     [1, 1, 0, 0],
     [1, 1, 0, 0],
     [0, 0, 0, 0]
 ];
-piecesModel[7].flips = 1;
+piecesModel[7].flips = 0;
 piecesModel[7].cells = [
     [1, 0, 0, 0],
     [1, 0, 0, 0],
     [1, 1, 1, 0],
     [0, 0, 0, 0]
 ];
-piecesModel[8].turns = 1;
-piecesModel[8].flips = 1;
+piecesModel[8].flips = 0;
 piecesModel[8].cells = [
     [0, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0]
 ];
-piecesModel[9].turns = 1;
-piecesModel[9].flips = 1;
+piecesModel[9].flips = 0;
 piecesModel[9].cells = [
     [0, 0, 0, 0],
     [0, 1, 0, 0],

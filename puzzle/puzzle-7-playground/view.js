@@ -19,7 +19,8 @@ import {
 
 import {Scheduler} from "./dataflow.js";
 
-export {boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton};
+export {boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton,
+       turnedFlippedActions};
 
 const tasks = Scheduler();
 let   globalStop = false;
@@ -104,6 +105,9 @@ const straightPlacementActions = (pieceIndex, postActions = [], postActionsIndex
             waitMS: 0,
             message: `drop piece ${pieceIndex} at ${placement.row} ${placement.col}`,
             task: () => {
+                if (! canDrop(placement.row, 0, placement.col, 0, pieceIndex)) {
+                    console.error("consistency broken, cannot drop piece !");
+                }
                 dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
                 updateBoard();
                 checkHandleSolved();
@@ -122,14 +126,16 @@ const straightPlacementActions = (pieceIndex, postActions = [], postActionsIndex
         });
 
     });
-
     if (postActionsIndex < postActions.length) {
         actions.push({
             waitMS: 0,
             message: `post action ${postActionsIndex}: ${postActions[postActionsIndex].message}`,
             task: () => {
                 postActions[postActionsIndex].task();
-                animateStraightPlacements(pieceIndex, postActions, postActionsIndex + 1, nestedAction);
+                const nextPostActionsIndex = postActionsIndex + 1;
+                if (nextPostActionsIndex < postActions.length) { // no more list recursion after the last post action
+                    animateStraightPlacements(pieceIndex, postActions, nextPostActionsIndex, nestedAction);
+                }
             }
         });
     }
@@ -150,12 +156,11 @@ const animateStraightPlacements = (pieceIndex, postActions = [], postActionsInde
     });
 };
 
-function turnedFlippedActions(pieceIndex) {
+function precalcTurnedFlippedActions(pieceIndex) {
     const actions = [];
-    let flip      = 0;
-    while (flip < maxFlips(pieceIndex)) {
-        let turn = 1;
-        while (turn < maxTurns(pieceIndex)) {
+
+    const addAllTurns = _ => {
+        for (let turn = 0; turn < maxTurns(pieceIndex); turn++) {
             actions.push({
                 waitMS:  0,
                 message: `turn ${turn} of piece ${pieceIndex} --------`,
@@ -164,21 +169,37 @@ function turnedFlippedActions(pieceIndex) {
                     updatePieces();
                 }
             });
-            turn++;
-        }
-        flip++;
-        if (flip < maxFlips(pieceIndex)) {
-            actions.push({
-                waitMS:0,
-                message: `flip ${flip} of piece ${pieceIndex} ========`,
-                task: () => {
-                    flipPiece(pieceIndex);
-                    updatePieces();
-                }
-            });
         }
     }
+    const addFlip = _ => {
+        actions.push({
+            waitMS:  0,
+            message: `flip piece ${pieceIndex} --------`,
+            task:    () => {
+                flipPiece(pieceIndex);
+                updatePieces();
+            }
+        });
+    }
+
+    addAllTurns();
+
+    if (maxFlips(pieceIndex) > 0) {
+        addFlip();
+        addAllTurns();
+        addFlip();
+    }
+
     return actions;
+}
+
+const actionStore = [];
+forEachPiece((pieceModel, pieceIndex) => {
+    actionStore[pieceIndex] = precalcTurnedFlippedActions(pieceIndex);
+})
+
+function turnedFlippedActions(pieceIndex) {
+    return actionStore[pieceIndex];
 }
 
 const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
