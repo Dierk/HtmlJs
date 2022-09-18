@@ -14,7 +14,8 @@ import {
     removePieceAt,
     maxTurns,
     maxFlips,
-    isSolved
+    isSolved,
+    pieceByIndex,
 } from "./controller.js";
 
 import {Scheduler} from "./dataflow.js";
@@ -95,62 +96,63 @@ const preorderAnimationTask = action => {
     });
 };
 
-const straightPlacementActions = (pieceIndex, postActions = [], postActionsIndex = 0, nestedAction = x => x) => {
+const straightPlacementActions = (pieceIndex, postActions = [], nestedAction = x => x) => {
 
     const actions = [];
 
-    const placements = candidatePlacements(pieceIndex);
-    placements.forEach(placement => {
-        actions.push({
-            waitMS: 0,
-            message: `drop piece ${pieceIndex} at ${placement.row} ${placement.col}`,
-            task: () => {
-                if (! canDrop(placement.row, 0, placement.col, 0, pieceIndex)) {
-                    console.error("consistency broken, cannot drop piece !");
+    const addPositionPlacementActions = actions => {
+        const placements = candidatePlacements(pieceIndex);
+        placements.forEach(placement => {
+            actions.push({
+                waitMS: 0,
+                message: `drop piece ${pieceIndex} at ${placement.row} ${placement.col}`,
+                task: () => {
+                    // if (! canDrop(placement.row, 0, placement.col, 0, pieceIndex)) {
+                    //     console.error("consistency broken, cannot drop piece !");
+                    // }
+                    dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
+                    updateBoard();
+                    checkHandleSolved();
                 }
-                dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
-                updateBoard();
-                checkHandleSolved();
-            }
-        });
+            });
 
-        nestedAction(actions, pieceIndex);
+            nestedAction(actions, pieceIndex);
 
-        actions.push({
-            waitMS: 50,
-            message: `remove piece ${pieceIndex} from ${placement.row} ${placement.col}`,
-            task: () => {
-                removePiece(pieceIndex);
-                updateBoard();
-            }
-        });
-
-    });
-    if (postActionsIndex < postActions.length) {
-        actions.push({
-            waitMS: 0,
-            message: `post action ${postActionsIndex}: ${postActions[postActionsIndex].message}`,
-            task: () => {
-                postActions[postActionsIndex].task();
-                const nextPostActionsIndex = postActionsIndex + 1;
-                if (nextPostActionsIndex < postActions.length) { // no more list recursion after the last post action
-                    animateStraightPlacements(pieceIndex, postActions, nextPostActionsIndex, nestedAction);
+            actions.push({
+                waitMS: 0,
+                message: `remove piece ${pieceIndex} from ${placement.row} ${placement.col}`,
+                task: () => {
+                    removePiece(pieceIndex);
+                    updateBoard();
                 }
-            }
+            });
         });
     }
+
+    postActions.forEach(action => {
+        addPositionPlacementActions(actions);
+        actions.push({
+            waitMS: 0,
+            message: `post action : ${action.message}`,
+            task: () => {
+                action.task();
+            }
+        });
+        action.task(); // the last post action gets executed at calculation time but not at interpretation time (?)
+    })
+
     return actions;
 };
 
-const preorderStraightPlacements = (pieceIndex, postActions = [], postActionsIndex = 0, nestedAction = x => x) => {
-    const actions = straightPlacementActions(pieceIndex, postActions, postActionsIndex, nestedAction);
+const preorderStraightPlacements = (pieceIndex, postActions = [], nestedAction = x => x) => {
+    const actions = straightPlacementActions(pieceIndex, postActions, nestedAction);
     actions.reverse().forEach(action => {
         preorderAnimationTask(action);
     });
 };
 
-const animateStraightPlacements = (pieceIndex, postActions = [], postActionsIndex = 0, nestedAction = x => x) => {
-    const actions = straightPlacementActions(pieceIndex, postActions, postActionsIndex, nestedAction);
+const animateStraightPlacements = (pieceIndex, postActions = [], nestedAction = x => x) => {
+    const actions = straightPlacementActions(pieceIndex, postActions, nestedAction);
     actions.forEach(action => {
         addAnimationTask(action);
     });
@@ -166,7 +168,7 @@ function precalcTurnedFlippedActions(pieceIndex) {
                 message: `turn ${turn} of piece ${pieceIndex} --------`,
                 task:    () => {
                     leftTurnPiece(pieceIndex);
-                    updatePieces();
+                    updatePieceOrientation(pieceByIndex(pieceIndex), pieceIndex);
                 }
             });
         }
@@ -177,7 +179,7 @@ function precalcTurnedFlippedActions(pieceIndex) {
             message: `flip piece ${pieceIndex} --------`,
             task:    () => {
                 flipPiece(pieceIndex);
-                updatePieces();
+                updatePieceOrientation(pieceByIndex(pieceIndex), pieceIndex);
             }
         });
     }
@@ -204,7 +206,7 @@ function turnedFlippedActions(pieceIndex) {
 
 const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
     const actions = turnedFlippedActions(pieceIndex);
-    animateStraightPlacements(pieceIndex, actions, 0, nestedAction);
+    animateStraightPlacements(pieceIndex, actions, nestedAction);
 };
 
 const animatePiece = pieceIndex => {
@@ -236,12 +238,12 @@ const bindTryButton = buttonElement => {
                   waitMS:0,
                   message: `recursed into piece ${nextPieceIndex} <<<<<<<<<`,
                   task: () =>
-                        preorderStraightPlacements(nextPieceIndex, turnedFlippedActions(nextPieceIndex), 0, recurseCallback)
+                        preorderStraightPlacements(nextPieceIndex, turnedFlippedActions(nextPieceIndex), recurseCallback)
             });
         }
 
         const startPieceIndex = availablePieceIndexes[0];
-        animateStraightPlacements(startPieceIndex, turnedFlippedActions(startPieceIndex), 0, recurseCallback);
+        animateStraightPlacements(startPieceIndex, turnedFlippedActions(startPieceIndex), recurseCallback);
 
     });
 };
@@ -317,8 +319,7 @@ function updateBoard() {
         }
     });
 }
-
-function updatePieces() {
+function updatePieceList() {
     forEachPiece((piece, pieceIndex) => {
         const pieceElement = document.getElementById(`pieceholder-${pieceIndex}`);
         if (!piece.display) {
@@ -326,19 +327,31 @@ function updatePieces() {
             return;
         }
         pieceElement.classList.remove('hidden');
-        piece.cells.forEach((row, rowIndex) => {  // todo: be more selective when to call this (flip, turn)
-            row.forEach((cell, colIndex) => {
-                const cellElement = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
-                if (cell === 1) {
-                    cellElement.classList.add(`filled`);
-                    cellElement.classList.add(`piece-color-${pieceIndex}`);
-                } else {
-                    cellElement.classList.remove(`filled`);
-                    cellElement.classList.remove(`piece-color-${pieceIndex}`);
-                }
-            });
+    });
+}
+function updatePieceOrientation(piece, pieceIndex) {
+    piece.cells.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+            const cellElement = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
+            if (cell === 1) {
+                cellElement.classList.add(`filled`);
+                cellElement.classList.add(`piece-color-${pieceIndex}`);
+            } else {
+                cellElement.classList.remove(`filled`);
+                cellElement.classList.remove(`piece-color-${pieceIndex}`);
+            }
         });
     });
+}
+function updatePieceOrientations() {
+    forEachPiece((piece, pieceIndex) => {
+        updatePieceOrientation(piece, pieceIndex);
+    });
+}
+
+function updatePieces() {
+    updatePieceList();
+    updatePieceOrientations();
 }
 
 const update = () => {

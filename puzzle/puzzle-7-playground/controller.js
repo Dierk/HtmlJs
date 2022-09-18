@@ -6,9 +6,11 @@ import {piecesModel, boardModel} from "./model.js";
 
 export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
     canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf,
-    maxTurns, maxFlips, isSolved };
+    maxTurns, maxFlips, isSolved, pieceByIndex };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
+
+const pieceByIndex  = index => piecesModel[index];
 
 const maxTurns = pieceIndex => piecesModel[pieceIndex].turns;
 const maxFlips = pieceIndex => piecesModel[pieceIndex].flips;
@@ -60,11 +62,9 @@ const flip = piece =>
     );
 
 const flipPiece = pieceIndex => {
-
-    if(piecesModel[pieceIndex].display === false) {
-        console.error("Cannot flip a piece that is on the board");
-    }
-
+    // if(piecesModel[pieceIndex].display === false) {
+    //     console.error("Cannot flip a piece that is on the board");
+    // }
     piecesModel[pieceIndex].cells = flip(piecesModel[pieceIndex].cells);
 }
 
