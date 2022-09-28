@@ -16,6 +16,7 @@ import {
     maxFlips,
     isSolved,
     pieceByIndex,
+    hasIsolatedCell
 } from "./controller.js";
 
 import {Scheduler} from "./dataflow.js";
@@ -116,7 +117,9 @@ const straightPlacementActions = (pieceIndex, postActions = [], nestedAction = x
                 }
             });
 
-            nestedAction(actions, pieceIndex);
+            if (!hasIsolatedCell()) {  // we do not recurse if there is an isolated cell since it can never be filled
+                nestedAction(actions, pieceIndex);
+            }
 
             actions.push({
                 waitMS: 0,

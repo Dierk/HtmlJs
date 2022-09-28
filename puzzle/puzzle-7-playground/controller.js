@@ -6,7 +6,7 @@ import {piecesModel, boardModel} from "./model.js";
 
 export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
     canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf,
-    maxTurns, maxFlips, isSolved, pieceByIndex };
+    maxTurns, maxFlips, isSolved, pieceByIndex, hasIsolatedCell };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
 
@@ -21,6 +21,25 @@ const forEachBoardCell = callback => {
             callback(cell, rowIndex, colIndex);
         });
     });
+}
+
+const hasIsolatedCell = _ => {
+    let result = false;
+    forEachBoardCell((cell, row, col) => {
+        if (result) return;
+        if (cell !== undefined) return;
+        // the cell above, below, left and right must be occupied or out of the board
+        // there is no empty cell on the left of the current cell
+        if ( row > 0 && boardModel[row - 1][col] === undefined) return;
+        // there is no empty cell on the above the current cell
+        if ( col > 0 && boardModel[row][col - 1] === undefined) return;
+        // there is no empty cell right of the current cell
+        if ( col + 1 < boardModel[row].length && boardModel[row][col + 1 ] === undefined) return;
+        // there is no empty cell below the current cell
+        if ( row + 1 < boardModel.length && boardModel[row + 1][col] === undefined) return;
+        result = true;
+    });
+    return result;
 }
 
 /**
