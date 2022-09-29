@@ -261,7 +261,7 @@ const bindPiecesDragStart = () => {
 
 const bindBoardTakeBack = boardElement => {
     boardElement.querySelectorAll('.cell').forEach(cellElement => {
-        cellElement.addEventListener('click', _ => {
+        cellElement.addEventListener('click', evt => {
             const [_, rowIndex, colIndex] = cellElement.id.split("-").map(Number);
             removePieceAt(rowIndex, colIndex);
             update();
