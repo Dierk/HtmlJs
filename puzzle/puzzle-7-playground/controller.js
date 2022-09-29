@@ -4,16 +4,13 @@
 
 import {piecesModel, boardModel} from "./model.js";
 
-export { leftTurn, flip, leftTurnPiece, flipPiece, dropPieceOnBoard, forEachPiece, forEachBoardCell,
-    canDrop, removePiece, removePieceAt, candidatePlacements, turnedPlacements, allPlacementsOf,
-    maxTurns, maxFlips, isSolved, pieceByIndex, hasIsolatedCell };
+export { leftTurn, flip, nextPiecePosition, dropPieceOnBoard, forEachPiece, forEachBoardCell,
+    canDrop, removePiece, removePieceAt, candidatePlacements, allPlacementsOf,
+    isSolved, pieceByIndex, hasIsolatedCell };
 
 const forEachPiece = callback => piecesModel.forEach(callback);
 
 const pieceByIndex  = index => piecesModel[index];
-
-const maxTurns = pieceIndex => piecesModel[pieceIndex].turns;
-const maxFlips = pieceIndex => piecesModel[pieceIndex].flips;
 
 const forEachBoardCell = callback => {
     boardModel.forEach((row, rowIndex) => {
@@ -42,50 +39,64 @@ const hasIsolatedCell = _ => {
     return result;
 }
 
-/**
- * a quadratic array of dimension n where 0 means "empty" and 1 means "filled"
- * @typedef {Array<Array< 0 | 1 >>} Piece
- */
 
 /**
- * turns the piece 90 degrees to the left
+ * turns the piecePosition 90 degrees to the left
  * @pure
- * @param {Piece} piece
- * @return {Piece} - a turned copy of the {@link piece} of dimension n
+ * @param {PiecePositionType} piecePosition
+ * @return {PiecePositionType} - a turned copy of the {@link piece} of dimension n
  */
-const leftTurn = piece =>
-    piece.map((row, rowIndex) =>
+const leftTurn = piecePosition =>
+    piecePosition.map((row, rowIndex) =>
         row.map((_, colIndex) =>
-            piece[colIndex][piece.length - 1 - rowIndex]
+            piecePosition[colIndex][piecePosition.length - 1 - rowIndex]
         )
     );
 
-const leftTurnPiece = pieceIndex => {
-
-    if(piecesModel[pieceIndex].display === false) {
+const nextPiecePosition = pieceIndex => {
+    const piece = piecesModel[pieceIndex];
+    if(piece.display === false) {
         console.error("Cannot turn a piece that is on the board");
     }
 
-    piecesModel[pieceIndex].cells = leftTurn(piecesModel[pieceIndex].cells);
+    piece.showIndex = (piece.showIndex + 1) % piece.positions.length;
 }
 
 /**
- * flips the piece upside down
+ * flips the piecePosition upside down
  * @pure
- * @param {Piece} piece
- * @return {Piece} - a flipped copy of the {@link piece}
+ * @param {PiecePositionType} piecePosition
+ * @return {PiecePositionType} - a flipped copy of the {@link piece}
  */
-const flip = piece =>
-    piece.map((row, rowIndex) =>
-        piece[piece.length - 1 - rowIndex].slice() // make a copy and be defensive
+const flip = piecePosition =>
+    piecePosition.map((row, rowIndex) =>
+        piecePosition[piecePosition.length - 1 - rowIndex].slice() // make a copy and be defensive
     );
 
-const flipPiece = pieceIndex => {
-    // if(piecesModel[pieceIndex].display === false) {
-    //     console.error("Cannot flip a piece that is on the board");
-    // }
-    piecesModel[pieceIndex].cells = flip(piecesModel[pieceIndex].cells);
+// const flipPiece = pieceIndex => {
+//     // if(piecesModel[pieceIndex].display === false) {
+//     //     console.error("Cannot flip a piece that is on the board");
+//     // }
+//     piecesModel[pieceIndex].shape = flip(piecesModel[pieceIndex].shape);
+// }
+
+
+const initPositions = piece => {
+    piece.positions.push(piece.shape);                  // start position unturned
+    if (piece.turns > 1) {
+        piece.positions.push(leftTurn(piece.positions[0])); // turned once
+    }
+    if (piece.turns > 2) {
+        piece.positions.push(leftTurn(piece.positions[1])); // turned twice
+        piece.positions.push(leftTurn(piece.positions[2])); // turned three times
+    }
+    if (piece.flips) {
+        // iterate over a position of the copies, flip each position that we have so far
+        [... piece.positions].forEach( position => piece.positions.push(flip(position)));
+    }
 }
+
+const initModel = _ => forEachPiece( initPositions);
 
 const removePiece = pieceIndex => {
     forEachBoardCell((cell, row, col) => {
@@ -107,8 +118,8 @@ const isSolved = () => {
     return piecesModel.every(piece => piece.display === false);
 }
 
-const dropPieceOnBoard = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex) =>
-    dropImpl(boardRow, pieceRow, boardCol, pieceCol, pieceIndex,
+const dropPieceOnBoard = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex, piecePosition) => // todo dk: check call sites
+    dropImpl(boardRow, pieceRow, boardCol, pieceCol, piecePosition,
         (row, col) => {
             boardModel[row][col] = pieceIndex;
             piecesModel[pieceIndex].display = false;
@@ -116,27 +127,27 @@ const dropPieceOnBoard = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex) =>
         })
 
 /**
- * One can drop the piece with index {@link pieceIndex} held by its cell of position {@link pieceRow} and {@link pieceCol}
+ * One can drop the {@link piece} held by its cell of position {@link pieceRow} and {@link pieceCol}
  * on the board at the position {@link boardRow} and {@link boardCol} if:
  * for every cell of the piece that of value 1, the corresponding cell of the board is available and no value yet.
  * @param boardRow
  * @param pieceRow
  * @param boardCol
  * @param pieceCol
- * @param pieceIndex
+ * @param { Piece } piecePosition
  * @return {boolean}
  */
-const canDrop = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex) =>
-    dropImpl(boardRow, pieceRow, boardCol, pieceCol, pieceIndex,
+const canDrop = (boardRow, pieceRow, boardCol, pieceCol, piecePosition) =>
+    dropImpl(boardRow, pieceRow, boardCol, pieceCol, piecePosition,
              (row, col) => boardModel[row][col] === undefined);
 
 /** @private */
-const dropImpl = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex, doit) => {
+const dropImpl = (boardRow, pieceRow, boardCol, pieceCol, piecePosition, doit) => {
     const startRow = boardRow - pieceRow; // normalizing
     const startCol = boardCol - pieceCol;
     for (let row = 0; row < 4; row++) {
         for (let col = 0; col < 4; col++) {
-            const pieceCell = piecesModel[pieceIndex].cells[row][col]; // for every cell of the piece
+            const pieceCell = piecePosition[row][col]; // for every cell of the piece
             if (pieceCell === 0) { // we only check the cells of value 1
                 continue;
             }
@@ -156,13 +167,24 @@ const dropImpl = (boardRow, pieceRow, boardCol, pieceCol, pieceIndex, doit) => {
     return true;
 }
 
-// for a given piece in its current orientation for the current board
-// when holding the piece at position 0,0
-const candidatePlacements = (pieceIndex) => {
+/**
+ * @typedef BoardCoordinates
+ * @Property {Number} row
+ * @Property {Number} col
+ */
+
+/**
+ * for a given piece in its current orientation for the current board
+ * when holding the piece in the given piecePosition at cell 0,0
+ * @param { PiecePositionType } piecePosition
+ * @return { Array<BoardCoordinates> }
+ */
+
+const candidatePlacements = (piecePosition) => {
     const result = [];
     for (let row = -2; row <= 5; row++) {
         for (let col = -2; col <= 5; col++) {
-            if (canDrop(row, 0, col, 0, pieceIndex)) {
+            if (canDrop(row, 0, col, 0, piecePosition)) {
                 result.push({row, col});
             }
         }
@@ -170,18 +192,19 @@ const candidatePlacements = (pieceIndex) => {
     return result;
 }
 
-const turnedPlacements = (pieceIndex) => {
-    const result = [];
-    for (let turn = 0; turn < 4; turn++) {
-        result.push(...candidatePlacements(pieceIndex).map(({row, col}) => ({row, col, turn})));
-    }
-    return result;
-}
+/**
+ * @typedef Placement - the piece can be placed on the current board at these coords when positioned as given by the positionIndex
+ * @property {Number} positionIndex           - use the position of this index
+ * @property {Array<BoardCoordinates>} coords - to place the piece at these coords
+ */
+/**
+ * the piece with this index can be placed on the current board in with this positions
+ * @param  { Number } pieceIndex
+ * @return { Array<Placement> }
+ */
+const allPlacementsOf = (pieceIndex) =>
+    piecesModel[pieceIndex].positions.map((position, positionIndex) => (
+        {positionIndex, coords: candidatePlacements(position)}
+    ));
 
-const allPlacementsOf = (pieceIndex) => {
-    const result = [];
-    for (let flip = 0; flip < 2; flip++) {
-        result.push(...turnedPlacements(pieceIndex).map(({row, col, turn}) => ({row, col, turn, flip})));
-    }
-    return result;
-}
+initModel(); // Attention: the controller always initialized the model unconditionally

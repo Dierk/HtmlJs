@@ -6,14 +6,11 @@ import {
     candidatePlacements,
     canDrop,
     dropPieceOnBoard,
-    flipPiece,
     forEachBoardCell,
     forEachPiece,
-    leftTurnPiece,
+    nextPiecePosition,
     removePiece,
     removePieceAt,
-    maxTurns,
-    maxFlips,
     isSolved,
     pieceByIndex,
     hasIsolatedCell
@@ -65,9 +62,8 @@ const piecesView = piecesRoot => {
             }
         }
         result += "</div>"; // end of piece
-        result += `<button id="piece-left-${pieceIndex}">left</button>`;
-        result += `<button id="piece-flip-${pieceIndex}">flip</button>`;
-        result += `<button id="piece-try-${pieceIndex}">try</button>`;
+        result += `<button id="piece-next-${pieceIndex}"> next </button>`;
+        result += `<button id="piece-try-${pieceIndex}"> try </button>`;
         result += "</div>"; // end of pieceholder
     });
     piecesRoot.innerHTML += result;
@@ -100,9 +96,13 @@ const preorderAnimationTask = action => {
 const straightPlacementActions = (pieceIndex, postActions = [], nestedAction = x => x) => {
 
     const actions = [];
+    const currentPiecePosition = pieceIndex => {
+        const piece = pieceByIndex(pieceIndex);
+        return piece.positions[piece.showIndex];
+    }
 
     const addPositionPlacementActions = actions => {
-        const placements = candidatePlacements(pieceIndex);
+        const placements = candidatePlacements(currentPiecePosition(pieceIndex));
         placements.forEach(placement => {
             actions.push({
                 waitMS: 0,
@@ -111,7 +111,7 @@ const straightPlacementActions = (pieceIndex, postActions = [], nestedAction = x
                     // if (! canDrop(placement.row, 0, placement.col, 0, pieceIndex)) {
                     //     console.error("consistency broken, cannot drop piece !");
                     // }
-                    dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex);
+                    dropPieceOnBoard(placement.row, 0, placement.col, 0, pieceIndex, currentPiecePosition(pieceIndex));
                     updateBoard();
                     checkHandleSolved();
                 }
@@ -163,38 +163,17 @@ const animateStraightPlacements = (pieceIndex, postActions = [], nestedAction = 
 
 function precalcTurnedFlippedActions(pieceIndex) {
     const actions = [];
-
-    const addAllTurns = _ => {
-        for (let turn = 0; turn < maxTurns(pieceIndex); turn++) {
-            actions.push({
-                waitMS:  0,
-                message: `turn ${turn} of piece ${pieceIndex} --------`,
-                task:    () => {
-                    leftTurnPiece(pieceIndex);
-                    updatePieceOrientation(pieceByIndex(pieceIndex), pieceIndex);
-                }
-            });
-        }
-    }
-    const addFlip = _ => {
+    const piece = pieceByIndex(pieceIndex);
+    piece.positions.forEach( (position, positionIndex) => {
         actions.push({
             waitMS:  0,
-            message: `flip piece ${pieceIndex} --------`,
+            message: `position ${positionIndex} of piece ${pieceIndex} --------`,
             task:    () => {
-                flipPiece(pieceIndex);
-                updatePieceOrientation(pieceByIndex(pieceIndex), pieceIndex);
+                nextPiecePosition(pieceIndex);
+                updatePieceOrientation(piece, pieceIndex);
             }
         });
-    }
-
-    addAllTurns();
-
-    if (maxFlips(pieceIndex) > 0) {
-        addFlip();
-        addAllTurns();
-        addFlip();
-    }
-
+    } );
     return actions;
 }
 
@@ -253,14 +232,9 @@ const bindTryButton = buttonElement => {
 
 const bindPiecesLeftFlipTry = piecesRoot => {
     forEachPiece((_, pieceIndex) => {
-        const leftButton = piecesRoot.querySelector(`#piece-left-${pieceIndex}`);
-        leftButton.addEventListener('click', () => {
-            leftTurnPiece(pieceIndex);
-            updatePieces();
-        });
-        const flipButton = piecesRoot.querySelector(`#piece-flip-${pieceIndex}`);
-        flipButton.addEventListener('click', () => {
-            flipPiece(pieceIndex);
+        const nextButton = piecesRoot.querySelector(`#piece-next-${pieceIndex}`);
+        nextButton.addEventListener('click', () => {
+            nextPiecePosition(pieceIndex);
             updatePieces();
         });
         const tryButton = piecesRoot.querySelector(`#piece-try-${pieceIndex}`);
@@ -287,7 +261,7 @@ const bindPiecesDragStart = () => {
 
 const bindBoardTakeBack = boardElement => {
     boardElement.querySelectorAll('.cell').forEach(cellElement => {
-        cellElement.addEventListener('click', evt => {
+        cellElement.addEventListener('click', _ => {
             const [_, rowIndex, colIndex] = cellElement.id.split("-").map(Number);
             removePieceAt(rowIndex, colIndex);
             update();
@@ -302,8 +276,10 @@ const bindBoardDrop = boardElement => {
         const [_, boardRow, boardCol]   = droppedAt.id.split("-").map(Number);
         let {piece, pieceRow, pieceCol} = JSON.parse(data);
         [piece, pieceRow, pieceCol]     = [piece, pieceRow, pieceCol].map(Number); // string to number
-        if (canDrop(boardRow, pieceRow, boardCol, pieceCol, piece)) {
-            dropPieceOnBoard(boardRow, pieceRow, boardCol, pieceCol, piece);
+        const droppedPiece = pieceByIndex(piece);
+        const currentPosition = droppedPiece.positions[droppedPiece.showIndex];
+        if (canDrop(boardRow, pieceRow, boardCol, pieceCol, currentPosition)) {
+            dropPieceOnBoard(boardRow, pieceRow, boardCol, pieceCol, piece, currentPosition);
             update();
         }
     };
@@ -333,7 +309,7 @@ function updatePieceList() {
     });
 }
 function updatePieceOrientation(piece, pieceIndex) {
-    piece.cells.forEach((row, rowIndex) => {
+    piece.positions[piece.showIndex].forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
             const cellElement = document.getElementById(`piece-${pieceIndex}-${rowIndex}-${colIndex}`);
             if (cell === 1) {
