@@ -85,5 +85,5 @@ test(canDrop(0,0,0,0,piece0pos0), true);           // we can drop again
 test(allPlacementsOf(1).reduce( (acc,cur) => acc + cur.coords.length,0), 154);
 dropPieceOnBoard(0,0,0,0,0, piece0pos0);        // dropping a piece leaves fewer options for the next piece
 
-test(allPlacementsOf(1).reduce( (acc,cur) => acc + cur.coords.length,0), 154);
+test(allPlacementsOf(1).reduce( (acc,cur) => acc + cur.coords.length,0), 116);
 

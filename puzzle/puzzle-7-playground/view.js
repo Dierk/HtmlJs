@@ -20,14 +20,15 @@ import {Scheduler} from "./dataflow.js";
 
 export {boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton,
        turnedFlippedActions};
-
+/**
+ * Single scheduler for all async UI tasks in strict sequence no matter how long they wait for display.
+ * @type {SchedulerType}
+ */
 const tasks = Scheduler();
-let   globalStop = false;
 
 const checkHandleSolved = () => {
     if (isSolved()) {
         console.log("all pieces placed -> we found a solution!");
-        globalStop = true; // no more new entries
         tasks.stop();      // remove old entries
         updatePieces();
     }
@@ -72,10 +73,9 @@ const piecesView = piecesRoot => {
 };
 
 const addAnimationTask = action => {
-    if (globalStop) return;
     tasks.add(ok => {
         setTimeout(() => {
-            console.debug(action.message);
+            // console.debug(action.message);
             action.task();
             ok();
         }, action.waitMS);
@@ -83,10 +83,9 @@ const addAnimationTask = action => {
 };
 
 const preorderAnimationTask = action => {
-    if (globalStop) return;
     tasks.preorder(ok => {
         setTimeout(() => {
-            console.debug(action.message);
+            // console.debug(action.message);
             action.task();
             ok();
         }, action.waitMS);
@@ -167,7 +166,7 @@ function precalcTurnedFlippedActions(pieceIndex) {
     piece.positions.forEach( (position, positionIndex) => {
         actions.push({
             waitMS:  0,
-            message: `position ${positionIndex} of piece ${pieceIndex} --------`,
+            message: `position ${positionIndex} of piece ${pieceIndex}`,
             task:    () => {
                 nextPiecePosition(pieceIndex);
                 updatePieceOrientation(piece, pieceIndex);
@@ -198,8 +197,6 @@ const animatePiece = pieceIndex => {
 const bindTryButton = buttonElement => {
     buttonElement.addEventListener('click', () => {
 
-        globalStop = false;
-
         const availablePieceIndexes = [];
         forEachPiece((piece, pieceIndex) => {
             if (piece.display) {
@@ -208,7 +205,6 @@ const bindTryButton = buttonElement => {
         });
 
         const recurseCallback = (actions, pieceIndex) => {
-            if (globalStop) return;
             const currentAvailableArrayIndex = availablePieceIndexes.indexOf(pieceIndex);
             const nextAvailableArrayIndex = currentAvailableArrayIndex + 1;
             if (nextAvailableArrayIndex >= availablePieceIndexes.length) {
