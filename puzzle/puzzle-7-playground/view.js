@@ -8,24 +8,33 @@ import {
     dropPieceOnBoard,
     forEachBoardCell,
     forEachPiece,
-    nextPiecePosition,
-    removePiece,
-    removePieceAt,
+    hasIsolatedCell,
     isSolved,
+    nextPiecePosition,
     pieceByIndex,
-    hasIsolatedCell
+    removePiece,
+    removePieceAt
 } from "./controller.js";
 
 import {Scheduler} from "./dataflow.js";
 
-export {boardView, piecesView, bindPiecesDragStart, bindBoardDrop, bindBoardTakeBack, bindTryButton,
-       turnedFlippedActions};
+export {
+    boardView,              // export for the starter
+    piecesView,
+    bindPiecesDragStart,
+    bindBoardDrop,
+    bindBoardTakeBack,
+    bindTryButton,
+    turnedFlippedActions    // export for test case only
+};
+
 /**
  * Single scheduler for all async UI tasks in strict sequence no matter how long they wait for display.
  * @type {SchedulerType}
  */
 const tasks = Scheduler();
 
+/** @type { () => void } */
 const checkHandleSolved = () => {
     if (isSolved()) {
         console.log("all pieces placed -> we found a solution!");
@@ -34,7 +43,7 @@ const checkHandleSolved = () => {
     }
 }
 
-const boardView = boardRoot => {
+const boardView = /** @type HTMLElement */ boardRoot => {
     const boardBackground = [
         ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', ' '],
         ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', ' '],
@@ -52,7 +61,7 @@ const boardView = boardRoot => {
     });
 };
 
-const piecesView = piecesRoot => {
+const piecesView = /** @type HTMLElement */ piecesRoot => {
     let result = "";
     forEachPiece((pieceModel, pieceIndex) => {
         result += `<div class="pieceholder" id="pieceholder-${pieceIndex}">`;
@@ -72,25 +81,16 @@ const piecesView = piecesRoot => {
     updatePieces();
 };
 
-const addAnimationTask = action => {
-    tasks.add(ok => {
+const animationTask = action =>
+    ok =>
         setTimeout(() => {
             // console.debug(action.message);
             action.task();
             ok();
         }, action.waitMS);
-    });
-};
 
-const preorderAnimationTask = action => {
-    tasks.preorder(ok => {
-        setTimeout(() => {
-            // console.debug(action.message);
-            action.task();
-            ok();
-        }, action.waitMS);
-    });
-};
+const addAnimationTask      = action => tasks.add(animationTask(action));
+const preorderAnimationTask = action => tasks.preorder(animationTask(action))
 
 const straightPlacementActions = (pieceIndex, postActions = [], nestedAction = x => x) => {
 
@@ -181,17 +181,14 @@ forEachPiece((pieceModel, pieceIndex) => {
     actionStore[pieceIndex] = precalcTurnedFlippedActions(pieceIndex);
 })
 
-function turnedFlippedActions(pieceIndex) {
-    return actionStore[pieceIndex];
-}
+const turnedFlippedActions = pieceIndex => actionStore[pieceIndex];
 
-const animateTurnedFlippedPlacements = (pieceIndex, nestedAction = x => x) => {
-    const actions = turnedFlippedActions(pieceIndex);
-    animateStraightPlacements(pieceIndex, actions, nestedAction);
-};
+const animateAllPositions = (pieceIndex, nestedAction = x => x) =>
+    animateStraightPlacements(pieceIndex, turnedFlippedActions(pieceIndex), nestedAction);
+
 
 const animatePiece = pieceIndex => {
-    animateTurnedFlippedPlacements(pieceIndex);
+    animateAllPositions(pieceIndex);
 };
 
 const bindTryButton = buttonElement => {
@@ -257,7 +254,7 @@ const bindPiecesDragStart = () => {
 
 const bindBoardTakeBack = boardElement => {
     boardElement.querySelectorAll('.cell').forEach(cellElement => {
-        cellElement.addEventListener('click', evt => {
+        cellElement.addEventListener('click', () => {
             const [_, rowIndex, colIndex] = cellElement.id.split("-").map(Number);
             removePieceAt(rowIndex, colIndex);
             update();
