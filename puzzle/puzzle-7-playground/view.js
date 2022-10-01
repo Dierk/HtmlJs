@@ -89,6 +89,9 @@ const animationTask = action =>
             ok();
         }, action.waitMS);
 
+// const animationTask = action =>    // use this version for dramatic speedup
+//     ok => { action.task(); ok(); };
+
 const addAnimationTask      = action => tasks.add(animationTask(action));
 const preorderAnimationTask = action => tasks.preorder(animationTask(action))
 
