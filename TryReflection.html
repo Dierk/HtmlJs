@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Reflection</title>
+<style> 
+
+    body {
+        margin: 1em;
+    }
+	main {
+
+	}
+    .reflect {
+        position: relative;
+        background-size: contain;
+        background-repeat: no-repeat;
+        max-width: 300px;
+        aspect-ratio: 491 / 432;
+        --image-url: url("https://webengineering-fhnw.github.io/Kolibri/img/logo/logo-491x432.png");
+        background-image: var(--image-url);
+    }
+    .reflect::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: inherit;
+        background-image:
+                linear-gradient(#ffffffff, #ffffff80),
+                var(--image-url);
+        transform: translateY(100%) scaleY(-1);
+        filter: brightness(95%) blur(2px);
+        z-index: -1;
+    }
+
+    .move-in {
+        animation: 1s ease-out from-right;
+    }
+    @keyframes from-right {
+        from {
+            transform: translateX(100vw);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    .text {
+        font-size: 1.2rem;
+        max-width: 30ch;
+        line-height: 1.2;
+        /*letter-spacing: .1rem;*/
+    }
+
+</style>
+	
+</head>
+<body>
+
+<main >
+    <div class="reflect move-in">
+
+    </div>
+    <div class="text">
+        lorem ipsum dolor situs vilate in isis ab ernit
+        lorem ipsum dolor situs vilate in isis ab ernit
+        lorem ipsum dolor situs vilate in isis ab ernit
+        lorem ipsum dolor situs vilate in isis ab ernit
+    </div>
+</main>
+
+</body>
+</html>
