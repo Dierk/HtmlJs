@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+
+
+<main>
+
+</main>
+
+
+<pre>
+<script>
+
+    /** @typedef IteratorStateType
+     * @template _T_
+     * @property { _T_ } value
+     * @property { Boolean } done
+     */
+
+    /**
+     * @constructor
+     * @template _T_
+     * @param { _T_ }       value
+     * @param { Boolean } done
+     * @return { IteratorStateType<_T_> }
+     * @constructor
+     */
+    const IteratorState = (value, done) => ({value, done});
+
+    /**
+     * @callback ConsumerCallback
+     * @template _T_
+     * @param { _T_ } value
+     * @return { void }
+     */
+
+    /** @typedef IteratorType
+     * @template _T_
+     * @property { ()                                   => IteratorState<_T_> } next
+     * @property { (callback: ConsumerCallback<_T_>)    => void }               forEach
+     * @property { (predicate: Predicate<_T_>)          => IteratorType<_T_>}   dropWhile
+     * @property { (count: Number)                      => IteratorType<_T_> }  drop
+     * @property { (predicate: Predicate<_T_>)          => IteratorType<_T_>}   takeWhile
+     * @property { (count: Number)                      => IteratorType<_T_> }  take
+     */
+
+    /** @callback Predicate
+     * @template _T_
+     * @param { _T_ } value
+     * @return { Boolean }
+     */
+
+    /** @callback NextCallback
+     * @template _T_
+     * @param { _T_ } value
+     * @return { _T_ }
+     */
+
+    /**
+     * @template _T_
+     * @param { Predicate<_T_> }    doneFunction
+     * @param { NextCallback<_T_> } nextFunction
+     * @param { _T_ }               value
+     * @return { IteratorType<_T_> }
+     *
+     * @constructor
+     */
+    const Iterator = (doneFunction, nextFunction, value) => {
+        const next = () => {
+            if (doneFunction(value)) {
+                return IteratorState(value, true);
+            }
+            const state = IteratorState(value, false);
+            value       = nextFunction(value);
+            return state;
+        }
+        const forEach = (callback) => {
+            for (const i of result) {
+                callback(i);
+            }
+        };
+        const dropWhile= predicate => {
+            while (!doneFunction(value) && predicate(value)) {
+                value = nextFunction(value);
+            }
+            return result;
+        };
+        const drop = count => {
+            let i = 0;
+            return dropWhile( () => i++ < count );
+        };
+        const takeWhile = predicate => {
+            const oldDoneFunction = doneFunction;
+            doneFunction = value => !predicate(value) || oldDoneFunction(value);
+            return result;
+        };
+        const take = count => {
+            let i = 0;
+            return takeWhile( () => i++ < count );
+        };
+        const result = {
+            [Symbol.iterator]: () => ({ next }),
+            forEach, drop, dropWhile, take, takeWhile
+        }
+        return result;
+    };
+
+
+    const Range = (end, start = 0, stride = 1) => {
+        if (end < start && stride > 0) { // possibly got the sequence wrong
+            [end, start] = [start, end];  // swap param values
+        }
+        if (end > start && stride < 0) { // possibly got the sequence wrong
+            [end, start] = [start, end];  // swap param values
+        }
+
+        return Iterator(
+            value => stride > 0 ? value > end : value < end,
+            value => value + stride,
+            start);
+    };
+
+    document.writeln("0123  ", ...Range(3));
+    document.writeln("23    ", ...Range(3, 2, 1));
+    document.writeln("23    ", ...Range(2, 3));    // sanity check
+    document.writeln("64    ", ...Range(4, 6, -2));
+    document.writeln("0-1-2 ", ...Range(0, -2, -1));
+    document.writeln("789   ", ...Range(9).dropWhile(i => i < 7));
+    document.writeln("789   ", ...Range(9).drop(7));
+    document.writeln("012   ", ...Range(Number.MAX_VALUE).takeWhile(i => i < 3));
+    document.writeln("012   ", ...Range(Number.MAX_VALUE).take(3));
+
+    const foo = [];
+    Range(3).forEach(i => foo.push(i));
+    document.writeln("0123  ", ...foo);
+
+    const bar = [];
+    for (const i of Range(3)) bar.push(i);
+    document.writeln("0123  ", ...bar);
+
+    const forever   = () => false;
+    const increment = i => i + 1;
+    document.writeln("0123  ", ...Iterator(forever, increment, 0).take(4));
+
+</script>
+</pre>
+
+</body>
+
+</html>
