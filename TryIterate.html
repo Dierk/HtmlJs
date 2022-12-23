@@ -126,6 +126,21 @@
             start);
     };
 
+    const decorate = iterable => {
+        // better first check whether iterable is already an iterator
+        const iterator      = iterable[Symbol.iterator]();
+        const poisonPill    = Object.create(null); // a unique object
+        const start         = iterator.next();
+        return Iterator (
+            value  => value === poisonPill,
+            _value => {
+                const next = iterator.next();
+                return next.done ? poisonPill : next.value;
+            },
+            start.done ? poisonPill : start.value
+        );
+    }
+
     document.writeln("0123  ", ...Range(3));
     document.writeln("23    ", ...Range(3, 2, 1));
     document.writeln("23    ", ...Range(2, 3));    // sanity check
@@ -147,6 +162,10 @@
     const forever   = () => false;
     const increment = i => i + 1;
     document.writeln("0123  ", ...Iterator(forever, increment, 0).take(4));
+
+    document.writeln("0123  ", ...decorate(Range(3)));
+    // we can decorate an HTMLCollection
+    document.writeln("BODY  ", [...decorate(document.querySelectorAll("body")).take(1)].map(e => e.tagName));
 
 </script>
 </pre>
