@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Overlay</title>
+    <style>
+        *, *::before, *::after {    /* common reset to avoid browser defaults */
+            margin:     0;
+            padding:    0;
+            box-sizing: border-box;
+        }
+
+        main {                      /* give us some context to work within */
+            width: 80%;
+            margin:   3em auto;
+            box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .overlayedImage {                  /* the overlay itself */
+            position: relative;            /* this is the parent that we position relative to */
+        }
+
+        .overlayedImage img {              /* the "background" image */
+            width: 100%;                   /* make it fill and adapt to the parent */
+            aspect-ratio: 16/9;            /* force a min-height on the parent */
+        }
+        .overlayedImage .bubble {
+            position:   absolute;          /* position relative to the parent */
+            top:        27%;
+            left:       40%;
+
+            font-size:          clamp(.3rem, 1.5vw, 1.5rem);
+            background-color:   white;
+            border-radius:      100vw;
+            padding:            .5em;
+        }
+         .overlayedImage .bubble::before { /* pseudo-element to create the arrow, relative to the bubble */
+            content:            '';
+            position:           absolute;
+            inset:              0;
+            background-color:   white;
+            clip-path:          polygon(0 100%, 10% 50%, 50% 50%, 0 100%);
+            transform:          translateY(40%) ;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <div class="overlayedImage">
+        <img src="https://www.w3schools.com/css/img_fjords.jpg" alt="Fjords" >
+        <div class="bubble">"Ommmmm ..."</div>
+    </div>
+
+
+</main>
+</body>
+
+</html>

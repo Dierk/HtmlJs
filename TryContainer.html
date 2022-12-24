@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Container</title>
+    <style>
+
+        body {
+            margin: 1em;
+        }
+
+        main {
+
+        }
+
+        .myContainer {
+            container-type: inline-size; /* only looks at the width */
+            container-name: myContainer;
+            display:        flex;
+            flex-wrap:      wrap;
+            min-height:     3em;
+            margin:         1em;
+            overflow:       hidden;
+            box-shadow:     0 0 5px rebeccapurple;
+            background-color: lightgray;
+        }
+
+        .contained {
+            width:            200px;
+            min-height:       3em;
+            margin:           1em;
+            --my-color:       blue;
+            background-color: var(--my-color);
+        }
+
+        @container myContainer (width < 600px) {  /* name is optional */
+            .contained {
+                --my-color: red;
+            }
+            /* we cannot change myContainer's properties here */
+        }
+        @container myContainer (width < 101vw) {
+            .contained {
+                height: clamp( 3em, 9rem - 6cqw, 9em );
+            }
+        }
+        .outer {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<main>
+    <p>Find two style classes: one for all the grey containers, a second one for the colored boxes.</p>
+    <p>As of Nov 22, this works in chrome, with OSX Ventura in Safari 16.1, but not in FF.</p>
+
+    <div class="contained">
+    </div>
+
+
+    <div class="myContainer">
+        <div class="contained">
+        </div>
+        <div class="contained">
+        </div>
+        <div class="contained">
+        </div>
+    </div>
+
+    <div class="outer">
+        <div class="myContainer">
+            <div class="contained">
+            </div>
+            <div class="contained">
+            </div>
+            <div class="contained">
+            </div>
+        </div>
+        <div class="myContainer">
+            <div class="contained">
+            </div>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

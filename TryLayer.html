@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Layer</title>
+    <style>
+
+        body {
+            margin: 1em;
+        }
+
+        p {
+          color: red;
+        }
+
+        @layer bigRedLayer {
+          .box1 p {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: blue;       /* declared later with higher specificity but still does not win because of hoisting */
+          }
+        }
+
+        @layer greenBorderLayer, redBorderLayer; /* <1> declare the layer sequence such the red comes last */
+
+        @layer redBorderLayer {
+            .box2 p {
+                border: 3px solid red;
+            }
+        }
+        @layer greenBorderLayer {
+            .box2 p {
+                border: 3px solid green; /* declared later with same specificity but still does not win because of <1> */
+            }
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+
+<main>
+
+    <p>I am in normal style</p>
+
+    <div class="box1">
+      <p>I am big, bold, but still red even though the color:blue is in a higher specificity selector and is declared later.
+          This is because 1) layer/non-layer conflicts ignore specificity, and 2) they are hoisted to the beginning of the
+          style definition and thus, the non-layer blue comes after the layer and "latest wins".</p>
+    </div>
+
+    <div class="box2">
+      <p>I am big, bold, but still red even though the color:red is in a higher specificity selector and is declared later.
+          This is because 1) layer/non-layer conflicts ignore specificity, and 2) they are lifted to the beginning of the
+          style definition and thus, the non-layer blue comes after the layer and "latest wins".</p>
+    </div>
+
+
+</main>
+
+</body>
+</html>
