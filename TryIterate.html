@@ -167,6 +167,10 @@
     // we can decorate an HTMLCollection
     document.writeln("BODY  ", [...decorate(document.querySelectorAll("body")).take(1)].map(e => e.tagName));
 
+    const $  = root => selector => decorate(root.querySelectorAll(selector));
+    const $_ = $(document);
+    document.writeln("BODY  ", [...$_("body").take(1)].map(e => e.tagName));
+
 </script>
 </pre>
 
