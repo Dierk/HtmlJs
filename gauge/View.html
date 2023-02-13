@@ -9,6 +9,11 @@
         p {
             padding: 0 10em 0 4em;
         }
+        .ui {
+            display: grid;
+            grid-template-columns: repeat(2, max-content);
+        }
+
         canvas {
             margin: 0.1em 1em 0 1em;
             --section-divider:   0.6;
@@ -62,31 +67,33 @@
     <a href="https://github.com/Dierk/HtmlJs/blob/master/gauge/View.html">View</a>,
     Do-what-you-want-but-leave-me-alone License.
 </p>
+<div class="ui">
 
-<canvas id="progressView" width="200" height="200" class="classic" draggable="false"></canvas>
+    <div class="detail">
+        <p>
+            Style:
+            <select id="colors">
+                <option>classic</option>
+                <option>citrus</option>
+                <option>elegant</option>
+            </select>
+        </p>
 
-<p>
-    Style:
-    <select id="colors">
-        <option>classic</option>
-        <option>citrus</option>
-        <option>elegant</option>
-    </select>
-</p>
-
-
-<p>
-    Progress:<br>
-    <input type="range" id="range"     value="55">    <br>
-    Threshold:<br>
-    <input type="range" id="threshold" value="60">    <br>
-    Size:<br>
-    <input type="range" id="size"      value="0">     <br>
-    Show thumb:
-    <input type="checkbox" id="thumb"  >              <br>
-    <button             id="animate">Animate</button> <br>
-</p>
-
+        <p>
+            Progress:<br>
+            <input type="range" id="range" value="55"> <br>
+            Threshold:<br>
+            <input type="range" id="threshold" value="60"> <br>
+            Size:<br>
+            <input type="range" id="size" value="0"> <br>
+            Show thumb:
+            <input type="checkbox" id="thumb"> <br>
+            <button id="animate">Animate</button>
+            <br>
+        </p>
+    </div>
+    <canvas id="progressView" width="200" height="200" class="classic" draggable="false"></canvas>
+</div>
 <script>
     // only to avoid duplication
     const repaint = () => {
