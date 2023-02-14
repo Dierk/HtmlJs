@@ -10,8 +10,13 @@
             padding: 0 10em 0 4em;
         }
         .ui {
+            padding: 0 0 0 4em;
             display: grid;
-            grid-template-columns: repeat(2, max-content);
+            grid-template-columns: repeat(2, min-content);
+            grid-column-gap: 2em;
+        }
+        .detail > * {
+            padding: 0 0 1em 0;
         }
 
         canvas {
@@ -70,16 +75,16 @@
 <div class="ui">
 
     <div class="detail">
-        <p>
+        <div>
             Style:
             <select id="colors">
                 <option>classic</option>
                 <option>citrus</option>
                 <option>elegant</option>
             </select>
-        </p>
+        </div>
 
-        <p>
+        <div>
             Progress:<br>
             <input type="range" id="range" value="55"> <br>
             Threshold:<br>
@@ -90,7 +95,7 @@
             <input type="checkbox" id="thumb"> <br>
             <button id="animate">Animate</button>
             <br>
-        </p>
+        </div>
     </div>
     <canvas id="progressView" width="200" height="200" class="classic" draggable="false"></canvas>
 </div>
