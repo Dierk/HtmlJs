@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Parser</title>
+    <style>
+
+        body {
+            margin: 1em;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<main>
+
+<pre><script>
+
+        const map = {
+            'IV': 4,
+            'IX': 9,
+            'XL': 40,
+            'XC': 90,
+            'CD': 400,
+            'CM': 900,
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+        const arab = roman => {
+            if (roman.length === 0) return 0;
+            for (const [key, value] of Object.entries(map)) {
+                if (roman.startsWith(key)) {
+                    return value + arab(roman.slice(key.length));
+                }
+            }
+            throw new Error('Invalid Roman numeral: ' + roman);
+        };
+
+        document.writeln( arab("") === 0 );
+        document.writeln( arab("I") === 1 );
+        document.writeln( arab("II") === 2 );
+        document.writeln( arab("III") === 3 );
+        document.writeln( arab("V") === 5 );
+        document.writeln( arab("IV") === 4 );
+        document.writeln( arab("X") === 10 );
+        document.writeln( arab("L") === 50 );
+        document.writeln( arab("C") === 100 );
+        document.writeln( arab("D") === 500 );
+        document.writeln( arab("M") === 1000 );
+
+        document.writeln( arab("MDCIII")   === 1603 );
+        document.writeln( arab("MCDXXXIV") === 1434 );
+
+
+        const numExpr   = /(\d+)/;
+        const opExpr    = /(\+|\-|\*|\/)/;
+        const space     = /\s*/;
+        const parenExpr = /\(([^()]*)\)/;
+        const numOrParenExpr = new RegExp(`(${numExpr.source}|${parenExpr.source})`);
+
+        const binOnlyExpr = new RegExp(
+            '^' +
+            space.source +
+            numOrParenExpr.source +
+            space.source +
+            opExpr.source +
+            space.source +
+            numOrParenExpr.source +
+            space.source +
+            '$'
+        );
+        const numOnlyExpr = new RegExp( '^' + space.source + numExpr.source + space.source + '$' );
+
+        const parenOnlyExpr = new RegExp( '^' + space.source + parenExpr.source + space.source + '$' );
+        const parse = input => {
+            const result = [];
+            if (input.length === 0) return result;
+            let match = null;
+            if (match = input.match(parenOnlyExpr)) {
+                return parse(match[1]);
+            }
+            if (match = input.match(binOnlyExpr)) {
+                return [match[4],[parse(match[1]),parse(match[5])]];
+            }
+            if (match = input.match(numOnlyExpr)) {
+                return Number(match[1]);  // 1 is the capturing group number
+            }
+
+        };
+
+        const interpret = ast => {
+            if (typeof ast === 'number') return ast;
+            const [operator, [a, b]] = ast;
+            switch (operator) {
+                case '+': return interpret(a) + interpret(b);
+                case '*': return interpret(a) * interpret(b);
+                default: throw new Error('Invalid operator: ' + operator);
+            }
+        };
+
+        document.writeln( 0 === interpret(0) );
+        document.writeln( 3 === interpret(["+", [1, 2]]) );
+        document.writeln( 9 === interpret(["*", [["+", [1, 2]], 3]]) );
+        document.writeln( 7 === interpret(["+", [1, ["*", [2,3]]]] )) ;
+
+        document.writeln( 1 === interpret( parse("1") ) );
+        document.writeln( 3 === interpret( parse("1 + 2") ) );
+        document.writeln( 3 === interpret( parse("(1 + 2)") ) );
+        document.writeln( 6 === interpret( parse("1 + (2 + 3)") ) );
+        document.writeln( 6 === interpret( parse("(1 + 2) + 3") ) );
+        document.writeln( 7 === interpret( parse("1 + (2 * 3)") ) );
+        document.writeln( 9 === interpret( parse("(1+2) * (1+2)") ) );
+
+    </script>
+
+</pre>
+
+
+</main>
+
+</body>
+</html>

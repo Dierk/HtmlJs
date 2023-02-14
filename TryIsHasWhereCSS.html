@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try is, has, where</title>
+    <style>
+
+        body {
+            margin: 1em;
+        }
+
+        /* specificity takes the max spec inside the parens* /  /* try .0-such-class*/
+        :is(.box1, .box2, #no-such-id) p {
+          color: red;
+        }
+
+        /* no matter that it comes later, "where" has 0 specificity */
+        :where(.box1, .box2) p {
+          color: green;
+        }
+
+        .box1 p ,
+        .box2 p {                /* try .0-such-class p */
+          color: blue;
+        }
+
+        div:has(:nth-child(2)) {
+          border: 2px solid red;
+          padding: .2em 1em;
+        }
+
+
+
+
+    </style>
+
+</head>
+<body>
+
+<main>
+
+    <p>I am in normal style</p>
+
+    <div class="box1">
+      <p>I am red.</p>
+    </div>
+
+    <div class="box2">
+        <p>I am red.</p>
+        <p>I am red.</p>
+    </div>
+
+
+</main>
+
+</body>
+</html>
