@@ -1,10 +1,6 @@
 name: Bundling with node/npm/rollup
-
-on:
-  push:
-    branches: [ $default-branch ]
-  pull_request:
-    branches: [ $default-branch ]
+run-name: ${{ github.actor }} is bundling
+on: [push]
 
 jobs:
   build:
