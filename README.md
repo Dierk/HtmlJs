@@ -22,5 +22,8 @@ see HTML files e.g.
 - [101](https://dierk.github.io/HtmlJs/one.html)
 - [Fire](https://dierk.github.io/HtmlJs/Fire.html)
 - [Puzzle](https://dierk.github.io/HtmlJs/puzzle/puzzle-7-playground/puzzle.html)
+- [CSSColorMix](https://dierk.github.io/HtmlJs/css-news/ColorMix.html)
+- [CSSPropTriple](https://dierk.github.io/HtmlJs/css-news/CustomPropTriple.html)
+- [CSSNesting](https://dierk.github.io/HtmlJs/css-news/Nesting.html)
 
 

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Color Mix</title>
+    <style>
+        body {
+            --base-color: blue;
+            background-color: coral;
+        }
+        .base {
+            background-color: var(--base-color);
+        }
+        .plain {
+            background-color: color-mix(in oklch, var(--base-color), red);
+        }
+        .lighter {
+            background-color: color-mix(in srgb , var(--base-color) 40%, white 60%);
+        }
+        .darker {
+            background-color: color-mix(in srgb , var(--base-color) 80%, black 20%);
+        }
+        .halfTransparent {
+            background-color: color-mix(in srgb , var(--base-color) 40%, transparent 60%);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="base">Base</div>
+<div class="plain">Plain mix, mixing hue but keeping the light</div>
+<div class="lighter">Lighter</div>
+<div class="darker">Darker</div>
+<div class="halfTransparent">Half transparent</div>
+
+
+</body>
+
+</html>

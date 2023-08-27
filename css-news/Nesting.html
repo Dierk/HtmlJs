@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Nesting Operator</title>
+    <style>
+        body {
+            background-color: coral;
+        }
+        div {
+            background-color: blue;
+
+            & div {
+                background-color: red;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div >
+    Outer
+    <div>Inner</div>
+</div>
+
+
+</body>
+
+</html>

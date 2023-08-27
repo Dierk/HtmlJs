@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css custom property with triple values</title>
+    <style>
+        body {
+            --base-hs:  240, 100%;
+            --base-hsl: var(--base-hs), 50%;
+            background-color: coral;
+        }
+        .base {
+            background-color: hsl(var(--base-hsl));
+        }
+        .lighter {
+            background-color: hsl(var(--base-hs), 80%);
+        }
+        .darker {
+            background-color: hsl(var(--base-hs), 30%);
+        }
+        .halfTransparent {
+            background-color: hsla(var(--base-hsl), 0.2);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="base">Base</div>
+<div class="lighter">Lighter</div>
+<div class="darker">Darker</div>
+<div class="halfTransparent">Half transparent</div>
+
+
+</body>
+
+</html>
