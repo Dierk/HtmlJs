@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css blobs</title>
+    <style>
+        body {
+            display: flex;
+        }
+        .blob {
+            margin-block: 2rem;
+            background-image: url("https://unsplash.it/200/200");
+            width: 200px;
+            aspect-ratio: 1 / 1;
+            background-color: lightblue;
+            border: 3px solid black;
+            border-radius: 10% 50% 10% 50% / 50% 10% 50% 10%;
+            transition: .5s ease-in-out;
+            rotate: 20deg;
+            box-shadow: .1rem .1rem .5rem 0 slateblue;
+        }
+        .blob:hover {
+            border-radius: 10% 10% 10% 10% / 40% 40% 40% 40%;
+            box-shadow: .5rem .5rem 1rem 0.1rem darkslateblue;
+            rotate: 0deg ;
+            transition:  .5s ease-in-out;
+            z-index: 1;
+            transform: scale(1.2) translateY(-1rem);
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div class="blob"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+
+
+
+</body>
+
+</html>
