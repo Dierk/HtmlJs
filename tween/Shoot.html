@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>View</title>
+
+    <style>
+        body {
+            margin: 4em;
+        }
+        .layout-children-bottom-left {
+            display:        flex;
+            justify-items:  start;
+            align-items:    end;
+        }
+        #playground {
+            position:       absolute;
+            inset:          2em;
+            z-index:        -1;
+            background-color: lightgoldenrodyellow;
+        }
+        #sensitiveArea {
+            height:         62%;
+            aspect-ratio:   1 / 1;
+            border-top-right-radius: 100% 100%;
+        }
+        #sensitiveArea:hover {
+            background-color: hsla(20deg, 80%, 50%, .2);
+        }
+        #bird {
+            height:  clamp(42px, 25% - 42px, 25%);
+        }
+
+    </style>
+    <script src="./tween.js"></script>
+</head>
+<body id="body">
+
+<h1>Shoot</h1>
+
+<div id="playground"        class="layout-children-bottom-left">
+    <div id="sensitiveArea" class="layout-children-bottom-left">
+        <img id="bird" src="bird.png" alt="bird" draggable="false">
+    </div>
+</div>
+
+<script>
+
+    const shoot = ({dx, dy}) => {
+        const timingFunction = quadBezier (0, 0) (dx/2, dy) (dx, 0);
+        const tension = Math.sqrt(dx*dx + dy*dy) / 3;
+        const scaleX = 500;
+        const scaleY = 300;
+        animate(timingFunction, 1000 * tension,
+                xy => {
+                   bird.style.transform =
+                       'translateX(' +
+                       xy[0] * scaleX + 'px) ' +
+                       'translateY(' +
+                       xy[1] * scaleY + 'px)'
+                });
+    }
+
+    let startPos = { x:0, y:0 }
+    sensitiveArea.onmousedown = evt => {
+        startPos = { x: evt.clientX, y: evt.clientY }
+    }
+    sensitiveArea.onmouseup = evt => {
+        const endPos = {x: evt.clientX, y: evt.clientY}
+        const downScale = 80;
+        const vector = {
+            dx: (endPos.x - startPos.x) / downScale,
+            dy: (endPos.y - startPos.y) / downScale
+        }
+        shoot(vector);
+    }
+
+
+</script>
+
+</body>
+</html>
