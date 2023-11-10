@@ -18,7 +18,7 @@ see HTML files e.g.
 - [Clifford Attractors](https://dierk.github.io/HtmlJs/concept/View.html)
 - [Dartboard](https://dierk.github.io/HtmlJs/dartboard/View.html)
 - [CSS Collapse Section](https://dierk.github.io/HtmlJs/TryCollapse.html)
-- [Tweening](https://dierk.github.io/HtmlJs/tween/View.html)
+- [Tweening](https://dierk.github.io/HtmlJs/tween/View.html) [Bird](https://dierk.github.io/HtmlJs/tween/Bird.html)
 - [101](https://dierk.github.io/HtmlJs/one.html)
 - [Fire](https://dierk.github.io/HtmlJs/Fire.html)
 - [Puzzle](https://dierk.github.io/HtmlJs/puzzle/puzzle-7-playground/puzzle.html)
