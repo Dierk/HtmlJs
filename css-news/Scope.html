@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Scope At-Rule</title>
+    <style>
+        /*scoping is applied for same specificity but before sequence*/
+        /*
+        div div {
+            color: green;
+        }
+        */
+    </style>
+</head>
+
+<body>
+
+<div >
+    <style>
+        @scope {
+            :scope {
+                color: blue;
+            }
+            div {
+                color: red;
+            }
+        }
+        </style>
+
+    Blue in Chrome but not in FF or Safari.
+    <div>Red in Chrome but not in FF or Safari.</div>
+</div>
+
+<div >
+    Outer
+    <div>Inner</div>
+</div>
+
+
+</body>
+
+</html>

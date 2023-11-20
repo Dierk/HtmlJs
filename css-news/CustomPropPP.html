@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Container Styled Query</title>
+    <style>
+
+        div:has(+ div) {
+            margin-bottom: 1em;
+        }
+
+        .privateProps {
+            --_color: var(--color, blue);
+            color: var(--_color);
+        }
+        .privateProps div {
+            color: white;
+            background-color: var(--_color);
+        }
+
+
+        @property --color-hue {
+            syntax: "<number>";
+            initial-value: 0;
+            inherits: true;
+        }
+        @keyframes rainbow {
+            from { --color-hue:   0 }
+            to   { --color-hue: 360 }
+
+        }
+        .animatedCustomProp {
+            color : hsl( var(--color-hue) 100% 50%);
+            animation: 5s rainbow linear infinite;
+        }
+
+        .spaceToggle {
+            --ON: initial;
+            --OFF: ;
+            background: var(--toggle, lightblue);
+            border: 1px var(--toggle, solid) blue;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div class="privateProps" style="--color:red">
+    Outer
+    <div>Custom color is red</div>
+</div>
+<div class="privateProps">
+    Outer
+    <div>Default color is blue</div>
+</div>
+
+<div class="animatedCustomProp">
+    Outer
+    <div>Rainbow colors</div>
+</div>
+
+
+<div class="spaceToggle" style="--toggle:var(--ON)">
+    Outer
+    <div>Special styling is ON (same as no toggle)</div>
+</div>
+<div class="spaceToggle" style="--toggle:var(--OFF)">
+    Outer
+    <div>Special styling is OFF (suppress certain parts of the style)</div>
+</div>
+
+<div>
+    All shamelessly <a href="https://www.youtube.com/watch?v=ZuZizqDF4q8">stolen</a>.
+</div>
+
+</body>
+</html>

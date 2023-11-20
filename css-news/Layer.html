@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Layer</title>
+    <style>
+
+        /* latest layer wins with no regard to specificity */
+        @layer lagoon  {}
+        @layer october {}
+
+        @layer lagoon {
+            div {
+                color:blue;
+            }
+        }
+        @layer october {
+            div {
+                color:red;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div >
+    Outer
+    <div>Inner</div>
+</div>
+
+</body>
+</html>
