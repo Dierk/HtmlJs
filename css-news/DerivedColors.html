@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Derived Colors</title>
+    <style>
+        body {
+            background-image: url("https://unsplash.it/300");
+        }
+        div {
+            --base-color: limegreen;
+            padding: 3em;
+        }
+        .base {
+            background-color: var(--base-color);
+        }
+        .lighten {
+            background: hsl(from var(--base-color) h s calc(l * 1.3));
+            /*the below is slightly nicer but only works in chrome*/
+            /*background: oklch(from var(--base-color) calc(l + 25) c h);*/
+        }
+        .desaturate {
+          background: hsl(from var(--base-color) h calc(s * 0.7) l);
+        }
+        .half-transparent {
+          background: rgb(from var(--base-color) r g b / calc(alpha * 0.5));
+        }
+        .invert {
+          background: rgb(from var(--base-color) calc(1 - r) calc(1 - g) calc(1 - b));
+        }
+        .complementary {
+          background: hsl(from var(--base-color) calc(h + 180) s l);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="base">
+    as of 2023-11-26 T 23:11:12 MEZ
+    this works in chrome and most of it in Safari
+</div>
+<div class="lighten">
+    lighten <a href="https://developer.chrome.com/blog/css-relative-color-syntax/#lighten-a-color"> developer.chrome.com</a>
+</div>
+<div class="desaturate">
+    desaturate
+</div>
+<div class="half-transparent">
+    half-transparent
+</div>
+<div class="complementary">
+    complementary
+</div>
+
+
+
+
+</body>
+
+</html>

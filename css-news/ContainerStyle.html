@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Container styled query</title>
+    <style>
+        @container style(--my-var:2) {
+            /*color: blue; syntax error  a container */
+            div {
+                color: red;
+                /*transform: rotate(var(--my-var));     doesn't work, it is not a degree */
+                /*transform: rotate(var(--my-var)deg);  doesn't work, because token resolution is not a string eval */
+                transform: rotate( calc( var(--my-var) * 1deg));  /* trick of the day */
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="--my-var:2;">
+    Outer
+    <div>Red and tiltet in Chrome but not in FF or Safari.</div>
+</div>
+
+<div >
+    Outer
+    <div>Inner</div>
+</div>
+
+
+</body>
+
+</html>
