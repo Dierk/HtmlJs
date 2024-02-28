@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>foo</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            --value: 50;
+            background-image: radial-gradient(
+                                  circle at 50% 50%,
+                                  red         calc(var(--value)/1.414 * 1%),
+                                  transparent calc(var(--value)/1.414 * 1%),
+                                  transparent 100%);
+        }
+    </style>
+</head>
+<body>>
+ <div id="circle"></div>
+ <input id="myinput" type="range" min="0" max="100">
+
+<script>
+    myinput.oninput = evt => circle.style.setProperty("--value", Number(myinput.value));
+
+
+</script>
+</body>
+</html>
