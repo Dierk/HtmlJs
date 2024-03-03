@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>sketch</title>
+<style>
+    body {
+        margin: 2em 4em;
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+    .master {
+        max-height: 600px;
+        overflow-y: scroll;
+    }
+    .detail {
+        display: flex;
+        gap: 1em;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    #legend {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        grid-gap: .2em 2em;
+    }
+    #image {
+        width: 600px;
+        aspect-ratio: 1;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        animation: kenburns ease-in-out 15s infinite alternate;
+    }
+    @keyframes kenburns {
+        0% {
+            background-size: 800px 800px;
+            background-position: -200px -200px;
+        }
+        100% {
+            background-size: 600px 600px;
+            background-position: 0 0;
+        }
+    }
+
+
+</style>
+    
+</head>
+<body>
+
+    <div class="master">
+    </div>
+
+    <div class="detail">
+        <div id="image"></div>
+        <div id="legend"></div>
+        <button id="button" onclick="renderNext()">Next Mountain</button>
+    </div>
+
+  <script >
+
+      let id = 0;
+      const mountains  = [];
+      const headers    = [];
+
+      const renderDetail = id => {
+          document.getElementById("image").style["background-image"] = 'url("' + mountains[id].IMAGE_URL + '")';
+          let content = "";
+          headers.forEach(header => {
+              content += `<span>${header}</span> <span>${mountains[id][header]}</span> `;
+          });
+          document.getElementById("legend").innerHTML = content;
+      };
+
+      const renderNext = () => {
+          id = (id + 1) % mountains.length;
+          renderDetail(id);
+      };
+
+      const renderMaster = () => {
+          const masterContainer = document.querySelector(".master");
+          let content = "";
+          mountains.forEach( (mountain, idx) => {
+            content += `<div onclick="renderDetail(${idx})">${mountain.NAME}</div>`;
+          });
+          masterContainer.innerHTML = content;
+      };
+
+      fetch("./mountains.csv")
+          .then(resp => resp.text())
+          .then(text => {
+              const lines      = text.split("\n");
+              const headerLine = lines.shift();
+              headers.push(...headerLine.split(";").map(h => h.trim()));
+              lines.forEach(line => {
+                  if (line.length < 1) { return; }
+                  const mountain = {};
+                  const values   = line.split(";").map(v => v.trim());
+                  headers.forEach((header, i) => {
+                      mountain[header] = values[i];
+                  });
+                  mountain["IMAGE_URL"] = `https://dieterholz.github.io/StaticResources/mountainpictures/${mountain["ID"]}-1.jpg`;
+                  mountains.push(mountain);
+              });
+              renderMaster();
+              renderDetail(0);
+          });
+
+  </script>
+
+</body>
+</html>
