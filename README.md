@@ -26,5 +26,6 @@ see HTML files e.g.
 - [CSSPropTriple](https://dierk.github.io/HtmlJs/css-news/CustomPropTriple.html)
 - [CSSNesting](https://dierk.github.io/HtmlJs/css-news/Nesting.html)
 - [Swiss Mountains](https://dierk.github.io/HtmlJs/swiss/MountainSketch.html)
+- [Switch](https://dierk.github.io/HtmlJs/Switch.html)
 
 
