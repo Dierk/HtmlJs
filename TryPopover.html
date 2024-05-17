@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popover</title>
+    <style>
+
+        #popover3:popover-open {
+            border-color: red;
+
+            inset:    unset;
+            left: 50px;
+            top:  50px;
+        }
+    </style>
+</head>
+<body>
+
+
+<button popovertarget="my-popover">Open Popover</button>
+<div popover id="my-popover">Greetings from popover=auto !</div>
+
+
+<div id="source2" popovertarget="popover2">
+    Just some arbitrary div that has a popover on hover
+</div>
+<div popover id="popover2">Greetings toggles popover via JS !</div>
+
+<script>
+    source2.onmouseenter = _ => popover2.togglePopover();
+    source2.onmouseleave = _ => popover2.togglePopover();
+</script>
+
+<div id="source3" popovertarget="popover3">
+    Popover on hover but next to trigger
+    <div popover id="popover3">Close popover</div>
+</div>
+
+<script>
+    const pos = source3.getBoundingClientRect();
+    popover3.style.setProperty("left", pos.left + "px");
+    popover3.style.setProperty("top",  pos.top + pos.height + "px");
+    source3.onmouseenter = _ => popover3.togglePopover();
+    source3.onmouseleave = _ => popover3.togglePopover();
+</script>
+
+
+</body>
+</html>
