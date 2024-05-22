@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG</title>
+    <style>
+
+
+        svg {
+            /*display: block;*/
+        }
+        #wave {
+            stroke-width:   3px;
+            stroke-opacity: 1;
+            stroke-linecap: round;
+            stroke:         cyan;
+        }
+        #wave.anim {
+            animation:      waving 1s ease-in-out alternate infinite;
+        }
+        @keyframes waving {
+            to {
+                stroke:         red;
+                d:              path("M 0 60 C 40 120,  80 0,  120 60");
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="box">
+<svg viewBox="-2 0 124 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="wave" d="M 0 60 C 40 0,  80 120,  120 60" />
+</svg>
+</div>
+
+<script>
+    box.onmouseenter = () => wave.classList.toggle("anim");
+    box.onmouseleave = () => wave.classList.toggle("anim");
+</script>
+
+
+</body>
+</html>

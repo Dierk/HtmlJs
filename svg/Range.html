@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Range</title>
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin:  0;
+            padding: 0;
+        }
+        body {
+            color: white;
+            margin: 4rem;
+            background-color: rebeccapurple;
+        }
+        svg {
+            display: block;
+            filter: drop-shadow(0px 0px 1em cyan);
+        }
+        #wave {
+            stroke-width:   3px;
+            stroke-opacity: 1;
+            stroke-linecap: round;
+            stroke:         cyan;
+            stroke-dasharray: 100 100 ;
+        }
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <div id="sea" >
+        <svg viewBox="-2 0 124 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="wave" d="M 0 60 C 40 0,  80 120,  120 60" pathLength="100" />
+        </svg>
+    </div>
+    <div>
+        <label for="range">Progress: 100%</label>
+        <input type="range" min="0" max="1oo" value="100" id="range">
+    </div>
+</main>
+
+<script>
+    const wave  = document.querySelector('#wave');
+    const range = document.querySelector('#range');
+    const label = document.querySelector('label[for="range"]');
+    const sea   = document.querySelector('#sea');
+
+    let   waveWidth  = sea.clientWidth;
+    window.addEventListener('resize', _ => waveWidth = sea.clientWidth);
+
+    // "data" binding
+    const updateViews = percentage => {
+        wave.style['stroke-dasharray'] = percentage + ' 104' ;
+        range.value = percentage;
+        label.textContent = 'Progress: ' + Math.round(percentage) + ' %';
+    };
+
+    // view bindings
+
+    range.addEventListener('input', _evt => updateViews(range.value));
+
+    let update = false;
+    sea.onmousedown  = _ => update = true;
+    sea.onmouseup    = _ => update = false;
+    sea.onmouseleave = _ => update = false;
+    sea.onmousemove  = event => {
+        if (!update) return; // guard clause
+        updateViews( event.offsetX * 100 / waveWidth );
+    }
+
+
+</script>
+
+</body>
+</html>
