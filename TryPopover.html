@@ -5,6 +5,13 @@
     <title>Popover</title>
     <style>
 
+        body {
+            margin: 4em;
+            display: flex;
+            flex-direction: column;
+            gap: 3em;
+        }
+
         #popover3:popover-open {
             border-color: red;
 
@@ -18,7 +25,7 @@
 
 
 <button popovertarget="my-popover">Open Popover</button>
-<div popover id="my-popover">Greetings from popover=auto !</div>
+<div    popover    id="my-popover">Greetings from popover=auto !</div>
 
 
 <div id="source2" popovertarget="popover2">
