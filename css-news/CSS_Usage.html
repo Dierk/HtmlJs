@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Design System Colors</title>
+    <link rel="stylesheet" href="CSS_Design_System.css">
+
+    <style>
+        body {
+            background-color: aliceblue;
+            margin: 2em;
+        }
+        .block {
+            width: 3em;
+            aspect-ratio: 1 / 1;
+        }
+
+        .col-2 {
+            display: grid;
+            grid-template-columns: max-content auto;
+            align-items: center;
+            gap: 1px 1em;
+        }
+
+        .overview {
+            display: grid;
+            grid-template-columns: repeat(20, max-content);
+            gap: 1px;
+            .block {
+                width: 2em;
+            }
+        }
+        pre {
+            margin: 0;
+            font-size: x-small;
+        }
+
+    </style>
+    <script>
+        const colorVariant = (name, sPct, lPct,  aPct ) => {
+            const colorPropertyName  = `${name}-s${sPct}-l${lPct}-a${aPct}`;
+            const colorPropertyValue = `hsla( var(${name}-h), calc(var(${name}-s) * ${Number(sPct) / 100}), calc(var(${name}-l) * ${Number(lPct) / 100}), ${Number(aPct) / 100} )`;
+            return {value: colorPropertyValue, name: colorPropertyName, style: `${colorPropertyName}: ${colorPropertyValue};`};
+        }
+    </script>
+</head>
+<body>
+
+<h1>Palette and Design System</h1>
+
+<h2>Semantic Colors</h2>
+<p>What the application developer should work with.</p>
+<div class="col-2">
+                                            <label>--kb-clr-base</label>
+    <div class="block" style="background-color:var(--kb-clr-base)"> </div>
+                                            <label>--kb-clr-base-dark</label>
+    <div class="block" style="background-color:var(--kb-clr-base-dark)"> </div>
+                                            <label>--kb-clr-base-light</label>
+    <div class="block" style="background-color:var(--kb-clr-base-light)"> </div>
+                                            <label>--kb-clr-base-bg</label>
+    <div class="block" style="background-color:var(--kb-clr-base-bg)"> </div>
+                                            <label>--kb-clr-base-shadow</label>
+    <div class="block" style="background-color:var(--kb-clr-base-shadow)"> </div>
+                                            <label>--kb-box-shadow</label>
+    <div class="block" style="margin:3px 0;background-color:white; box-shadow: var(--kb-box-shadow)"></div>
+
+                                                <label>--kb-clr-accent</label>
+        <div class="block" style="background-color:var(--kb-clr-accent)"> </div>
+                                                <label>--kb-clr-accent-light</label>
+        <div class="block" style="background-color:var(--kb-clr-accent-light)"> </div>
+     </div>
+
+
+</div>
+
+<h2>Palette Overview</h2>
+<p>This is to compare the many variations that one might pick from the palette for the design system.</p>
+<p>Click to see a style definition in the console.</p>
+
+<div class="overview">
+    <script>
+
+        const renderOverview = name => {
+            const forTenCols = variantFn => {
+                for(let col = 0; col<10; col++) {
+                    const variant = variantFn(col);
+                    const output = `<div class="block" style="background-color: ${variant.value}" title="${variant.name}"
+                            onclick="console.log('${(variant.style)}')"> </div>`;
+                    document.writeln(output);
+                }
+            }
+            for(let row = 0; row<10; row++) {
+                forTenCols(col => colorVariant(name, 100,       col*10, 100-10*row));
+                forTenCols(col => colorVariant(name, 100, 100 + col*10, 100-10*row));
+            }
+            for(let row = 0; row<10; row++) {
+                forTenCols(col => colorVariant(name,       col*10, 100, 100-10*row));
+                forTenCols(col => colorVariant(name, 100 + col*10, 100, 100-10*row));
+            }
+        }
+        renderOverview("--kb-clr-base");
+        renderOverview("--kb-clr-accent");
+
+
+
+
+    </script>
+
+</div>
+
+</body>
+</html>
