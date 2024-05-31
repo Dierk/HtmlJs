@@ -3,31 +3,57 @@
 
     /* mapping from palette to semantic channels */
 
-    --kb-clr-base-h:    var(--kb-clr-purple-h);
-    --kb-clr-base-s:    var(--kb-clr-purple-s);
-    --kb-clr-base-l:    var(--kb-clr-purple-l);
+    --kb-clr-base-h:    var(--kb-clr-violetblue-h);
+    --kb-clr-base-s:    var(--kb-clr-violetblue-s);
+    --kb-clr-base-l:    var(--kb-clr-violetblue-l);
 
     --kb-clr-accent-h:  var(--kb-clr-crimson-h);
     --kb-clr-accent-s:  var(--kb-clr-crimson-s);
     --kb-clr-accent-l:  var(--kb-clr-crimson-l);
 
+    --kb-clr-ok-h:      var(--kb-clr-forest-h);
+    --kb-clr-ok-s:      var(--kb-clr-forest-s);
+    --kb-clr-ok-l:      var(--kb-clr-forest-l);
+
+    --kb-clr-select-h:  var(--kb-clr-siena-h);
+    --kb-clr-select-s:  var(--kb-clr-siena-s);
+    --kb-clr-select-l:  var(--kb-clr-siena-l);
+
+    --kb-clr-output-h:  var(--kb-clr-violetblue-h); /* accidentally same as base */
+    --kb-clr-output-s:  var(--kb-clr-violetblue-s);
+    --kb-clr-output-l:  var(--kb-clr-violetblue-l);
+
+    --kb-clr-neutral-h: 0; /* this is not from palette since black needs no definition */
+    --kb-clr-neutral-s: 0%;
+    --kb-clr-neutral-l: 75%;
+
     /* setting semantic colors */
 
-    --kb-clr-base:      var(--kb-clr-purple);
-    --kb-clr-accent:    var(--kb-clr-crimson);
+    --kb-clr-base:      hsl(var(--kb-clr-base-h),   var(--kb-clr-base-s),   var(--kb-clr-base-l));
+    --kb-clr-accent:    hsl(var(--kb-clr-accent-h), var(--kb-clr-accent-s), var(--kb-clr-accent-l));
+    --kb-clr-ok:        hsl(var(--kb-clr-ok-h),     var(--kb-clr-ok-s),     var(--kb-clr-ok-l));
+    --kb-clr-select:    hsl(var(--kb-clr-select-h), var(--kb-clr-select-s), var(--kb-clr-select-l));
+    --kb-clr-output:    hsl(var(--kb-clr-output-h), var(--kb-clr-output-s), var(--kb-clr-output-l));
+    --kb-clr-neutral:   hsl(var(--kb-clr-neutral-h),var(--kb-clr-neutral-s),var(--kb-clr-neutral-l));
 
-    /* setting variants */
+    /* setting semantic variants as derived colors */
+
+    --_light_s_factor: 1.3; /* internal: s and l factors for lighter and darker variants */
+    --_light_l_factor: 1.5;
+    --_dark_s_factor:  1;
+    --_dark_l_factor:  0.7;
 
     --kb-clr-base-dark: hsla(    var(--kb-clr-base-h),
-                            calc(var(--kb-clr-base-s) * 1),
-                            calc(var(--kb-clr-base-l) * 0.7),
+                            calc(var(--kb-clr-base-s) * var(--_dark_s_factor)),
+                            calc(var(--kb-clr-base-l) * var(--_dark_l_factor)),
                             1 );
 
     --kb-clr-base-light: hsla(   var(--kb-clr-base-h),
-                            calc(var(--kb-clr-base-s) * 1),
-                            calc(var(--kb-clr-base-l) * 1.3),
+                            calc(var(--kb-clr-base-s) * var(--_light_s_factor)),
+                            calc(var(--kb-clr-base-l) * var(--_light_l_factor)),
                             1 );
 
+    /* todo: do we need a bg color? */
     --kb-clr-base-bg:    hsla(   var(--kb-clr-base-h),
                             calc(var(--kb-clr-base-s) * 0.7),
                             calc(var(--kb-clr-base-l) * 1.3),
@@ -38,21 +64,24 @@
                             calc(var(--kb-clr-base-l) * 1),
                             0.2 );
 
-
+    /* todo: the actual box-shadow definition should probably go to Kolibri-Base.css */
     --kb-box-shadow:  0 4px  8px 0 var(--kb-clr-base-shadow),
                       0 6px 20px 0 var(--kb-clr-base-shadow);
 
 
     --kb-clr-accent-light: hsla( var(--kb-clr-accent-h),
-                            calc(var(--kb-clr-accent-s) * 1.3),
-                            calc(var(--kb-clr-accent-l) * 1.3),
-                            1 );;
+                            calc(var(--kb-clr-accent-s) * var(--_light_s_factor)),
+                            calc(var(--kb-clr-accent-l) * var(--_light_l_factor)),
+                            1 );
 
-    /* to be included later
-    --kb-clr-output:  var(--kb-clr-base);
-    --kb-clr-ok:      hsl(104, 89%, 28%);
-    --kb-clr-select:  hsl(46, 90%, 84%);
-    --kb-clr-neutral: hsl(0, 0%, 74%);
+    --kb-clr-ok-light: hsla(     var(--kb-clr-ok-h),
+                            calc(var(--kb-clr-ok-s) * var(--_light_s_factor)),
+                            calc(var(--kb-clr-ok-l) * var(--_light_l_factor)),
+                            1 );
 
-     */
+    --kb-clr-select-dark: hsla(  var(--kb-clr-select-h),
+                            calc(var(--kb-clr-select-s) * var(--_dark_s_factor)),
+                            calc(var(--kb-clr-select-l) * var(--_dark_l_factor)),
+                            1 );
+
 }

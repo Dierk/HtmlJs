@@ -7,7 +7,7 @@
 
     <style>
         body {
-            background-color: aliceblue;
+            /*background-color: aliceblue;*/
             margin: 2em;
         }
         .block {
@@ -64,18 +64,36 @@
                                             <label>--kb-box-shadow</label>
     <div class="block" style="margin:3px 0;background-color:white; box-shadow: var(--kb-box-shadow)"></div>
 
-                                                <label>--kb-clr-accent</label>
-        <div class="block" style="background-color:var(--kb-clr-accent)"> </div>
-                                                <label>--kb-clr-accent-light</label>
-        <div class="block" style="background-color:var(--kb-clr-accent-light)"> </div>
-     </div>
+                                            <label>--kb-clr-accent</label>
+    <div class="block" style="background-color:var(--kb-clr-accent)"> </div>
+                                            <label>--kb-clr-accent-light</label>
+    <div class="block" style="background-color:var(--kb-clr-accent-light)"> </div>
+
+                                            <label>--kb-clr-ok</label>
+    <div class="block" style="background-color:var(--kb-clr-ok)"> </div>
+                                            <label>--kb-clr-ok-light</label>
+    <div class="block" style="background-color:var(--kb-clr-ok-light)"> </div>
+
+                                            <label>--kb-clr-select</label>
+    <div class="block" style="background-color:var(--kb-clr-select)"> </div>
+                                            <label>--kb-clr-select-dark</label>
+    <div class="block" style="background-color:var(--kb-clr-select-dark)"> </div>
+
+                                            <label>--kb-clr-output</label>
+    <div class="block" style="background-color:var(--kb-clr-output)"> </div>
+                                            <label>--kb-clr-neutral</label>
+    <div class="block" style="background-color:var(--kb-clr-neutral)"> </div>
 
 
 </div>
 
-<h2>Palette Overview</h2>
-<p>This is to compare the many variations that one might pick from the palette for the design system.</p>
-<p>Click to see a style definition in the console.</p>
+
+
+<h2>Derived Colors Overview</h2>
+<p>This is to compare the many technical variations of the semantic colors that one might want to pick
+    for special purposes.</p>
+<p>Hover to see the variant. Click to see a proposed systematic style definition in the console
+    that you can copy and use.</p>
 
 <div class="overview">
     <script>
@@ -100,6 +118,10 @@
         }
         renderOverview("--kb-clr-base");
         renderOverview("--kb-clr-accent");
+        renderOverview("--kb-clr-ok");
+        renderOverview("--kb-clr-select");
+        renderOverview("--kb-clr-output");
+        renderOverview("--kb-clr-neutral");
 
 
 

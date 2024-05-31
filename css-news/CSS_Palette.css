@@ -1,23 +1,25 @@
-:root {
-    --kb-clr-purple-h:    256;
-    --kb-clr-purple-s:    82%;
-    --kb-clr-purple-l:    55%;
-    --kb-clr-purple:      hsl(
-                                var(--kb-clr-purple-h),
-                                var(--kb-clr-purple-s),
-                                var(--kb-clr-purple-l)
-                          );
 
+/* Definition of named colors that we might want to use */
+
+:root {
+    /* a rich blue in between ultramarine and blueviolet */
+    --kb-clr-violetblue-h: 256;
+    --kb-clr-violetblue-s: 82%;
+    --kb-clr-violetblue-l: 55%;
+
+    /* a cool red like crimson, carmine, or krapplack */
     --kb-clr-crimson-h:    322;
     --kb-clr-crimson-s:    73%;
     --kb-clr-crimson-l:    52%;
-    --kb-clr-crimson:      hsl(
-                                var(--kb-clr-crimson-h),
-                                var(--kb-clr-crimson-s),
-                                var(--kb-clr-crimson-l)
-                          );
 
-    --kb-clr-green:      hsl(104, 89%, 28%);
-    --kb-clr-siena:  hsl(46, 90%, 84%);
+    /* close to named css color forestgreen */
+    --kb-clr-forest-h:     104;
+    --kb-clr-forest-s:     89%;
+    --kb-clr-forest-l:     28%;
+
+    /* close to named css color navajowhite, similar to raw siena or beach sand */
+    --kb-clr-siena-h:      46;
+    --kb-clr-siena-s:      90%;
+    --kb-clr-siena-l:      84%;
 
 }
