@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Style Resets/Defaults</title>
+    <style>
+
+        h1,h2,h3,h4 {
+            text-wrap: balance; /* equal line length on overflow */
+        }
+
+        p, li, figcaption {
+            text-wrap: pretty; /* avoid orphans */
+            max-width: 65ch;   /* any text columns should not be longer for readability */
+        }
+
+        /* fallback default containers */
+        header, main, footer, section, article {
+            container-type: inline-size;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+
+<header>
+
+</header>
+
+<main>
+    <h1>Some probably lengthy lengthy lengthy  lengthy lengthy H1 header</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias autem, deserunt earum eveniet ex, fuga impedit itaque magni quia quidem rerum tempora voluptates voluptatum. Aperiam dicta laboriosam magni minus obcaecati.</p>
+
+    <h2>Some probably lengthy lengthy lengthy lengthy lengthy lengthy lengthy H2 header</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias autem, deserunt earum eveniet ex, fuga impedit itaque magni quia quidem rerum tempora voluptates voluptatum. Aperiam dicta laboriosam magni minus obcaecati.</p>
+
+</main>
+
+<footer>
+
+</footer>
+
+</body>
+
+</html>
