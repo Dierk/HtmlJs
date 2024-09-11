@@ -5,13 +5,49 @@
     <title>Css Style Resets/Defaults</title>
     <style>
 
-        h1,h2,h3,h4 {
+        /* When setting sizes, this should by default include padding and border.
+           This might overriden in places where _content_ needs to be aligned.
+        */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* No default margins since they usually get in the way of layout and alignment */
+        h1, h2, h3, h4, body, p, figure, picture {
+            margin: 0;
+        }
+
+        body {
+            min-height:  100vh; /* avoid cropped pages */
+        }
+
+
+        h1, h2, h3, h4 {
             text-wrap: balance; /* equal line length on overflow */
         }
 
+        /* Lengthy text should be better readable */
         p, li, figcaption {
-            text-wrap: pretty; /* avoid orphans */
-            max-width: 65ch;   /* any text columns should not be longer for readability */
+            text-wrap:      pretty; /* avoid orphans */
+            max-width:      65ch;   /* any text columns should not be longer for readability */
+            letter-spacing: .01em;
+            line-height:     1.4;   /* inherits */
+        }
+
+        /* Per default, images should not flow with text.
+           Might be overridden for special cases.
+        */
+        img, picture {
+            max-width: 100%;   /* avoid crazy overflows */
+            display:   block;
+        }
+
+        /* Some form elements do not inherit typography per default but should. */
+        input,
+        button,
+        textarea,
+        select {
+            font: inherit;
         }
 
         /* fallback default containers */
@@ -19,7 +55,33 @@
             container-type: inline-size;
         }
 
+        /* utility classes */
 
+        /* Do not display but make it still accessible for screen readers
+           (and maybe keyboard navigation/tab?)
+         */
+        .screen-reader-only {
+            position:    absolute;      /* get out of stacking context and flow */
+            width:       1px;           /* do not ignore */
+            height:      1px;
+            overflow:    hidden;
+            padding:     0;
+            border:      0;
+            margin:      -1px;          /* do not take up any space */
+            clip:        rect(0,0,0,0); /* do not show anything */
+            white-space: nowrap;
+        }
+        .screen-reader-only:focus-within {
+            position:    relative;      /* become visible and part of the flow */
+            width:       unset;         /* do not ignore */
+            height:      unset;
+            overflow:    unset;
+            padding:     unset;
+            border:      unset;
+            margin:      unset;          /* do not take up any space */
+            clip:        unset;          /* do not show anything */
+            white-space: unset;
+        }
 
     </style>
 </head>
@@ -36,6 +98,13 @@
 
     <h2>Some probably lengthy lengthy lengthy lengthy lengthy lengthy lengthy H2 header</h2>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias autem, deserunt earum eveniet ex, fuga impedit itaque magni quia quidem rerum tempora voluptates voluptatum. Aperiam dicta laboriosam magni minus obcaecati.</p>
+
+    <p>Before element that is screen-reader-only but tabbable.</p>
+    <p class="screen-reader-only"> Hidden for normal users but can be
+        read by a screen reader and becomes visible when tabbed to
+        through a <input type="text" value="tabbable element">.</p>
+
+    <p>After hidden Element.</p>
 
 </main>
 
