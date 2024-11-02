@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Animation Timeline</title>
+    <style>
+        body {
+            padding: 5em;
+        }
+
+        /* provide the area in which the animation can operate */
+        #myScrollContainer {
+            background-color:     azure;
+            --containerHeight:    50vh;
+            --squareSize:         100px;
+            --parallaxOffset:     20px;
+            height:               calc(var(--containerHeight) + var(--parallaxOffset));
+            overflow-y:           scroll; /* make the container horizontally scrollable */
+            scroll-timeline-name: --myScrollContainerTimeline; /* other elements can animate in relation to this scroll position */
+        }
+
+        #square {
+            background-color: #7f57a5;
+            border-radius:    10%;
+            width:            var(--squareSize);
+            box-shadow:       0 0 5px 3px azure inset; /* make the background appear smaller */
+            aspect-ratio:     1 / 1;
+            margin-top:       calc((var(--containerHeight) - var(--squareSize)));
+            margin-inline:    auto;
+            position:         relative;
+        }
+
+        #square::before {
+            content:             '';
+            position:            absolute;
+            inset:               0 var(--parallaxOffset) 0 calc( -1 * var(--parallaxOffset)); /* move it a little to the left */
+            background-color:    deeppink;
+
+            animation-name:      parallaxAnimation;
+            animation-duration:  1ms; /* Firefox requires this to apply the animation */
+            animation-direction: alternate;
+            animation-timeline:  --myScrollContainerTimeline;
+
+        }
+
+        @keyframes parallaxAnimation {
+            from {
+                transform: translateY(var(--parallaxOffset));
+            }
+            to {
+                transform: translateY(calc( -1 * var(--parallaxOffset)));
+            }
+        }
+
+        /* Make sure we overflow the container such that we can scroll.
+           We need the same space below the square as we have above it.
+        */
+        #stretcher {
+            height: calc((var(--containerHeight) - var(--squareSize)));
+        }
+
+    </style>
+</head>
+
+<body>
+<p>Animation Timeline only works in chrome-based browsers directly,
+    in Firefox with feature flag, but not in Safari (as of Oct 2024).
+    See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline">MDN</a></p>
+
+<div id="myScrollContainer">
+    <div id="square"></div>
+    <div id="stretcher"></div>
+</div>
+
+
+</body>
+
+</html>
