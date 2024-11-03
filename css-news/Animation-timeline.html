@@ -10,7 +10,7 @@
 
         /* provide the area in which the animation can operate */
         #myScrollContainer {
-            background-color:     azure;
+            background-color:     cornsilk;
             --containerHeight:    50vh;
             --squareSize:         100px;
             --parallaxOffset:     20px;
@@ -34,21 +34,29 @@
             content:             '';
             position:            absolute;
             inset:               0 var(--parallaxOffset) 0 calc( -1 * var(--parallaxOffset)); /* move it a little to the left */
-            background-color:    deeppink;
+            background-color:    hsl(from magenta h s calc(l * 1.9) / 0.8);
+            border-radius:       10%;
+            border:              2px solid magenta;
 
             animation-name:      parallaxAnimation;
             animation-duration:  1ms; /* Firefox requires this to apply the animation */
             animation-direction: alternate;
             animation-timeline:  --myScrollContainerTimeline;
+            animation-timing-function: ease-in-out;
 
         }
 
         @keyframes parallaxAnimation {
             from {
                 transform: translateY(var(--parallaxOffset));
+                scale: 1;
+            }
+            50% {
+                scale: 1.6;
             }
             to {
                 transform: translateY(calc( -1 * var(--parallaxOffset)));
+                scale: 1;
             }
         }
 
