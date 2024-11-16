@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+    <script src="../observable/observable.js"></script>
+    <script src="gauge.js"></script>
+
+
+    <style>
+        p {
+            padding: 0 10em 0 4em;
+        }
+        .ui {
+            padding: 0 0 0 4em;
+            display: grid;
+            grid-template-columns: repeat(2, min-content);
+            grid-column-gap: 2em;
+        }
+        .detail > * {
+            padding: 0 0 1em 0;
+        }
+
+        canvas {
+            margin:             0.1em 1em 0 1em;
+            --section-divider:   0.6;
+        }
+
+        .classic {
+            --section-one-color: red;
+            --section-two-color: green;
+            --progress-color:    rgba(116,160,194,0.5);
+        }
+        .citrus {
+            --section-one-color: orange;
+            --section-two-color: lightgreen;
+            --progress-color:    rgba(255,0,0,0.2);
+        }
+        .elegant {
+            --section-one-color: darkgrey;
+            --section-two-color: grey;
+            --progress-color:    rgba(0,0,0,0.2);
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>Custom Component: experiment</h1>
+
+<div class="ui">
+    <input  id="range" type="range"> <span id="digits"></span><br>
+    <canvas id="gauge" class="classic" width=200 height=200 draggable="false"></canvas>
+</div>
+<script>
+    const GaugeController = value => {
+        const valueObs = Observable(value); // model is aggregated, value is between 0 and 1
+        return {
+            setValue:   valueObs.setValue,
+            getValue:   valueObs.getValue,
+            onValueChanged: valueObs.onChange
+        }
+    }
+    const gaugeController = GaugeController(0);
+
+    range.oninput = _evt => gaugeController.setValue(Number(range.value) / 100);    // range view binding
+    gaugeController.onValueChanged( value => range.value = value * 100);            // range data binding
+    gaugeController.onValueChanged( value => digits.textContent = value * 100 | 0); // digits data binding
+
+    bindGaugeView(gauge, gaugeController);                                          // gauge view binding
+    gaugeController.onValueChanged(value => progressPie(gauge, value, true));       // gauge data binding
+
+    gaugeController.setValue(0.55)
+
+</script>
+
+</body>
+</html>
