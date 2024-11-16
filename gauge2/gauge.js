@@ -1,8 +1,10 @@
 // Using only function scope. No "class", "new", or "this".
 
 function progressPie(canvas, progressFraction, showThumb) {
-    const centerx   = canvas.width  / 2;
-    const centery   = canvas.height / 2;
+    const canvasWidth     = canvas.getBoundingClientRect().width;
+    const canvasHeight    = canvas.getBoundingClientRect().height;
+    const centerx   = canvasWidth  / 2;
+    const centery   = canvasHeight / 2;
     const radius    = Math.min(centerx, centery);
     const ctx       = canvas.getContext('2d');
     const clockwise = false;
@@ -29,10 +31,10 @@ function progressPie(canvas, progressFraction, showThumb) {
 
     function thumb(progressFraction) {
         const factor = 0.7;
-        const tcentery =  factor * Math.sin(adjust(progressFraction)) * (canvas.height / 2) + centery ;
-        const tcenterx =  factor * Math.cos(adjust(progressFraction)) * (canvas.width  / 2) + centerx ;
+        const tcentery =  factor * Math.sin(adjust(progressFraction)) * (canvasHeight / 2) + centery ;
+        const tcenterx =  factor * Math.cos(adjust(progressFraction)) * (canvasWidth  / 2) + centerx ;
 
-        const size = Math.min(40, canvas.height / 10);
+        const size = Math.min(40, canvasHeight / 10);
 
         const inner = ctx.createLinearGradient(tcenterx - size, tcentery - size, tcenterx + size, tcentery + size );
         inner.addColorStop(0,   "rgba(0,0,0,0.3)");
@@ -51,7 +53,7 @@ function progressPie(canvas, progressFraction, showThumb) {
     }
 
     function paint() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.clearRect(0,0,canvasWidth, canvasHeight);
         // background arcs
         const divider = Number(getCSS("--section-divider"));
         pieSlice(0, divider, radius, gradient(radius, getCSS("--section-one-color")));
