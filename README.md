@@ -29,5 +29,6 @@ see HTML files e.g.
 - [Swiss Mountains](https://dierk.github.io/HtmlJs/swiss/MountainSketch.html)
 - [Switch](https://dierk.github.io/HtmlJs/Switch.html)
 - [Kolibri Text SVG Effekt](https://dierk.github.io/HtmlJs/svg/Text_SVG_Effekt.html)
+- [Safe Gauge](https://dierk.github.io/HtmlJs/gauge2/View.html)
 
 
