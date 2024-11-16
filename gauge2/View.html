@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>View</title>
     <script src="observable.js"></script>
@@ -8,13 +8,13 @@
 
     <style>
         body {
-            font-family: system-ui;
-            max-width: 40ch;
-            margin-inline: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2em;
+            font-family:        system-ui;
+            max-width:          40ch;
+            margin-inline:      auto;
+            display:            flex;
+            flex-direction:     column;
+            align-items:        center;
+            gap:                2em;
         }
 
         canvas {
@@ -31,13 +31,22 @@
         }
 
         .digits {
-            font-size: 2.5rem;
+            font-size:  2.5rem;
             font-variant-numeric: tabular-nums;
-            display: flex;
-            gap: .3em;
-            color: limegreen;
-            filter: drop-shadow(0 0 .05em lime);
-
+            display:    flex;
+            gap:        .4em;
+            padding:    .4em;
+            color:      limegreen;
+            border:     2px solid transparent;
+        }
+        .digits.finished {
+            border-color:   lime;
+            box-shadow:     0 0 .3em 0 lime;
+        }
+        .digits span {
+            padding: .1em;
+            background-image: linear-gradient(lightgrey, #D3D3D340, lightgray);
+            text-shadow: lime 0 0 .3em;
         }
     </style>
 
@@ -47,14 +56,14 @@
 <h1>Custom Component: experiment</h1>
 
 
-<div><input id="range" type="range" min=0 max=9 step=1> <span id="digits"></span></div>
-    <canvas id="gauge" width=200 height=200 class="classic" draggable="false"></canvas>
+<div><input id="range" type="range" min=0 max=9 step=1> <label for="range" id="rangeLabel"></label></div>
+<canvas id="gauge" width=200 height=200 class="classic" draggable="false"></canvas>
 
-<div class="digits">
-    <span id="digit_0">0</span>
-    <span id="digit_1">0</span>
-    <span id="digit_2">0</span>
-    <span id="digit_3">0</span></div>
+<div class="digits" id="digitRoot">
+</div>
+
+<button id="resetButton"> Reset </button>
+
 <script>
     const GaugeController = value => {
         const valueObs = Observable(value); // model is aggregated, value is between 0 and 1
@@ -69,76 +78,96 @@
     range.oninput = _evt => gaugeController.setValue(Number(range.value) / 10);    // range view binding
     gaugeController.onValueChanged(value => range.value = value * 10);             // range data binding
 
-    gaugeController.onValueChanged(value => digits.textContent = value * 100 | 0); // digits data binding
+    gaugeController.onValueChanged(value => rangeLabel.textContent = value * 10 | 0); // digits data binding
 
     bindGaugeView(gauge, gaugeController);                                          // gauge view binding
     gaugeController.onValueChanged(value => progressPie(gauge, value, true));       // gauge data binding
 
-    const AggregateController = digitCount => {
-        const digitObservables = Array.from({length:digitCount}, _ => Observable(0) );
-        return {
-            onChange: index        => digitObservables[index].onChange,
-            setValue: (idx, value) => digitObservables[idx].setValue(value)
-        }
-    }
-    const aggregateController = AggregateController(4);
+    const AggregateController = (digitCount, gaugeController) => {                  // aggregating many digits
 
-    aggregateController.onChange(0)(value => digit_0.textContent = value);
-    aggregateController.onChange(1)(value => digit_1.textContent = value);
-    aggregateController.onChange(2)(value => digit_2.textContent = value);
-    aggregateController.onChange(3)(value => digit_3.textContent = value);
+        const digitObservables = Array.from({length: digitCount}, _ => Observable(0)); // we aggregate so many digits
+        const onDigitChange = index        => digitObservables[index].onChange;
+        const setDigitValue = (idx, value) => digitObservables[idx].setValue(value);
+        const finishedObservable = Observable(false);
 
-    let resetCount = 0;
-    let oldUpwards = true;
-    let digitIdx   = 0;
-    let lastValue  = 0;
-    gaugeController.onValueChanged( newValue => {
-        if ( Math.abs(newValue - lastValue) < 0.05) {   // change must be at least 5% - makes it more forgiving to use
-            return;
-        }
+        // The aggregate controller observes the gaugeController for value changes such that
+        // the aggregated observables can be updated according to the aggregation logic.
+        // While the gaugeController updates one digit, the aggregate controller tells which one.
 
-        if (resetCount > 1) {                           // we have to reset
-            enabled = false;                            // prevent mutual recursion
+        let resetCount  = 0;         // going downwards over the zero position twice resets all digits
+        let lastUpwards = true;      // whether we were last going upwards (true) or downwards (false)
+        let digitIdx    = 0;         // the index of the digit that we are currently working with
+        let lastValue   = 0;         // the last value that we have seen, needed to find out the direction
+
+        const reset = () => {
             console.info("RESET");
-            [0,1,2,3].forEach( n => aggregateController.setValue(n, 0));  // reset the digits
+            Array.from({length: digitCount}, (_,n) => setDigitValue(n, 0));     // reset the digits
             resetCount = 0;                             // back to initial values
             digitIdx   = 0;
             lastValue  = 0;
-            return;
+            finishedObservable.setValue(false);
+            // we keep the current direction
         }
 
-        let   upwards = newValue >= lastValue; // first call will be 0 0, after that the values are never equal
-        const crossedZeroUpwards   = lastValue > 0.75 && newValue < 0.25 && false === upwards;
-        const crossedZeroDownwards = lastValue < 0.25 && newValue > 0.75 &&           upwards;
-        if (crossedZeroUpwards) {
-            upwards = true;
-        }
-        if (crossedZeroDownwards) {
-            upwards = false;
-            resetCount++;
-        }
+        gaugeController.onValueChanged(newValue => {
+            if (Math.abs(newValue - lastValue) < 0.05) {   // change must be at least 5% - makes it more forgiving to use
+                return;
+            }
+            if (resetCount > 1) {                           // we have to reset
+                reset();
+            }
 
-        if (upwards) {
-            console.log(" -> ");
-        } else {
-            console.log(" <- ");
-        }
+            let upwards                = newValue >= lastValue; // first call will be 0 0, after that the values are never equal
+            const crossedZeroUpwards   = lastValue > 0.75 && newValue < 0.25 && false === upwards;
+            const crossedZeroDownwards = lastValue < 0.25 && newValue > 0.75 && upwards;
+            if (crossedZeroUpwards) {
+                upwards = true;
+            }
+            if (crossedZeroDownwards) {
+                upwards = false;
+                resetCount++;
+            }
+            if (upwards !== lastUpwards) {                          // change of direction, value at index remains
+                digitIdx++;                                         // the next index is used
+                resetCount = 0;                                     // we fixed a value, so no reset
+            }
 
-        if (upwards !== oldUpwards) {                           // change of direction, value at index remains
-            digitIdx++;                                         // the next index is used
-            resetCount = 0;                                     // we fixed a value, so no reset
-        }
+            if (digitIdx >= digitCount) {
+                finishedObservable.setValue(true);
+                return;
+            }
 
-        if (digitIdx > 3) {
-            console.warn("finished!")
-            return;
-        }
+            setDigitValue(digitIdx, Math.min(9, Math.floor(newValue * 10)));
 
-        aggregateController.setValue(digitIdx, newValue * 10 | 0);
+            lastUpwards = upwards;
+            lastValue  = newValue;
+        });
 
-        oldUpwards = upwards;
-        lastValue  = newValue;
-    });
+        return { // API to bind against
+            onDigitChange,
+            setDigitValue,
+            reset:         () => { gaugeController.setValue(0); lastUpwards=true; reset();},
+            onFinished:    finishedObservable.onChange,
+            getDigitCount: ()           => digitCount
+        };
+    }
+    const aggregateController = AggregateController(4, gaugeController); // well, you can have many digits if you want ...
+
+    const AggregateProjector = (root, aggregateController) => {
+        Array.from({length:aggregateController.getDigitCount()}, (_,idx) => {
+            const span = document.createElement("SPAN");                            // create the digit view
+            root.append(span);
+            aggregateController.onDigitChange(idx)(value => span.textContent = value);   // data binding
+        })
+
+        aggregateController.onFinished( fin =>
+            fin
+            ? root.classList.add("finished")
+            : root.classList.remove("finished"))
+    }
+    AggregateProjector(digitRoot, aggregateController);
+
+    resetButton.onclick = _evt => aggregateController.reset();
 
 
 </script>
