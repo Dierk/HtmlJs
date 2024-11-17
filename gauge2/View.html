@@ -14,7 +14,7 @@
             display:            flex;
             flex-direction:     column;
             align-items:        center;
-            gap:                2em;
+            gap:                1em;
         }
 
         canvas {
@@ -53,14 +53,17 @@
 </head>
 <body>
 
-<h1>Custom Component: experiment</h1>
+<h1>Safe Dial</h1>
+<p>Start by moving to the right.
+Change direction for the next digit.
+Reset by moving left over the zero position twice.
+</p>
 
+<div class="digits" id="digitRoot"></div>
 
-<div><input id="range" type="range" min=0 max=9 step=1> <label for="range" id="rangeLabel"></label></div>
 <canvas id="gauge" width=200 height=200 class="classic" draggable="false"></canvas>
 
-<div class="digits" id="digitRoot">
-</div>
+<div><input id="range" type="range" min=0 max=9 step=1> <label for="range" id="rangeLabel"></label></div>
 
 <button id="resetButton"> Reset </button>
 
