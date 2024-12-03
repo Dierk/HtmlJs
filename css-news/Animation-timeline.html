@@ -15,7 +15,7 @@
             --squareSize:         100px;
             --parallaxOffset:     20px;
             height:               calc(var(--containerHeight) + var(--parallaxOffset));
-            overflow-y:           scroll; /* make the container horizontally scrollable */
+            overflow-y:           scroll; /* make the container vertically crollable */
             scroll-timeline-name: --myScrollContainerTimeline; /* other elements can animate in relation to this scroll position */
         }
 
@@ -67,6 +67,42 @@
             height: calc((var(--containerHeight) - var(--squareSize)));
         }
 
+
+        #listContainer {
+            display:                flex;
+            flex-direction:         row;
+            align-items:            center;
+            gap:                    1em;
+            padding:                .3em 1em;
+            margin-block:           1em;
+            font-family:            system-ui;
+            font-size:              larger;
+            ul {
+                padding:            1em 2em 1em 1em;
+                color:              white;
+                box-shadow:         0 0 .3em 0 darkblue;
+                background-image:   linear-gradient(#0059ff10, darkblue, #0059ff10);
+                max-height:         7lh;
+                overflow-y:         scroll;
+                list-style:         none;
+                scroll-snap-type:   y mandatory;
+                scrollbar-color:    whitesmoke transparent;
+            }
+        }
+        li {
+            opacity: 0.3;
+            animation:          bright;
+            animation-range:    calc(50% - 1lh) calc(50% + 1lh);
+            animation-timeline: view();
+            scroll-snap-align:  center;
+        }
+        @keyframes bright {
+            50% {
+                opacity: 1;
+                font-size: x-large;
+            }
+        }
+
     </style>
 </head>
 
@@ -80,6 +116,27 @@
     <div id="stretcher"></div>
 </div>
 
+<div id="listContainer">
+    <div>My Number:</div>
+    <ul>
+            <li>one</li>
+            <li>two</li>
+            <li>three</li>
+            <li>four</li>
+            <li>five</li>
+            <li>six</li>
+            <li>seven</li>
+            <li>eight</li>
+            <li>nine</li>
+            <li>ten</li>
+            <li>eleven</li>
+            <li>twelve</li>
+            <li>thirteen</li>
+            <li>fourteen</li>
+            <li>fifteen</li>
+        </ul>
+
+</div>
 
 </body>
 
