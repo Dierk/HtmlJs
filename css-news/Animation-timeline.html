@@ -69,8 +69,8 @@
 
 
         #listContainer {
-            display:                flex;
-            flex-direction:         row;
+            display:                grid;
+            grid-template-columns:  max-content 15ch max-content;
             align-items:            center;
             gap:                    1em;
             padding:                .3em 1em;
@@ -116,12 +116,16 @@
     <div id="stretcher"></div>
 </div>
 
+<div style="margin-top: 2lh">
+    Even more Chrome-only: snap events.
+</div>
+
 <div id="listContainer">
     <div>My Number:</div>
     <ul>
-            <li>&nbsp;</li>
-            <li>&nbsp;</li>
-            <li>&nbsp;</li>
+            <li style="opacity: 0">one</li>   <!-- dirty trick of the day-->
+            <li style="opacity: 0">one</li>
+            <li style="opacity: 0">one</li>
             <li>one</li>
             <li>two</li>
             <li>three</li>
@@ -137,12 +141,18 @@
             <li>thirteen</li>
             <li>fourteen</li>
             <li>fifteen</li>
-            <li>&nbsp;</li>
-            <li>&nbsp;</li>
-            <li>&nbsp;</li>
+            <li style="opacity: 0">fifteen</li>
+            <li style="opacity: 0">fifteen</li>
+            <li style="opacity: 0">fifteen</li>
         </ul>
-
+    <div><span id="out"></span></div>
 </div>
+
+<script>
+    const scroller = document.querySelector("#listContainer ul");
+    const out      = document.querySelector("#out");
+    scroller.onscrollsnapchange = evt => out.textContent = evt.snapTargetBlock.textContent;
+</script>
 
 </body>
 
