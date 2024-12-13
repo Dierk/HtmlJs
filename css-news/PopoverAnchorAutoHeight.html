@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popover</title>
+    <style>
+
+        body {
+            margin: 4em;
+            display: flex;
+            flex-direction: column;
+            gap: 3em;
+            /*
+                Needed to animated e.g. from height:0 to height:auto.
+                Works in Chrome but does not work in FF, Safari yet (dec.24).
+            */
+            /*interpolate-size: allow-keywords;*/
+        }
+
+        [popover] {             /* style that pops for all elements with popover attribute */
+            flex-direction:     column;
+            gap:                .5em;
+            background-image:   linear-gradient(170deg, #4c4cc6 45%, darkblue 50%, darkblue 80%, #4c4cc6);
+            box-shadow:         .2em .2em  1em 0 lightslategray,
+                                0    0    .5em 0 white           inset;
+            border-width:       0;
+            border-radius:      .5em;
+            color:              white;
+            font-family:        system-ui;
+            padding:            1em;
+        }
+
+        :popover-open {
+            animation-name:             appear;
+            animation-duration:         .5s;
+            animation-timing-function:  ease-in-out;
+            animation-fill-mode:        forwards;
+        }
+        :popover-open::backdrop {
+            background-color:           color-mix(in hsl, white, transparent);
+            transition:                 background-color 1s linear;
+            @starting-style {
+                background-color:       transparent;
+            }
+        }
+
+        #source3 {
+            position:           relative;
+            anchor-name:        --source3-anchor;
+        }
+        #popover3 {
+            position:           absolute;   /* override the popover-hidden default */
+            inset:              unset;
+            position-anchor:    --source3-anchor;
+            top:                anchor(bottom);
+            left:               anchor(left);
+
+            transform-origin:   top center; /* makes expandY a drop-down */
+        }
+        #popover3:popover-open {
+            display:                    flex;              /* override */
+            animation-name:             appear, expandY;
+        }
+
+        @keyframes appear {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes expandY {
+            from {  transform: scaleY(0); }
+            to   {  transform: scaleY(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+
+<button popovertarget="my-popover">Open Popover</button>
+<div    popover    id="my-popover">Greetings from popover=auto !</div>
+
+
+<div id="source2" >
+    Just some arbitrary div that shows a popover on hover.
+</div>
+<div popover id="popover2">Greetings toggles popover via JS !</div>
+
+<script>
+    source2.onmouseenter = _ => popover2.showPopover();
+</script>
+
+<div id="source3">
+    Toggles popover on hover witch anchoring next to trigger.
+    <div popover id="popover3">
+        <div>Popover is cool</div>
+        <div>Anchor-Positioning</div>
+        <div>Animate to auto height</div>
+    </div>
+</div>
+
+<script>
+    source3.onmouseenter = _ => popover3.togglePopover();
+    source3.onmouseleave = _ => popover3.togglePopover();
+</script>
+
+<div>
+    This uses the anchor-positioning, which seems to be
+    working in all latest browsers (dec. 2024) - at least as long
+    as the popover is a nested element, despite
+    mdn claiming that it only works in Chrome.
+</div>
+
+
+
+</body>
+</html>
