@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Transition SPA</title>
+    <style>
+        ::view-transition-group(root){
+          animation-duration: 1s;
+        }
+
+        h1.center {
+            text-align: center;
+        }
+        div {
+            height: 1em;
+            background-color: maroon;
+        }
+        div:nth-child(even) {
+            background-color: peachpuff;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="changingContent1" onclick="change1Listener()">Click Me !</h1>
+
+<script>
+
+    function change1Listener() {
+
+      const doChange1 = () => {                                     // some arbitrary change to the dom
+        changingContent1.textContent += " Thanks!";                     // change a text
+        changingContent1.classList.add("center");                       // add a css class
+        document.body.innerHTML += "<div></div>";                       // add an element
+      };
+      // Fallback for browsers that don't support View Transitions:
+      if (!document.startViewTransition) {
+        doChange1();
+        console.warn("could not do view transition, falling back");
+        return;
+      }
+      // With View Transitions:
+      const transition = document.startViewTransition(() => doChange1());
+    }
+
+
+</script>
+</body>
+</html>

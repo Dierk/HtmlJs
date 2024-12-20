@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Transition SPA</title>
+    <style>
+        ::view-transition-group(root){
+            animation-duration:         1s;
+        }
+
+        ::view-transition-group(page-content){
+            animation-duration:         1s;
+            animation-timing-function:  ease-in-out;
+        }
+        ::view-transition-old(page-content) {
+          animation-name:               slide-out-left;
+        }
+        ::view-transition-new(page-content) {
+          animation-name:               slide-in-right;
+        }
+        @keyframes slide-out-left {
+          from { transform:             translateX(0);      }
+          to   { transform:             translateX(-100%);  }
+        }
+        @keyframes slide-in-right {
+          from { transform:             translateX(100%);   }
+          to   { transform:             translateX(0);      }
+        }
+
+        /* we could be more specific but this is enough (pretty much) */
+        ::view-transition-group(selection-marker){
+            animation-duration:         .3s;
+            animation-timing-function:  ease-in-out;
+        }
+
+        nav ul {
+            list-style:         none;
+            display:            flex;
+            margin-block:       1em ;
+            padding:            0;
+            background-color:   indigo;
+            color:              whitesmoke;
+            font-family:        system-ui;
+        }
+        nav ul li {
+            position:           relative;
+            padding:            .3em;
+        }
+        nav ul li.selected {
+            color:              white;
+            font-weight:        bold;
+        }
+        nav ul li::before {
+            content:            "";
+            position:           absolute;
+            inset:              auto 0 0 0;
+            height:             .2em;
+            transform:          translateY(0);
+            background-color:   indigo;
+        }
+        nav ul li.selected::before {
+            view-transition-name: selection-marker; /* isolate the transition */
+            transform:          translateY(.4em);
+            background-color:   red;
+        }
+        div {
+            margin-top:         2rem;
+            font-size:          3rem;
+            text-align:         center;
+            view-transition-name: page-content;
+        }
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li data-page-id="One">One</li>
+        <li data-page-id="Two" class="selected">Two</li>
+        <li data-page-id="Three">Three</li>
+        <li data-page-id="Four">A long item four</li>
+    </ul>
+</nav>
+
+<div id="One" class="hide">
+        Some first page content
+</div>
+<div id="Two" >
+        Some other page content
+</div>
+<div id="Three" class="hide">
+        A third page content
+</div>
+<div id="Four" class="hide">
+        Page content number four
+</div>
+
+<script>
+
+    const items = document.querySelectorAll("nav ul li");
+
+    const transitionListener = item => _evt => {
+
+      const selectMenue = () => {
+        items.forEach( item => {
+            item.classList.remove("selected");
+            document.getElementById(item.getAttribute("data-page-id")).classList.add("hide");
+        });
+        item.classList.add("selected");
+        document.getElementById(item.getAttribute("data-page-id")).classList.remove("hide");
+      };
+      // Fallback for browsers that don't support View Transitions:
+      if (!document.startViewTransition) {
+        selectMenue();
+        console.warn("could not do view transition, falling back");
+        return;
+      }
+      // With View Transitions:
+      const transition = document.startViewTransition(() => selectMenue());
+    };
+
+    items.forEach( item => item.addEventListener("click", transitionListener(item)));
+
+</script>
+</body>
+</html>
