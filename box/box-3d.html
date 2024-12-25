@@ -7,7 +7,7 @@
 
         body {
             display:         flex;
-            justify-content: center;
+            justify-content: start;
             align-items:     center;
             min-height:      100vh;
             margin:          0;
@@ -72,6 +72,17 @@
             100% {transform: rotateX(-50deg) rotateY(-70deg);}
         }
 
+        .showSides {
+            position: relative;
+            top:     calc(var(--box-width) * -1.5px );
+            left:    calc(var(--box-width) *  1px );
+            animation: showSides 5s ease-in-out alternate infinite;
+        }
+        @keyframes showSides {
+            0%   {transform: rotateX(-30deg) rotateY(-70deg);}
+            100% {transform: rotateX(-20deg) rotateY(290deg);}
+        }
+
         .face {
             background:    rgba(0, 128, 255, 0.95);
             border:        3px solid darkblue;
@@ -96,16 +107,16 @@
 
 <script>
     let result = "";
-    [0, 1, 2,3,4,5].forEach(line => {
+    [0, 1, 2,3,4].forEach(line => {
         result += `<div class="box-container" style="--box-container-nr:${line}">`;
-        [0, 1, 2, 3,4,5,6,7,8].forEach(col => {
+        [0, 1, 2, 3,4,5,6,7,8,9,10].forEach(col => {
             result += `
                 <div class="box" style="--box-nr:${col};">
                     <div class="face front">Front ${col}</div>
-                    <div class="face back">Back ${col}</div>
-                    <div class="face left">Left ${col}</div>
+                    <div class="face back" >Back ${col}</div>
+                    <div class="face left" >Left ${col}</div>
                     <div class="face right">Right ${col}</div>
-                    <div class="face top" onclick="alert('line ${line} col ${col}')">Top  ${col}</div>
+                    <div class="face top"  >Top  ${col}</div>
                     <div class="face bottom">Bottom ${col}</div>
                 </div>
             `;
@@ -113,6 +124,12 @@
         result += `</div>`;
     });
     document.querySelector("main").innerHTML = result;
+    document.querySelectorAll(".top").forEach( top => {
+        top.onclick = evt => {
+            evt.target.parentElement.classList.add("showSides");
+            setTimeout( _ => {evt.target.parentElement.classList.remove("showSides");}, 10*1000);
+        }
+    })
 </script>
 </body>
 </html>
