@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Box</title>
+    <style>
+
+        body {
+            display:         flex;
+            justify-content: center;
+            align-items:     center;
+            min-height:      100vh;
+            margin:          0;
+            background:      linear-gradient(in srgb-linear, blue, orange);
+            perspective:     200vmax;
+        }
+
+        .box-container {
+            /* for debug purposes */
+            /*outline:                  2px solid lime;*/
+            pointer-events:           none; /* overlapping containers should not block boxes behind them.*/
+
+            display:                  flex;
+            flex-direction:           row-reverse; /* for overlap through painting sequence, we paint right-to-left */
+
+            --box-width:              100;
+            --z-center:               calc(var(--box-width) * 1px / 2);
+
+            --box-x-offset:           calc(10 * var(--box-width) / 100);
+            --box-y-offset:           calc(25 * var(--box-width) / 100);
+            --box-nr:                 0;
+
+            --box-container-x-offset: calc(33 * var(--box-width) / 100);
+            --box-container-y-offset: calc(-30 * var(--box-width) / 100);
+            --box-container-nr:       0;
+
+            translate:                calc(var(--box-container-nr) * var(--box-container-x-offset) * 1px)
+                                      calc(var(--box-container-nr) * var(--box-container-y-offset) * 1px);
+
+        }
+
+        /* provides the logical group */
+        .box {
+            pointer-events:  initial;
+            width:           calc(var(--box-width) * 1px);
+            height:          calc(var(--box-width) * 1px);
+            display:         grid;                              /* child positioning  */
+            transform-style: preserve-3d;                       /* put children in our 3d space */
+            animation:       rotateBox 1s linear forwards;      /* show the box from various sides */
+            translate:       calc(var(--box-nr) * var(--box-x-offset) * 1px) calc(var(--box-nr) * var(--box-y-offset) * 1px);
+        }
+
+        /* all children go directly on top of each other */
+        .box > * {
+            grid-column: 1;
+            grid-row:    1;
+        }
+
+
+        /* the transform origin for rotate is center by default, so rotations must first */
+        /* put the respective face in the the center, then rotate.            */
+
+        .front  {transform:                 translateZ(var(--z-center));}  /* move front to center */
+        .back   {transform: rotateY(180deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the back */
+        .left   {transform: rotateY(-90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the left */
+        .right  {transform: rotateY( 90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the right */
+        .top    {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
+        .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
+
+        @keyframes rotateBox {
+            0%   {transform: rotateX(0)      rotateY(0);}
+            100% {transform: rotateX(-50deg) rotateY(-70deg);}
+        }
+
+        .face {
+            background:    rgba(0, 128, 255, 0.95);
+            border:        3px solid darkblue;
+            border-radius: 4%;
+            display:       grid;
+            place-items:   center;
+            font-family:   system-ui;
+            font-size:     larger;
+            font-weight:   bold;
+            color:         white;
+        }
+
+        .top:hover {
+            background: rgba(255, 193, 60, 0.9);
+        }
+    </style>
+</head>
+<body>
+<main>
+
+</main>
+
+<script>
+    let result = "";
+    [0, 1, 2,3,4,5].forEach(line => {
+        result += `<div class="box-container" style="--box-container-nr:${line}">`;
+        [0, 1, 2, 3,4,5,6,7,8].forEach(col => {
+            result += `
+                <div class="box" style="--box-nr:${col};">
+                    <div class="face front">Front ${col}</div>
+                    <div class="face back">Back ${col}</div>
+                    <div class="face left">Left ${col}</div>
+                    <div class="face right">Right ${col}</div>
+                    <div class="face top" onclick="alert('line ${line} col ${col}')">Top  ${col}</div>
+                    <div class="face bottom">Bottom ${col}</div>
+                </div>
+            `;
+        });
+        result += `</div>`;
+    });
+    document.querySelector("main").innerHTML = result;
+</script>
+</body>
+</html>
