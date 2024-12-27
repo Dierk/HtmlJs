@@ -30,5 +30,7 @@ see HTML files e.g.
 - [Switch](https://dierk.github.io/HtmlJs/Switch.html)
 - [Kolibri Text SVG Effekt](https://dierk.github.io/HtmlJs/svg/Text_SVG_Effekt.html)
 - [Safe Gauge](https://dierk.github.io/HtmlJs/gauge2/View.html)
+- [Boxes](https://dierk.github.io/HtmlJs/box/boxes-3d.html)
+- [Block](https://dierk.github.io/HtmlJs/box/block-3d.html)
 
 

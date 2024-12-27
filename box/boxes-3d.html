@@ -15,7 +15,7 @@
             perspective:     200vmax;
         }
 
-        .block-parent {
+        .box-container {
             /* for debug purposes */
             /*outline:                  2px solid lime;*/
             pointer-events:           none; /* overlapping containers should not block boxes behind them.*/
@@ -40,7 +40,7 @@
         }
 
         /* provides the logical group */
-        .block {
+        .box {
             pointer-events:  initial;
             width:           calc(var(--box-width) * 1px);
             height:          calc(var(--box-width) * 1px);
@@ -51,7 +51,7 @@
         }
 
         /* all children go directly on top of each other */
-        .block > * {
+        .box > * {
             grid-column: 1;
             grid-row:    1;
         }
