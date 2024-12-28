@@ -155,13 +155,38 @@
 <script>
 
     const registerForMouseAndTouch = sourceElement => {
-        let lastX = 0;
-        let lastY = 0;
+
+        let lastHorizontalPosition = 0;
+        let lastVerticalPosition   = 0;
+        let firstCall              = true;
+        const getDiffs = evt => {
+            let newHorizontalPosition = evt.clientX; // selection position via mouse or touch where 0,0 is the canvas top left corner
+            let newVerticalPosition   = evt.clientY;
+            if (evt.type.startsWith("touch")) {
+                newHorizontalPosition  = evt.targetTouches[0].clientX ;
+                newVerticalPosition    = evt.targetTouches[0].clientY ;
+            }
+            result = [
+                newHorizontalPosition - lastHorizontalPosition,
+                newVerticalPosition   - lastVerticalPosition
+            ]
+            lastHorizontalPosition = newHorizontalPosition;
+            lastVerticalPosition   = newVerticalPosition;
+            if ( firstCall) {
+                firstCall = false;
+                return [0,0];
+            }
+            return result;
+        }
+
+
         const track = evt => {
-            lastX += evt.movementX;
-            lastY += evt.movementY;
-            block.style.setProperty('--block-x', -lastY);
-            block.style.setProperty('--block-y', lastX);
+            const [diffHorizontal, diffVertical] = getDiffs(evt);
+            console.log(diffHorizontal, diffVertical);
+            const lastBlockX = window.getComputedStyle(block,null).getPropertyValue("--block-x");
+            const lastBlockY = window.getComputedStyle(block,null).getPropertyValue("--block-y");
+            block.style.setProperty('--block-x', Number(lastBlockX)-diffVertical);
+            block.style.setProperty('--block-y', Number(lastBlockY)+diffHorizontal);
         };
         const consume = evt => {                    // prevent click, focus, drag, and selection events
             evt.preventDefault();
