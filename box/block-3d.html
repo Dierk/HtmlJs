@@ -194,6 +194,7 @@
         };
         sourceElement.onmousedown = evt => {         // start updating
             consume(evt);
+            firstCall = true;
             sourceElement.onmousemove = track;
             sourceElement.ontouchmove = track;
         };
