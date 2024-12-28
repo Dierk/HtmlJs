@@ -179,10 +179,8 @@
             return result;
         }
 
-
         const track = evt => {
             const [diffHorizontal, diffVertical] = getDiffs(evt);
-            console.log(diffHorizontal, diffVertical);
             const lastBlockX = window.getComputedStyle(block,null).getPropertyValue("--block-x");
             const lastBlockY = window.getComputedStyle(block,null).getPropertyValue("--block-y");
             block.style.setProperty('--block-x', Number(lastBlockX)-diffVertical);
