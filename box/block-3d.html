@@ -11,11 +11,11 @@
             background:      linear-gradient(in srgb-linear, blue, orange);
         }
         main {
-            min-height:      70vh;
+            min-height:      90vh;
             display:         flex;
             justify-content: center;
             align-items:     center;
-            perspective: 200vmax;
+            perspective:     200vmax;
         }
 
         /* provides the logical group */
@@ -34,13 +34,13 @@
             display:         grid;                              /* child positioning  */
             place-items:     center;
             transform-style: preserve-3d;                       /* put children in our 3d space */
-            --block-x:       60;
-            --block-y:       -40;
-            --block-z:       0;
+            --block-x:        72;
+            --block-y:       -27;
+            --block-z:         0;
             transform:       rotateZ(calc(var(--block-z) * 1deg))
                              rotateY(calc(var(--block-y) * 1deg))
                              rotateX(calc(var(--block-x) * 1deg)) ;
-            animation:       rotateBox 3s ease-in-out ;      /* show the box from various sides */
+            transition:      transform .25s ease-out;            /* simulate a bit of momentum */
         }
 
         /* all children go directly on top of each other */
@@ -106,12 +106,6 @@
             ;
         }
 
-        @keyframes rotateBox {
-            0%   {transform: rotateY(0)      rotateX(0);}
-            50%  {transform: rotateY(0deg)   rotatex(60deg);}
-            100% {transform: rotateY(-40deg) rotatex(60deg);}
-        }
-
         .face {
             --base-color: blue;
             background-color:  color-mix( in hsl, var(--base-color), transparent 50%);
@@ -144,26 +138,50 @@
     </style>
 </head>
 <body>
-<main>
-    <div class="block" id="block">
-        <div class="face bottom">Bottom </div>
-        <div class="face top">Top</div>
-        <div class="face front"></div>
-        <div class="face back">Back</div>
-        <div class="face left">Left</div>
-        <div class="face right">Right</div>
+<main id="main">
+    <div class="block" id="block" draggable="false" >
+        <div draggable="false" class="face bottom">Bottom </div>
+        <div draggable="false" class="face top">Top</div>
+        <div draggable="false" class="face front"></div>
+        <div draggable="false" class="face back">Back</div>
+        <div draggable="false" class="face left">Left</div>
+        <div draggable="false" class="face right">Right</div>
     </div>
 </main>
 <footer>
-    <input type="range" id="x" min="-360" max="360">
-    <input type="range" id="y" min="-360" max="360">
-    <input type="range" id="z" min="-360" max="360">
+    Use mouse or touch to rotate the block.
 </footer>
 
 <script>
-    x.oninput = _ => block.style.setProperty('--block-x', x.value);
-    y.oninput = _ => block.style.setProperty('--block-y', y.value);
-    z.oninput = _ => block.style.setProperty('--block-z', z.value);
+
+    const registerForMouseAndTouch = sourceElement => {
+        let lastX = 0;
+        let lastY = 0;
+        const track = evt => {
+            lastX += evt.movementX;
+            lastY += evt.movementY;
+            block.style.setProperty('--block-x', -lastY);
+            block.style.setProperty('--block-y', lastX);
+        };
+        const consume = evt => {                    // prevent click, focus, drag, and selection events
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
+        };
+        sourceElement.onmousedown = evt => {         // start updating
+            consume(evt);
+            sourceElement.onmousemove = track;
+            sourceElement.ontouchmove = track;
+        };
+        sourceElement.onmouseup   = evt => {         // stop updating
+            consume(evt);
+            sourceElement.onmousemove = undefined;
+            sourceElement.ontouchmove = undefined;
+        };
+        sourceElement.ontouchstart = sourceElement.onmousedown;   // handle mouse and touch events identically
+        sourceElement.ontouchend   = sourceElement.onmouseup;
+    };
+
+    registerForMouseAndTouch(main);
 
 </script>
 </body>
