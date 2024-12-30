@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Box</title>
+    <style>
+        :root {
+            --color-fhnw:           #fee72c;
+        }
+
+        body {
+            min-height:             100dvh;
+            display:                grid;
+            grid-template-columns:  100%;
+            grid-template-rows:     1fr max-content;
+            margin:                 0;
+            background:             linear-gradient(in srgb-linear, blue, orange);
+        }
+
+        /* The scene provides the area in which 3d visualizations and operations can take place
+           as well as setting the "camera position".
+           It also serves as the sensitive area for mouse & touch events to rotate the
+           coordinate system of the scene.
+        */
+        .scene3d {
+            container:              main inline-size;
+            perspective:            200vmax;
+            perspective-origin:     right top;
+            position:               relative;
+        }
+
+        /* provides the logical group for the coordinate system */
+        .coords {
+            position:           absolute; /* position the 000 coords at the center of the scene */
+            top:                50cqh;
+            left:               50cqw;
+
+            --coord-length:     42cqmin;
+            width:              var(--coord-length);
+            aspect-ratio:       1 / 1;
+
+            display:            grid;                              /* child positioning  */
+            transform-style:    preserve-3d;                       /* put children in our 3d space */
+            --coords-rotate-x:  0;
+            --coords-rotate-y:  0;
+            --coords-rotate-z:  0;
+            transform-origin:   0 0;
+            transform:          rotateZ(calc(var(--coords-rotate-z) * 1deg))
+                                rotateY(calc(var(--coords-rotate-y) * 1deg))
+                                rotateX(calc(var(--coords-rotate-x) * 1deg)) ;
+            transition:         transform .25s ease-out;            /* simulate a bit of momentum */
+        }
+
+
+        .plane {
+            grid-column:        1;
+            grid-row:           1;
+            width:              inherit;
+            aspect-ratio:       inherit;
+            border-left:        4px solid blue;
+            border-top:         4px solid red;
+            background:         transparent;
+            display:            grid;
+            place-items:        center;
+            font-family:        "Helvetica Neue", system-ui;
+            font-size:          calc(var(--coord-length) / 3);
+            font-weight:        bold;
+            color:              transparent;
+            &.show {
+                background:     #fff5;
+                color:          #0008;
+            }
+        }
+
+        .xz-plane  {
+            border-left:        4px solid yellow;
+            transform-origin:   center top;
+            transform:          rotateX(90deg);
+        }
+
+        footer {
+            padding:            1lh;
+            display:            grid;
+            place-items:        center;
+            color:              white;
+            font-size:          120%;
+        }
+
+    </style>
+</head>
+<body>
+<main id="main" class="scene3d">
+    <div class="coords">
+        <div class="plane show xy-plane">xy</div>
+        <div class="plane show xz-plane">xz</div>
+    </div>
+</main>
+<footer>
+    Use mouse or touch to rotate the coords.
+</footer>
+
+<script>
+
+    const registerForMouseAndTouch = sourceElement => {
+        const coords = sourceElement.querySelector(".coords");
+        if(!coords) {
+            throw new Error(`Element ${sourceElement} must have a child with class "coords"`);
+        }
+
+        let lastHorizontalPosition = 0;
+        let lastVerticalPosition   = 0;
+        let firstCall              = true;
+        const getDiffs = evt => {
+            let newHorizontalPosition = evt.clientX;
+            let newVerticalPosition   = evt.clientY;
+            if (evt.type.startsWith("touch")) {
+                newHorizontalPosition  = evt.targetTouches[0].clientX ;
+                newVerticalPosition    = evt.targetTouches[0].clientY ;
+            }
+            result = [
+                newHorizontalPosition - lastHorizontalPosition,
+                newVerticalPosition   - lastVerticalPosition
+            ]
+            lastHorizontalPosition = newHorizontalPosition;
+            lastVerticalPosition   = newVerticalPosition;
+            if ( firstCall) {
+                firstCall = false;
+                return [0,0];
+            }
+            return result;
+        }
+
+        const track = evt => {
+            const [diffHorizontal, diffVertical] = getDiffs(evt);
+            const lastCoordXrotate = window.getComputedStyle(coords,null).getPropertyValue("--coords-rotate-x");
+            const lastCoordYrotate = window.getComputedStyle(coords,null).getPropertyValue("--coords-rotate-y");
+            coords.style.setProperty('--coords-rotate-x', Number(lastCoordXrotate)-diffVertical);
+            coords.style.setProperty('--coords-rotate-y', Number(lastCoordYrotate)+diffHorizontal);
+        };
+        const consume = evt => {                    // prevent click, focus, drag, and selection events
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
+        };
+        sourceElement.onmousedown = evt => {         // start updating
+            consume(evt);
+            firstCall = true;
+            sourceElement.onmousemove = track;
+            sourceElement.ontouchmove = track;
+        };
+        sourceElement.onmouseup   = evt => {         // stop updating
+            consume(evt);
+            sourceElement.onmousemove = undefined;
+            sourceElement.ontouchmove = undefined;
+        };
+        sourceElement.ontouchstart = sourceElement.onmousedown;   // handle mouse and touch events identically
+        sourceElement.ontouchend   = sourceElement.onmouseup;
+    };
+
+    registerForMouseAndTouch(main);
+
+</script>
+</body>
+</html>
