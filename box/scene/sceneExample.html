@@ -32,6 +32,15 @@
             background-size:    8cqmin 8cqmin;
             opacity:            0.1;
         }
+        .triangle {
+            position:           absolute;
+            inset:              0;
+            width:              62%;
+            aspect-ratio:       1/1;
+            background-color:   lime;
+            clip-path:          circle(100% at 0 0);
+            opacity:            0.5;
+        }
 
     </style>
 </head>
@@ -41,6 +50,9 @@
         <div class="plane xy-plane">xy</div>
         <div class="plane xz-plane">xz</div>
         <div class="floor"></div>
+        <div class="triangle"></div>
+        <div class="triangle" style="transform-origin: left   top; transform:rotateY(-90deg);"></div>
+        <div class="triangle" style="transform-origin: center top; transform:rotateX(90deg);"></div>
     </div>
 </main>
 <footer>
