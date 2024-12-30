@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Scene</title>
+    <link rel="stylesheet" href="scene.css">
+    <script src="scene.js"></script>
+    <style>
+
+        body {
+            min-height:             100dvh;
+            display:                grid;
+            grid-template-columns:  100%;
+            grid-template-rows:     1fr max-content;
+            margin:                 0;
+            background:             linear-gradient(in srgb-linear, blue, orange);
+        }
+
+        footer {
+            padding:            1lh;
+            display:            grid;
+            place-items:        center;
+            color:              white;
+            font-size:          120%;
+        }
+
+    </style>
+</head>
+<body>
+<main id="main" class="scene3d">
+    <div class="coords">
+        <div class="plane show xy-plane">xy</div>
+        <div class="plane show xz-plane">xz</div>
+    </div>
+</main>
+<footer>
+    Use mouse or touch to rotate the coords.
+</footer>
+
+<script>
+
+
+    registerForMouseAndTouch(main);
+
+</script>
+</body>
+</html>
