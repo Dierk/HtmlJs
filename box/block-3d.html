@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>3D Box</title>
     <style>
+        :root {
+            --color-fhnw:           #fee72c;
+        }
 
         body {
             min-height:             100dvh;
@@ -110,27 +113,24 @@
         }
 
         .face {
-            --base-color: blue;
-            background-color:  color-mix( in hsl, var(--base-color), transparent 50%);
+            --base-color:  var(--color-fhnw);
+            background-color:  color-mix( in hsl, var(--base-color), transparent 10%);
             display:       grid;
             place-items:   center;
             font-family:   "Helvetica Neue", system-ui;
             font-size:     calc(var(--display-unit) * var(--block-depth) * 0.5);
             font-weight:   bold;
-            color:         color-mix( in hsl, black, transparent 70%);;
+            color:         color-mix( in hsl, black, transparent 70%);
         }
 
-        .front  { --base-color:          red;
-                    background-color:    #fee72c; /* fhnw - yellow */
+        .front  {
+                    background-color:    var(--color-fhnw);
                     background-image:    url("nweb.png");
                     background-repeat:   no-repeat;
                     background-position: left center;
                     background-size:     contain;
                     opacity:             .8;
         }
-        .back   { --base-color: yellow; }
-        .left   { --base-color: yellow; }
-        .right  { --base-color: yellow; }
         .top    { --base-color: aliceblue; }
         .bottom { --base-color: blueviolet; }
 
@@ -139,7 +139,7 @@
             justify-content:    center;
             align-items:        center;
             color:              white;
-            font-size: 120%;
+            font-size:          120%;
         }
 
     </style>
