@@ -64,8 +64,8 @@
             const inputElement1 = document.getElementById("in-1");
             const inputElement2 = document.getElementById("in-2");
             const animateFire = canvas => {
-                const width  = Number(canvas.width);
-                const height = Number(canvas.height);
+                const width  = Number(canvas.getBoundingClientRect().width);
+                const height = Number(canvas.getBoundingClientRect().height);
                 const stage  = canvas.getContext("2d");
                 stage.globalCompositeOperation = "lighter";
                 const size   = 18 ;      // radius of a flame spark, this is a crucial parameter
