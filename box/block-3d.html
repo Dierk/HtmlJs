@@ -148,19 +148,6 @@
             font-size:          120%;
         }
 
-        .face.left canvas {
-            display: block;
-            position: absolute;
-            inset: 0;
-            filter: blur(3px);
-            opacity: 95%;
-        }
-        .fade {
-            background: transparent;
-            color:      transparent;
-            transition: all 3s linear;
-        }
-
     </style>
 </head>
 <body>
@@ -170,9 +157,7 @@
         <div class="face top"   >Nice</div>
         <div class="face front" ></div>
         <div class="face back"  contenteditable="true" >Interactive</div>
-        <div class="face left"  onclick="this.classList.add('fade');">HOT
-            <canvas onclick="animateFire(this)"></canvas>
-        </div>
+        <div class="face left"  >Cool</div>
         <div class="face right" >Fun</div>
     </div>
 </main>
@@ -181,69 +166,6 @@
 </footer>
 
 <script>
-
-    const animateFire = canvas => {
-        const width  = Number(canvas.getBoundingClientRect().width);
-        const height = Number(canvas.getBoundingClientRect().height);
-        const stage  = canvas.getContext("2d");
-        stage.globalCompositeOperation = "lighter";
-        const size   = 18 ;      // radius of a flame spark, this is a crucial parameter
-        const particleDepth = 3; // so many particles you see on top of each other (in the average)
-        const totalParticles = particleDepth * width * height / (size * size);
-        const maxTTL = 1000; // max ms that a particle lives, the time from bottom to top
-
-
-        let particles = [];
-        const Particle = (x, y, ttl) => ({x, y, ttl /* remaining time to live in ms*/});
-
-        const jitter = () => 2 * Math.random() - 1; // random value between -1 and 1
-
-        let lastTimeRendered = Date.now();
-
-        const render = now => {
-            const msPassedSinceLastRender = now - lastTimeRendered;
-            lastTimeRendered = now;
-            const fraction = msPassedSinceLastRender / maxTTL; // fraction of a lifetime that has passed
-
-            // prepare the next particle data
-            particles.forEach((particle, idx) => {
-                particle.ttl -= msPassedSinceLastRender;
-                if (particle.ttl < 0) return;
-                particle.x = particle.x + jitter() * size / 2;
-                particle.y = particle.y - fraction * height ;
-            })
-            particles = particles.filter(particle => particle.ttl > 0);  // clean the outlived
-
-            const particleCount = totalParticles * fraction;
-            const xDistance = width / particleCount;
-            for (let i = 0; i < particleCount; i++) {
-                const versatz = jitter() * size ;
-                const p = Particle(versatz + (i+0.5) * xDistance, Math.abs(versatz) + height, maxTTL);
-                particles.push(p);
-            }
-
-            stage.clearRect(0, 0, width, height);
-
-            particles.forEach(p => {
-                const fractionToLive = p.ttl / maxTTL;
-                const fractionLived  = 1 - fractionToLive;
-                const color = "hsla(" +
-                    (60 * fractionToLive) + "," +           // 60 down to 0 , yellow to red
-                    (40 + 40 * fractionToLive ) + "%," +    // 80 down to 40
-                    "20%," +                                // since lightness comes from overshine, we can keep this low
-                    fractionToLive +                        // 100% down to 0
-                    ")";
-                const radius = size - size / 2 * fractionLived; // size down to half the size
-                stage.fillStyle = color;
-                stage.beginPath();
-                stage.arc(p.x, p.y, radius, 0, 2 * Math.PI);
-                stage.fill();
-            });
-            requestAnimationFrame(render);
-        }
-        render(Date.now());
-    };
-
 
     const registerForMouseAndTouch = sourceElement => {
 
