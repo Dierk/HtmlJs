@@ -28,9 +28,15 @@
             inset:              -100% -100%;
             width:              200%;
             height:             200%;
-            background-image:   repeating-conic-gradient(white 0deg 90deg, black 90deg 180deg);
+            background-image:   repeating-conic-gradient(transparent 0deg 90deg, black 90deg 180deg);
             background-size:    8cqmin 8cqmin;
-            opacity:            0.1;
+            opacity:            0.3;
+            & .toplight {
+                position:           absolute;
+                inset:              0;
+                background-image:   radial-gradient(white 30% ,black 80%);
+                opacity:            .85;
+            }
         }
         .triangle {
             position:           absolute;
@@ -52,7 +58,7 @@
     <div class="coords">
         <div class="plane xy-plane">xy</div>
         <div class="plane xz-plane">xz</div>
-        <div class="floor"></div>
+        <div class="floor"><div class="toplight"></div></div>
         <div class="triangle"></div>
         <div class="triangle" style="transform-origin: left   top; transform:rotateY(-90deg);"></div>
         <div class="triangle" style="transform-origin: center top; transform:rotateX(90deg);"></div>
