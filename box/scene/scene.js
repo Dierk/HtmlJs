@@ -1,7 +1,7 @@
-const registerForMouseAndTouch = sourceElement => {
-    const coords = sourceElement.querySelector(".coords");
+const registerForMouseAndTouch = (scene, consumeEvents=false) => {
+    const coords = scene.querySelector(".coords");
     if(!coords) {
-        throw new Error(`Element ${sourceElement} must have a child with class "coords"`);
+        throw new Error(`Element ${scene} must have a child with class "coords"`);
     }
 
     let lastHorizontalPosition = 0;
@@ -34,21 +34,22 @@ const registerForMouseAndTouch = sourceElement => {
         coords.style.setProperty('--coords-rotate-x', Number(lastCoordXrotate)-diffVertical);
         coords.style.setProperty('--coords-rotate-y', Number(lastCoordYrotate)+diffHorizontal);
     };
-    const consume = evt => {                    // prevent click, focus, drag, and selection events
+    const consume = evt => {             // prevent click, focus, drag, and selection events
+        if (! consumeEvents) return;
         evt.preventDefault();
         evt.stopImmediatePropagation();
     };
-    sourceElement.onmousedown = evt => {         // start updating
+    scene.onmousedown = evt => {         // start updating
         consume(evt);
         firstCall = true;
-        sourceElement.onmousemove = track;
-        sourceElement.ontouchmove = track;
+        scene.onmousemove = track;
+        scene.ontouchmove = track;
     };
-    sourceElement.onmouseup   = evt => {         // stop updating
+    scene.onmouseup   = evt => {         // stop updating
         consume(evt);
-        sourceElement.onmousemove = undefined;
-        sourceElement.ontouchmove = undefined;
+        scene.onmousemove = undefined;
+        scene.ontouchmove = undefined;
     };
-    sourceElement.ontouchstart = sourceElement.onmousedown;   // handle mouse and touch events identically
-    sourceElement.ontouchend   = sourceElement.onmouseup;
+    scene.ontouchstart = scene.onmousedown;   // handle mouse and touch events identically
+    scene.ontouchend   = scene.onmouseup;
 };

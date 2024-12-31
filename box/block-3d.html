@@ -121,6 +121,10 @@
             font-size:     calc(var(--display-unit) * var(--block-depth) * 0.5);
             font-weight:   bold;
             color:         color-mix( in hsl, black, transparent 70%);
+
+            -webkit-user-select:    none; /* sadly still needed in 2024 */
+            user-select:    none;
+            /*overflow: clip;*/
         }
 
         .front  {
@@ -133,6 +137,8 @@
         }
         .top    { --base-color: aliceblue; }
         .bottom { --base-color: blueviolet; }
+        .back:hover { color:black; }
+
 
         footer {
             display:            flex;
@@ -146,13 +152,13 @@
 </head>
 <body>
 <main id="main">
-    <div class="block" id="block" draggable="false" >
-        <div draggable="false" class="face bottom">Solid</div>
-        <div draggable="false" class="face top"   >Nice</div>
-        <div draggable="false" class="face front" ></div>
-        <div draggable="false" class="face back"  >Sustainable</div>
-        <div draggable="false" class="face left"  >Cool</div>
-        <div draggable="false" class="face right" >Fun</div>
+    <div class="block" id="block" >
+        <div class="face bottom">Solid</div>
+        <div class="face top"   >Nice</div>
+        <div class="face front" ></div>
+        <div class="face back"  contenteditable="true" >Interactive</div>
+        <div class="face left"  >Cool</div>
+        <div class="face right" >Fun</div>
     </div>
 </main>
 <footer>
@@ -194,8 +200,8 @@
             block.style.setProperty('--block-rotate-y', Number(lastBlockY)+diffHorizontal);
         };
         const consume = evt => {                    // prevent click, focus, drag, and selection events
-            evt.preventDefault();
-            evt.stopImmediatePropagation();
+            // evt.preventDefault();
+            // evt.stopImmediatePropagation();
         };
         sourceElement.onmousedown = evt => {         // start updating
             consume(evt);

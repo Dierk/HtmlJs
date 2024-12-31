@@ -37,15 +37,18 @@
             inset:              0;
             width:              62%;
             aspect-ratio:       1/1;
-            background-color:   lime;
+            background-color:   limegreen;
             clip-path:          circle(100% at 0 0);
             opacity:            0.5;
+        }
+        .triangle:nth-child(4) {
+            background-color:   lime;
         }
 
     </style>
 </head>
 <body>
-<main id="main" class="scene3d">
+<main id="main" class="scene3d noSelection">
     <div class="coords">
         <div class="plane xy-plane">xy</div>
         <div class="plane xz-plane">xz</div>
@@ -60,7 +63,6 @@
 </footer>
 
 <script>
-
 
     registerForMouseAndTouch(main);
 

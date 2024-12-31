@@ -59,3 +59,8 @@
     transform-origin:   center top;
     transform:          rotateX(90deg);
 }
+
+.noSelection {
+    -webkit-user-select:    none; /* sadly still needed in 2024 */
+    user-select:            none;
+}
