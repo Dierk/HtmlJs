@@ -7,6 +7,9 @@
         :root {
             --color-fhnw:           #fee72c;
         }
+        html {
+            overscroll-behavior:    none;
+        }
 
         body {
             min-height:             100dvh;
@@ -15,7 +18,7 @@
             grid-template-rows:     80% 20%;
             margin:                 0;
             background:             linear-gradient(in srgb-linear, blue, orange);
-            overscroll-behavior: none;
+            overscroll-behavior:    none;
         }
         main {
             container:       main inline-size;
@@ -23,6 +26,7 @@
             justify-content: center;
             align-items:     center;
             perspective:     200vmax;
+            overscroll-behavior:    contain;
         }
 
         /* provides the logical group */
