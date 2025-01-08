@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Scene</title>
+    <link rel="stylesheet" href="scene.css">
+    <script src="scene.js"></script>
+    <style>
+
+        body {
+            min-height:             100dvh;
+            display:                grid;
+            grid-template-columns:  100%;
+            grid-template-rows:     1fr max-content;
+            margin:                 0;
+            background:             linear-gradient(in srgb-linear, blue, orange);
+        }
+
+        footer {
+            padding:            1lh;
+            display:            grid;
+            place-items:        center;
+            color:              white;
+            font-size:          120%;
+        }
+        .floor {
+            position:           absolute;
+            inset:              -100% -100%;
+            width:              200%;
+            height:             200%;
+            background-image:   repeating-conic-gradient(transparent 0deg 90deg, black 90deg 180deg);
+            background-size:    8cqmin 8cqmin;
+            opacity:            0.3;
+            & .toplight {
+                position:           absolute;
+                inset:              0;
+                background-image:   radial-gradient(white 30% ,black 80%);
+                opacity:            .85;
+            }
+        }
+        .triangle {
+            position:           absolute;
+            inset:              0;
+            width:              62%;
+            aspect-ratio:       1/1;
+            background-color:   limegreen;
+            clip-path:          circle(100% at 0 0);
+            opacity:            0.5;
+        }
+        .triangle:nth-child(4) {
+            background-color:   lime;
+        }
+
+        /* provides the logical group */
+        .box {
+            grid-area:          1/1;
+            --box-width:        20;
+            --z-center:         calc(1cqw * var(--box-width) / 2);
+            width:              calc(var(--box-width) * 1cqw);
+            aspect-ratio:       1 / 1;
+            display:            grid;                              /* child positioning  */
+            transform-style:    preserve-3d;                       /* put children in our 3d space */
+            translate:          0 0 var(--z-center);
+            --rotate-x:         0;
+            --rotate-y:         0;
+        }
+
+        /* all children go directly on top of each other */
+        .box > * {
+            grid-area:          1/1;
+        }
+
+
+        /* the transform origin for rotate is center by default, so rotations must first */
+        /* put the respective face in the the center, then rotate.            */
+
+        .front  {transform:                 translateZ(var(--z-center));}  /* move front to center */
+        .back   {transform: rotateY(180deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the back */
+        .left   {transform: rotateY(-90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the left */
+        .right  {transform: rotateY( 90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the right */
+        .top    {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
+        .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
+
+        .face {
+            background:    rgba(0, 128, 255, 0.95);
+            border:        3px solid darkblue;
+            border-radius: 4%;
+            display:       grid;
+            place-items:   center;
+            font-family:   system-ui;
+            font-size:     6cqw;
+            font-weight:   bold;
+            color:         white;
+        }
+        .throwDice {
+            animation: throwAnimation 2s linear     forwards,
+                       liftAnimation  2s ease-in-out forwards;
+        }
+
+        @keyframes throwAnimation {
+              0% {transform: rotateX(0deg)   rotateY(0deg)      ;}
+             50% {transform: rotateX(360deg) rotateY(360deg)    ;}
+             51% {transform: rotateX(0deg)   rotateY(0deg)      ;}
+            100% {transform: rotateX(calc(var(--rotate-x)*1deg))
+                             rotateY(calc(var(--rotate-y)*1deg));}
+        }
+        @keyframes liftAnimation {
+            0%  {translate: 0 0 var(--z-center)                 ;}
+            50% {translate: 0 0 calc(4 * var(--z-center))       ;}
+           100% {translate: 0 0 var(--z-center)                 ;}
+        }
+
+    </style>
+</head>
+<body>
+<main id="main" class="scene3d noSelection">
+    <div class="coords">
+<!--        <div class="plane xy-plane">xy</div>-->
+<!--        <div class="plane xz-plane">xz</div>-->
+        <div class="floor"><div class="toplight"></div></div>
+<!--        <div class="triangle"></div>-->
+<!--        <div class="triangle" style="transform-origin: left   top; transform:rotateY(-90deg);"></div>-->
+<!--        <div class="triangle" style="transform-origin: center top; transform:rotateX(90deg);"></div>-->
+        <div class="box" id="dice" >
+             <div onclick="throwDice()" class="face front">1</div>
+             <div onclick="throwDice()" class="face back" >2</div>
+             <div onclick="throwDice()" class="face left" >3</div>
+             <div onclick="throwDice()" class="face right">4</div>
+             <div onclick="throwDice()" class="face top"  >5</div>
+             <div onclick="throwDice()" class="face bottom">6</div>
+         </div>
+    </div>
+</main>
+<footer>
+    Use mouse or touch to rotate the coords.
+</footer>
+
+<script>
+
+    registerForMouseAndTouch(main);
+
+    const throwDice = () => {
+        dice.classList.remove("throwDice");
+        const x = 90 * Math.floor(Math.random() * 4);
+        const y = 90 * Math.floor(Math.random() * 4);
+        dice.style.setProperty("--rotate-x", x);
+        dice.style.setProperty("--rotate-y", y);
+        setTimeout(_=> dice.classList.add("throwDice"), 0);
+    };
+
+</script>
+</body>
+</html>
