@@ -38,19 +38,17 @@
                 opacity:            .85;
             }
         }
-        .triangle {
-            position:           absolute;
-            inset:              0;
-            width:              62%;
-            aspect-ratio:       1/1;
-            background-color:   limegreen;
-            clip-path:          circle(100% at 0 0);
-            opacity:            0.5;
-        }
-        .triangle:nth-child(4) {
-            background-color:   lime;
-        }
 
+        .boxshadow {
+            grid-area:          1/1;
+            --box-width:        20;
+            width:              calc(var(--box-width) * 1cqw);
+            aspect-ratio:       1 / 1;
+            background-color:   #0007;
+            box-shadow:         0 0 7cqw 0 #000;
+            border-radius:      20%;
+            opacity: .4;
+        }
         /* provides the logical group */
         .box {
             grid-area:          1/1;
@@ -82,18 +80,16 @@
         .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
 
         .face {
-            background:    rgba(0, 128, 255, 0.95);
-            border:        3px solid darkblue;
-            border-radius: 4%;
+            background:    hsl(230 80% 70% / 0.9);
+            box-shadow:    0 0 6cqw darkblue inset;
+            border-radius: 3%;
             display:       grid;
             place-items:   center;
-            font-family:   system-ui;
             font-size:     6cqw;
             font-weight:   bold;
-            color:         white;
         }
         .throwDice {
-            animation: throwAnimation 2s linear     forwards,
+            animation: throwAnimation 2s linear      forwards,
                        liftAnimation  2s ease-in-out forwards;
         }
 
@@ -110,29 +106,62 @@
            100% {translate: 0 0 var(--z-center)                 ;}
         }
 
+        .dot {
+            background-color:   lime;
+            width:              4cqw;
+            aspect-ratio:       1/1;
+            border-radius:      50%;
+            grid-area:          1/1;
+            box-shadow: .15cqw .15cqw .5cqw darkblue inset;
+        }
+
     </style>
 </head>
 <body>
 <main id="main" class="scene3d noSelection">
     <div class="coords">
-<!--        <div class="plane xy-plane">xy</div>-->
-<!--        <div class="plane xz-plane">xz</div>-->
         <div class="floor"><div class="toplight"></div></div>
-<!--        <div class="triangle"></div>-->
-<!--        <div class="triangle" style="transform-origin: left   top; transform:rotateY(-90deg);"></div>-->
-<!--        <div class="triangle" style="transform-origin: center top; transform:rotateX(90deg);"></div>-->
+        <div class="boxshadow"></div>
         <div class="box" id="dice" >
-             <div onclick="throwDice()" class="face front">1</div>
-             <div onclick="throwDice()" class="face back" >2</div>
-             <div onclick="throwDice()" class="face left" >3</div>
-             <div onclick="throwDice()" class="face right">4</div>
-             <div onclick="throwDice()" class="face top"  >5</div>
-             <div onclick="throwDice()" class="face bottom">6</div>
+             <div onclick="throwDice()" class="face front">
+                 <div class="dot"></div>
+             </div>
+             <div onclick="throwDice()" class="face back" >
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face left" >
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" ></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face right">
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate: -100% 100%;"></div>
+                 <div class="dot" style="translate:  100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face top"  >
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate: -100% 100%;"></div>
+                 <div class="dot" ></div>
+                 <div class="dot" style="translate:  100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
+             </div>
+             <div onclick="throwDice()" class="face bottom">
+
+                 <div class="dot" style="translate: -100% -120%;"></div>
+                 <div class="dot" style="translate: -100%    0%;"></div>
+                 <div class="dot" style="translate: -100%  120%;"></div>
+                 <div class="dot" style="translate:  100% -120%;"></div>
+                 <div class="dot" style="translate:  100%    0%;"></div>
+                 <div class="dot" style="translate:  100%  120%;"></div>
+             </div>
          </div>
     </div>
 </main>
 <footer>
-    Use mouse or touch to rotate the coords.
+    Click to throw dice. Use mouse or touch to rotate the coords.
 </footer>
 
 <script>
