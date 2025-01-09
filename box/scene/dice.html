@@ -21,40 +21,31 @@
             display:            grid;
             place-items:        center;
             color:              white;
-            font-size:          120%;
+            font-size:          clamp(1rem, 5cqmin, 5rem);
         }
-        .floor {
-            position:           absolute;
-            inset:              -100% -100%;
-            width:              200%;
-            height:             200%;
-            background-image:   repeating-conic-gradient(transparent 0deg 90deg, black 90deg 180deg);
-            background-size:    8cqmin 8cqmin;
-            opacity:            0.3;
-            & .toplight {
-                position:           absolute;
-                inset:              0;
-                background-image:   radial-gradient(white 30% ,black 80%);
-                opacity:            .85;
-            }
-        }
-
         .boxshadow {
             grid-area:          1/1;
             --box-width:        20;
-            width:              calc(var(--box-width) * 1cqw);
+            width:              calc(var(--box-width) * 1cqmin);
             aspect-ratio:       1 / 1;
-            background-color:   #0007;
-            box-shadow:         0 0 7cqw 0 #000;
-            border-radius:      20%;
-            opacity: .4;
+            background-color:   #5d008b80;
+            filter:             blur(3cqmin);
+        }
+        .shadowAnim {
+            animation: shadowAnimation 2s ease-in-out;
+        }
+        @keyframes shadowAnimation {
+              0% { scale: 1;   rotate: 0deg; }
+             50% { scale: 1.3; rotate: 360deg; filter: blur(8cqmin);}
+            100% { scale: 1;   rotate: 180deg; }
+
         }
         /* provides the logical group */
         .box {
             grid-area:          1/1;
             --box-width:        20;
-            --z-center:         calc(1cqw * var(--box-width) / 2);
-            width:              calc(var(--box-width) * 1cqw);
+            --z-center:         calc(1cqmin * var(--box-width) / 2);
+            width:              calc(var(--box-width) * 1cqmin);
             aspect-ratio:       1 / 1;
             display:            grid;                              /* child positioning  */
             transform-style:    preserve-3d;                       /* put children in our 3d space */
@@ -80,13 +71,11 @@
         .bottom {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
 
         .face {
-            background:    hsl(230 80% 70% / 0.9);
-            box-shadow:    0 0 6cqw darkblue inset;
-            border-radius: 3%;
-            display:       grid;
-            place-items:   center;
-            font-size:     6cqw;
-            font-weight:   bold;
+            background-image:   linear-gradient(20deg in srgb-linear, #5d008bc0, 40%, darkgoldenrod, 60%, #5d008bc0);
+            box-shadow:         0 0 2cqmin #5d008b inset;
+            border-radius:      3%;
+            display:            grid;
+            place-items:        center;
         }
         .throwDice {
             animation: throwAnimation 2s linear      forwards,
@@ -94,11 +83,11 @@
         }
 
         @keyframes throwAnimation {
-              0% {transform: rotateX(0deg)   rotateY(0deg)      ;}
-             50% {transform: rotateX(360deg) rotateY(360deg)    ;}
-             51% {transform: rotateX(0deg)   rotateY(0deg)      ;}
-            100% {transform: rotateX(calc(var(--rotate-x)*1deg))
-                             rotateY(calc(var(--rotate-y)*1deg));}
+              0%    {transform: rotateX(0deg)   rotateY(0deg)      ;}
+             75%    {transform: rotateX(360deg) rotateY(360deg)    ;}
+             75.01% {transform: rotateX(0deg)   rotateY(0deg)      ;}
+            100%    {transform: rotateX(calc(var(--rotate-x)*1deg))
+                                rotateY(calc(var(--rotate-y)*1deg));}
         }
         @keyframes liftAnimation {
             0%  {translate: 0 0 var(--z-center)                 ;}
@@ -107,28 +96,34 @@
         }
 
         .dot {
-            background-color:   lime;
-            width:              4cqw;
+            background-color:   greenyellow;
+            width:              4cqmin;
             aspect-ratio:       1/1;
             border-radius:      50%;
             grid-area:          1/1;
-            box-shadow: .15cqw .15cqw .5cqw darkblue inset;
+            box-shadow:         .15cqmin .15cqmin .5cqmin #5d008b inset;
         }
 
     </style>
 </head>
 <body>
 <main id="main" class="scene3d noSelection">
-    <div class="coords">
-        <div class="floor"><div class="toplight"></div></div>
-        <div class="boxshadow"></div>
+    <div class="coords" style="
+        --coords-rotate-x:  70;
+        --coords-rotate-y: -25;
+">
+        <div class="boxshadow" id="boxshadow"></div>
         <div class="box" id="dice" >
              <div onclick="throwDice()" class="face front">
                  <div class="dot"></div>
              </div>
              <div onclick="throwDice()" class="face back" >
-                 <div class="dot" style="translate: -100% -100%;"></div>
-                 <div class="dot" style="translate:  100% 100%;"></div>
+                 <div class="dot" style="translate: -100% -120%;"></div>
+                 <div class="dot" style="translate: -100%    0%;"></div>
+                 <div class="dot" style="translate: -100%  120%;"></div>
+                 <div class="dot" style="translate:  100% -120%;"></div>
+                 <div class="dot" style="translate:  100%    0%;"></div>
+                 <div class="dot" style="translate:  100%  120%;"></div>
              </div>
              <div onclick="throwDice()" class="face left" >
                  <div class="dot" style="translate: -100% -100%;"></div>
@@ -149,13 +144,8 @@
                  <div class="dot" style="translate:  100% 100%;"></div>
              </div>
              <div onclick="throwDice()" class="face bottom">
-
-                 <div class="dot" style="translate: -100% -120%;"></div>
-                 <div class="dot" style="translate: -100%    0%;"></div>
-                 <div class="dot" style="translate: -100%  120%;"></div>
-                 <div class="dot" style="translate:  100% -120%;"></div>
-                 <div class="dot" style="translate:  100%    0%;"></div>
-                 <div class="dot" style="translate:  100%  120%;"></div>
+                 <div class="dot" style="translate: -100% -100%;"></div>
+                 <div class="dot" style="translate:  100% 100%;"></div>
              </div>
          </div>
     </div>
@@ -169,12 +159,16 @@
     registerForMouseAndTouch(main);
 
     const throwDice = () => {
+        const xy = [[0, 0], [90, 0], [0, 90], [0, -90], [-90, 0], [180, 0]]
+        const rotIdx = Math.floor(Math.random() * 6);
+        dice.style.setProperty("--rotate-x", xy[rotIdx][0]);
+        dice.style.setProperty("--rotate-y", xy[rotIdx][1]);
         dice.classList.remove("throwDice");
-        const x = 90 * Math.floor(Math.random() * 4);
-        const y = 90 * Math.floor(Math.random() * 4);
-        dice.style.setProperty("--rotate-x", x);
-        dice.style.setProperty("--rotate-y", y);
-        setTimeout(_=> dice.classList.add("throwDice"), 0);
+        boxshadow.classList.remove("shadowAnim");
+        setTimeout(_=> {
+            dice.classList.add("throwDice");
+            boxshadow.classList.add("shadowAnim");
+        },0);
     };
 
 </script>
