@@ -5,7 +5,7 @@
    coordinate system of the scene.
 */
 .scene3d {
-    container:              main inline-size;
+    container:              scene3d inline-size;
     perspective:            200vmax;
     perspective-origin:     right top;
     position:               relative;
