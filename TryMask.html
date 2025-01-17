@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Mask</title>
+    <style>
+
+        :root {
+        }
+
+        div {
+            width: 200px;
+            aspect-ratio: 1 / 1;
+            background-color: rebeccapurple;
+        }
+        .mask-alpha {
+            mask: linear-gradient(transparent, white);
+        }
+        .mask-luminance {
+            mask: linear-gradient(black, white) luminance;
+        }
+        .mask-image {
+            mask: url("https://unsplash.it/200/200") luminance;
+        }
+        .mask-svg {
+            mask: url("TryMaskSVG.svg");
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+<main>
+
+    <section>
+        <h2>Mask by alpha channel</h2>
+        <div class="mask-alpha">
+        </div>
+        <h2>Mask by luminance: black=transparent white=opaque</h2>
+        <div class="mask-luminance">
+        </div>
+        <h2>Mask by random image</h2>
+        <div class="mask-image">
+        </div>
+        <h2>Mask by svg</h2>
+        <div class="mask-svg">
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+</script>
+
+
+</body>
+
+</html>
