@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Color Scheme</title>
+    <style>
+
+        :root {
+            /*palette*/
+            --clr-palette-blue:         blue;
+            --clr-palette-lightblue:    lightblue;
+            /*semantic colors*/
+            --clr-blue:                 light-dark(var(--clr-palette-blue), var(--clr-palette-lightblue));
+
+            color-scheme: /* on separate lines for testing */
+                light
+                dark
+            ;
+            @media (prefers-color-scheme: dark) { /* fallback or override defaults */
+                    background-color: #115;
+            }
+        }
+        .blue {
+            color: var(--clr-blue); /* use semantic colors */
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div >Some standard text in standard text color with <a href="#">anchor</a>
+    and other elements like <input type="text" value="input">.</div>
+<div class="blue">in light mode: blue, in dark mode: lightblue </div>
+
+
+</body>
+
+</html>
