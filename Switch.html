@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>switch</title>
+    <meta charset="UTF-8">
+<style>
+    body {
+        font-size:      2rem;
+    }
+    label + input[type=checkbox] {
+        display:        none;
+    }
+    label + input[type=checkbox] + span {
+        font-family:    system-ui;
+        font-size:      70%;
+        opacity:        .3;
+        cursor:         pointer;
+        &:hover {
+            opacity:    1;
+        }
+    }
+    label:has( + input[type=checkbox]) {
+        display:        inline-block;
+        height:         1lh;
+        aspect-ratio:   5 / 2;
+        border:         1px solid lightgray;
+        border-radius:  100vh;
+        position:       relative;
+    }
+    label:has( + input[type=checkbox])::before {
+        content:            "";
+        position:           absolute;
+        top:                5%;
+        left:               5%;
+        bottom:             5%;
+        right:              unset;
+        aspect-ratio:       1 / 1;
+        border-radius:      50%;
+        background-color:   aliceblue;
+        box-shadow:         0.02em .05em 0.1em inset gray;
+        transition:         transform .4s ease-in-out;
+    }
+    label:has( + input[type=checkbox]:checked)::before {
+        transform:          translateX(150%);
+        background-image:   radial-gradient(circle at 40% 30%, floralwhite, green 40%, white 100%);
+        box-shadow:         0 .1em .4em 0 green;
+    }
+    label:has( + input[type=checkbox]:indeterminate)::before {
+        transform:          translateX(75%);
+        background-color:   floralwhite;
+        animation:          nudge 1s linear alternate infinite;
+    }
+    
+    @keyframes nudge {
+        from { transform: translateX(65%); }
+        to   { transform: translateX(85%); }
+    }
+
+</style>
+	
+</head>
+<body>
+<h1>  Switch </h1>
+<label for="c1"> </label><input id="c1" type="checkbox"><span onclick="unset(c1);" title="unset">&nbsp;⎋</span>
+<label for="c2"> </label><input id="c2" type="checkbox" checked><span onclick="unset(c2);" title="unset">&nbsp;⎋</span>
+<div><input id="c3" type="checkbox"><label for="c3">indeterminate</label></div>
+<script>
+    c3.onchange = _evt => {
+        c1.indeterminate = c3.checked;
+        c2.indeterminate = c3.checked;
+    };
+</script>
+
+<script>
+    const unset = checkbox => {
+        checkbox.checked       = false;
+        checkbox.indeterminate = true;
+    }
+</script>
+
+</body>
+</html>

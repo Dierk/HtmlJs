@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris</title>
+    <style>
+        #playground {
+            --x-tiles:          12;
+            --y-tiles:          24;
+            --tile-size:        2em;
+            width:              calc(var(--tile-size) * var(--x-tiles));
+            height:             calc(var(--tile-size) * var(--y-tiles));
+            background-color:   lightgray;
+            position:           relative;
+            overflow:           clip;
+
+        }
+        .stone {
+            --stone-x:          0;
+            --stone-y:          0;
+            animation:          falling 2s ease-in 2 alternate;
+        }
+        .tile {
+            --tile-x:           0;
+            --tile-y:           0;
+            width:              var(--tile-size);
+            aspect-ratio:       1 / 1;
+            position:           absolute;
+            inset:              0 auto auto 0;
+            translate:          calc( ( var(--stone-x) + var(--tile-x) ) * var(--tile-size))
+                                calc( ( var(--stone-y) + var(--tile-y) ) * var(--tile-size));
+        }
+        .shapeI .tile {
+            background-color:   rebeccapurple;
+        }
+        .shapeZ .tile {
+            background-color:   red;
+        }
+        .shapeS .tile {
+            background-color:   greenyellow;
+        }
+        .shapeT .tile {
+            background-color:   blue;
+        }
+        .shapeL .tile {
+            background-color:   yellow;
+        }
+        .shapeF .tile {
+            background-color:   hotpink;
+        }
+        .shapeO .tile {
+            background-color:   black;
+        }
+
+        @property --stone-y {
+            syntax:         "<number>";
+            inherits:       true;
+            initial-value:  0;
+        }
+        @keyframes falling {
+            to { --stone-y: var(--y-tiles); }
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Webtris</h1>
+</header>
+<main>
+    <div id="playground">
+        <div class="stone shapeI" style="--stone-x:0;--stone-y:0;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:2;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:3;"></div>
+        </div>
+        <div class="stone shapeL" style="--stone-x:2;--stone-y:2;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:2;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:2;"></div>
+        </div>
+        <div class="stone shapeF" style="--stone-x:8;--stone-y:3;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:2;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:0;"></div>
+        </div>
+        <div class="stone shapeO" style="--stone-x:10;--stone-y:5;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:1;"></div>
+        </div>
+        <div class="stone shapeZ" style="--stone-x:4;--stone-y:2;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:2;--tile-y:1;"></div>
+        </div>
+        <div class="stone shapeS" style="--stone-x:4;--stone-y:5;">
+            <div class="tile" style="--tile-x:1;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:2;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:0;--tile-y:1;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:1;"></div>
+        </div>
+        <div class="stone shapeT" style="--stone-x:7;--stone-y:0;">
+            <div class="tile" style="--tile-x:0;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:2;--tile-y:0;"></div>
+            <div class="tile" style="--tile-x:1;--tile-y:1;"></div>
+        </div>
+
+    </div>
+</main>
+<footer>
+
+</footer>
+</body>
+</html>
