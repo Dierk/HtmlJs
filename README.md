@@ -36,5 +36,6 @@ see HTML files e.g.
 - [Dice](https://dierk.github.io/HtmlJs/box/scene/dice.html)
 - [Tetris Sketch 1](https://dierk.github.io/HtmlJs/tetris/Sketch1.html)
 - [Tetris Sketch 2](https://dierk.github.io/HtmlJs/tetris/Sketch2.html)
+- [Tetris Sketch 3](https://dierk.github.io/HtmlJs/tetris/Sketch3.html)
 
 

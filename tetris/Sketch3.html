@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris</title>
+    <style>
+        #playground {
+            --x-tiles:          16;
+            --y-tiles:          24;
+            --tile-size:        2em;
+            width:              calc(var(--tile-size) * var(--x-tiles));
+            height:             calc(var(--tile-size) * var(--y-tiles));
+            background-color:   lightgray;
+            position:           relative;
+            overflow:           clip;
+            transform:          translateZ(0); /* bad safari hack: move to GPU rendering to avoid crazy artefacts */
+        }
+        .stone {
+            --stone-x:          0;
+            --stone-y:          0;
+            position:           absolute;
+            transition:         all .1s linear;
+            translate:          calc( var(--stone-x) * var(--tile-size))
+                                calc( var(--stone-y) * var(--tile-size));
+            filter:             drop-shadow(.15em .15em .2em blueviolet);
+        }
+        .tile {
+            --tile-x:           0;
+            --tile-y:           0;
+            width:              var(--tile-size);
+            aspect-ratio:       1 / 1;
+            position:           absolute;
+            transition:         all .1s linear;
+            translate:          calc( var(--tile-x) * var(--tile-size))
+                                calc( var(--tile-y) * var(--tile-size));
+        }
+
+        .shapeI .tile { background-color:   rebeccapurple;  }
+        .shapeZ .tile { background-color:   red;            }
+        .shapeS .tile { background-color:   greenyellow;    }
+        .shapeT .tile { background-color:   blue;           }
+        .shapeL .tile { background-color:   yellow;         }
+        .shapeF .tile { background-color:   hotpink;        }
+        .shapeO .tile { background-color:   black;          }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Webtris</h1>
+    Include keyboard interaction left, right, down, up (rotate) in a torus world.
+</header>
+<main>
+    <div id="playground">
+    </div>
+</main>
+<footer>
+</footer>
+<script>
+    const shapeIrot0 = [ {x:0, y:0}, {x:0, y:1}, {x:0, y:2}, {x:0, y:3} ];
+    const shapeIrot1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0} ];
+    const shapeI     = [ shapeIrot0, shapeIrot1, shapeIrot0.toReversed(), shapeIrot1.toReversed() ];
+
+    const shapeLrot0 = [ {x:0, y:0}, {x:0, y:1}, {x:0, y:2}, {x:1, y:2} ];
+    const shapeLrot1 = [ {x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:2, y:0} ];
+    const shapeLrot2 = [ {x:1, y:2}, {x:1, y:1}, {x:1, y:0}, {x:0, y:0} ];
+    const shapeLrot3 = [ {x:2, y:0}, {x:1, y:0}, {x:0, y:0}, {x:0, y:1} ];
+    const shapeL     = [ shapeLrot0, shapeLrot1, shapeLrot2, shapeLrot3 ];
+
+    const shapeFrot0 = [ {x:0, y:2}, {x:0, y:1}, {x:0, y:0}, {x:1, y:0} ];
+    const shapeFrot1 = [ {x:2, y:1}, {x:1, y:1}, {x:0, y:1}, {x:0, y:0} ];
+    const shapeFrot2 = [ {x:1, y:0}, {x:1, y:1}, {x:1, y:2}, {x:0, y:2} ];
+    const shapeFrot3 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:2, y:1} ];
+    const shapeF     = [ shapeFrot0, shapeFrot1, shapeFrot2, shapeFrot3 ];
+
+    const shapeTrot0 = [ {x:0, y:0}, {x:0, y:1}, {x:0, y:2}, {x:1, y:1} ];
+    const shapeTrot1 = [ {x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:1, y:0} ];
+    const shapeTrot2 = [ {x:1, y:2}, {x:1, y:1}, {x:1, y:0}, {x:0, y:1} ];
+    const shapeTrot3 = [ {x:2, y:0}, {x:1, y:0}, {x:0, y:0}, {x:1, y:1} ];
+    const shapeT     = [ shapeTrot0, shapeTrot1, shapeTrot2, shapeTrot3 ];
+
+    const shapeZrot0 = [ {x:0, y:2}, {x:0, y:1}, {x:1, y:1}, {x:1, y:0} ];
+    const shapeZrot1 = [ {x:2, y:1}, {x:1, y:1}, {x:1, y:0}, {x:0, y:0} ];
+    const shapeZ     = [ shapeZrot0, shapeZrot1, shapeZrot0.toReversed(), shapeZrot1.toReversed() ];
+
+    const shapeSrot0 = [ {x:0, y:0}, {x:0, y:1}, {x:1, y:1}, {x:1, y:2} ];
+    const shapeSrot1 = [ {x:0, y:1}, {x:1, y:1}, {x:1, y:0}, {x:2, y:0} ];
+    const shapeS     = [ shapeSrot0, shapeSrot1, shapeSrot0.toReversed(), shapeSrot1.toReversed() ];
+
+    const shapeOrot0 = [ {x:0, y:0}, {x:0, y:1}, {x:1, y:0}, {x:1, y:1} ];
+    const shapeO     = [ shapeOrot0 ];
+
+    const stones = [
+        { id:0, name:"shapeI", shape: shapeI, rotation:0, x:0, y:0 },
+        { id:2, name:"shapeL", shape: shapeL, rotation:0, x:5, y:0 },
+        { id:3, name:"shapeF", shape: shapeF, rotation:0, x:0, y:5 },
+        { id:4, name:"shapeT", shape: shapeT, rotation:0, x:5, y:5 },
+        { id:5, name:"shapeZ", shape: shapeZ, rotation:0, x:0, y:9 },
+        { id:6, name:"shapeS", shape: shapeS, rotation:0, x:5, y:9 },
+        { id:7, name:"shapeO", shape: shapeO, rotation:0, x:0, y:13 },
+    ];
+    const playgroundElement = document.getElementById("playground");
+
+    const updateTilesRotation = stone => {
+        const tileElements = playgroundElement.querySelectorAll(`.stone[data-id="${stone.id}"] .tile`);
+        tileElements.forEach( (tileElement, idx) => {
+            tileElement.style.setProperty("--tile-x", stone.shape[stone.rotation][idx].x);
+            tileElement.style.setProperty("--tile-y", stone.shape[stone.rotation][idx].y);
+        });
+    };
+    const updateStonePosition = stone => {
+        const stoneElement = playgroundElement.querySelector(`.stone[data-id="${stone.id}"]`);
+        stoneElement.style.setProperty("--stone-x", stone.x);
+        stoneElement.style.setProperty("--stone-y", stone.y);
+    };
+
+    stones.forEach( stone => {
+        const stoneHtml = `
+            <div class="stone ${stone.name}" data-id="${stone.id}">
+                <div class="tile"></div>
+                <div class="tile"></div>
+                <div class="tile"></div>
+                <div class="tile"></div>
+            </div>
+        `;
+        playgroundElement.innerHTML += stoneHtml;
+        updateStonePosition(stone);
+        updateTilesRotation(stone);
+    });
+
+    const moveLeft = _ => {
+        stones.forEach( stone => {
+            stone.x--;
+            if (stone.x < 0) stone.x = 16;
+            updateStonePosition(stone);
+        });
+    };
+    const moveRight = _ => {
+        stones.forEach( stone => {
+            stone.x++;
+            if (stone.x > 16) stone.x = 0;
+            updateStonePosition(stone);
+        });
+    };
+    const moveDown = _ => {
+        stones.forEach( stone => {
+            stone.y++;
+            if (stone.y > 24) stone.y = 0;
+            updateStonePosition(stone);
+        });
+    };
+    const rotate = _ => {
+        stones.forEach( stone => {
+            stone.rotation = (stone.rotation + 1 ) % stone.shape.length;
+            updateTilesRotation(stone);
+        });
+    };
+
+    window.onkeydown = evt => {
+        switch (evt.key) {
+            case "ArrowLeft":   moveLeft(); break;
+            case "ArrowRight":  moveRight();break;
+            case "ArrowUp":     rotate();   break;
+            case "ArrowDown":   moveDown(); break;
+            default:  console.log("key not recognized: ", evt.key);
+        }
+    };
+
+    setInterval(() => {
+        moveDown();
+    }, 1000 / 2);
+
+</script>
+</body>
+</html>
