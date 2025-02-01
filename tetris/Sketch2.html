@@ -13,6 +13,7 @@
             background-color:   lightgray;
             position:           relative;
             overflow:           clip;
+            transform:          translateZ(0); /* bad safari hack: move to GPU rendering to avoid crazy artefacts */
         }
         .stone {
             --stone-x:          0;
