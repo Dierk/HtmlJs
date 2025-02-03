@@ -42,18 +42,6 @@
                 opacity:            .85;
             }
         }
-        .triangle {
-            position:           absolute;
-            inset:              0;
-            width:              62%;
-            aspect-ratio:       1/1;
-            background-color:   limegreen;
-            clip-path:          circle(100% at 0 0);
-            opacity:            0.5;
-        }
-        .triangle:nth-child(4) {
-            background-color:   lime;
-        }
 
         .tetromino {
             transform-style:    preserve-3d;
@@ -90,7 +78,7 @@
              background:         grey;
              opacity:            .8;
              border-radius:      3%;
-             border:             .5px solid grey;
+             border:             1px solid grey;
          }
 
          /* the transform origin for rotate is center by default, so rotations must first */
@@ -127,11 +115,11 @@
             <div class="box" style="--x: 0;--y: 2;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 3;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
-        <div class="tetromino shapeI" data-id="2" style="--tetromino-x: 0;--tetromino-y: 5;--tetromino-z: 3;">
-            <div class="box" style="--x: 0;--y: 0;--z:  0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: -1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: -2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: -3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="tetromino shapeI" data-id="2" style="--tetromino-x: 0;--tetromino-y: 5;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
     </div>
 </main>
@@ -147,14 +135,14 @@
     const tet1 = document.querySelector('[data-id="1"]');
     const tet2 = document.querySelector('[data-id="2"]');
 
-    tet0.style.setProperty("--tetromino-z", 4);
-    tet1.style.setProperty("--tetromino-z", 9);
-    tet2.style.setProperty("--tetromino-z", 9);
+    tet0.style.setProperty("--tetromino-z", 10);
+    tet1.style.setProperty("--tetromino-z", 6);
+    tet2.style.setProperty("--tetromino-z", 4);
     setTimeout( _ => {
         tet0.style.setProperty("--tetromino-z", 0);
         tet1.style.setProperty("--tetromino-z", 0);
-        tet2.style.setProperty("--tetromino-z", 3);
-    },200);
+        tet2.style.setProperty("--tetromino-z", 0);
+    },100);
 
 
 
