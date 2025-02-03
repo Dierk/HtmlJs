@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Tetris</title>
+    <link rel="stylesheet" href="scene.css">
+    <script src="scene.js"></script>
+    <style>
+
+        :root {
+            --box-width:        6;
+        }
+
+        body {
+            min-height:             100dvh;
+            display:                grid;
+            grid-template-columns:  100%;
+            grid-template-rows:     1fr max-content;
+            margin:                 0;
+            background:             linear-gradient(in srgb-linear, blue, orange);
+        }
+
+        footer {
+            padding:            1lh;
+            display:            grid;
+            place-items:        center;
+            color:              white;
+            font-size:          120%;
+        }
+        .floor {
+            position:           absolute;
+            inset:              0;
+            width:              100%;
+            height:             100%;
+            background-image:   repeating-conic-gradient(transparent 0deg 90deg, black 90deg 180deg);
+            background-size:    calc(var(--box-width) * 2 *1cqmin) calc(var(--box-width) * 2 * 1cqmin);
+            opacity:            0.3;
+            & .toplight {
+                position:           absolute;
+                inset:              0;
+                background-image:   radial-gradient(white 30% ,black 80%);
+                opacity:            .85;
+            }
+        }
+        .triangle {
+            position:           absolute;
+            inset:              0;
+            width:              62%;
+            aspect-ratio:       1/1;
+            background-color:   limegreen;
+            clip-path:          circle(100% at 0 0);
+            opacity:            0.5;
+        }
+        .triangle:nth-child(4) {
+            background-color:   lime;
+        }
+
+        .tetromino {
+            transform-style:    preserve-3d;
+            grid-area:          1/1;
+            display:            grid;
+            --z-center:         calc(1cqmin * var(--box-width) / 2);
+            --tetromino-x:      0;
+            --tetromino-y:      0;
+            --tetromino-z:      0;
+            translate:          calc(var(--tetromino-x) * var(--box-width) * 1cqmin)
+                                calc(var(--tetromino-y) * var(--box-width) * 1cqmin)
+                                calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center));
+            transition:         translate 2s ease-in;
+        }
+
+        /* provides the logical group */
+         .box {
+             grid-area:          1/1;
+             --x:                0;
+             --y:                0;
+             --z:                0;
+             width:              calc(var(--box-width) * 1cqmin);
+             aspect-ratio:       1 / 1;
+             display:            grid;                              /* child positioning  */
+             transform-style:    preserve-3d;                       /* put children in our 3d space */
+             translate:          calc(var(--x) * var(--box-width) * 1cqmin)
+                                 calc(var(--y) * var(--box-width) * 1cqmin)
+                                 calc(var(--z) * var(--box-width) * 1cqmin);
+         }
+
+         /* all children go directly on top of each other */
+         .box > * {
+             grid-area:          1/1;
+             background:         grey;
+             opacity:            .8;
+             border-radius:      3%;
+             border:             .5px solid grey;
+         }
+
+         /* the transform origin for rotate is center by default, so rotations must first */
+         /* put the respective face in the the center, then rotate.            */
+         .box :nth-child(1) {transform:                 translateZ(var(--z-center));}  /* move front to center */
+         .box :nth-child(2) {transform: rotateY(180deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the back */
+         .box :nth-child(3) {transform: rotateY(-90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the left */
+         .box :nth-child(4) {transform: rotateY( 90deg) translateZ(var(--z-center));}  /* center, then around Y-axis to the right */
+         .box :nth-child(5) {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
+         .box :nth-child(6) {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
+
+        .shapeI .box * {
+            background-color: cyan;
+        }
+    </style>
+</head>
+<body>
+<main id="main" class="scene3d noSelection">
+    <div class="coords" style="
+            --coords-rotate-x:  86;
+            --coords-rotate-y: -15;
+    ">
+        <div class="floor"><div class="toplight"></div></div>
+
+        <div class="tetromino shapeI" data-id="0" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 1;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 2;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 3;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
+        <div class="tetromino shapeI" data-id="1" style="--tetromino-x: 5;--tetromino-y: 0;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 1;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 2;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 3;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
+        <div class="tetromino shapeI" data-id="2" style="--tetromino-x: 0;--tetromino-y: 5;--tetromino-z: 3;">
+            <div class="box" style="--x: 0;--y: 0;--z:  0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: -1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: -2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: -3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
+    </div>
+</main>
+<footer>
+    Use mouse or touch to rotate the coords.
+</footer>
+
+<script>
+
+    registerForMouseAndTouch(main);
+
+    const tet0 = document.querySelector('[data-id="0"]');
+    const tet1 = document.querySelector('[data-id="1"]');
+    const tet2 = document.querySelector('[data-id="2"]');
+
+    tet0.style.setProperty("--tetromino-z", 4);
+    tet1.style.setProperty("--tetromino-z", 9);
+    tet2.style.setProperty("--tetromino-z", 9);
+    setTimeout( _ => {
+        tet0.style.setProperty("--tetromino-z", 0);
+        tet1.style.setProperty("--tetromino-z", 0);
+        tet2.style.setProperty("--tetromino-z", 3);
+    },200);
+
+
+
+</script>
+</body>
+</html>
