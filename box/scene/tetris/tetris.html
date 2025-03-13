@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>3D Tetris</title>
-    <link rel="stylesheet" href="scene.css">
-    <script src="scene.js"></script>
+    <link rel="stylesheet" href="../scene.css">
+    <script src="../scene.js"></script>
     <style>
 
         :root {
@@ -54,7 +54,7 @@
             translate:          calc(var(--tetromino-x) * var(--box-width) * 1cqmin)
                                 calc(var(--tetromino-y) * var(--box-width) * 1cqmin)
                                 calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center));
-            transition:         translate 2s ease-in;
+            transition:         translate .2s linear;
         }
 
         /* provides the logical group */
@@ -109,18 +109,18 @@
             <div class="box" style="--x: 2;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 3;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
-        <div class="tetromino shapeI" data-id="1" style="--tetromino-x: 5;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 1;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 2;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 3;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeI" data-id="2" style="--tetromino-x: 0;--tetromino-y: 5;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
+<!--        <div class="tetromino shapeI" data-id="1" style="&#45;&#45;tetromino-x: 5;&#45;&#45;tetromino-y: 0;&#45;&#45;tetromino-z: 0;">-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 1;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 2;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 3;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--        </div>-->
+<!--        <div class="tetromino shapeI" data-id="2" style="&#45;&#45;tetromino-x: 0;&#45;&#45;tetromino-y: 5;&#45;&#45;tetromino-z: 0;">-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
+<!--        </div>-->
     </div>
 </main>
 <footer>
@@ -131,18 +131,36 @@
 
     registerForMouseAndTouch(main);
 
-    const tet0 = document.querySelector('[data-id="0"]');
-    const tet1 = document.querySelector('[data-id="1"]');
-    const tet2 = document.querySelector('[data-id="2"]');
+    // const tet0 = document.querySelector('[data-id="0"]');
+    // const tet1 = document.querySelector('[data-id="1"]');
+    // const tet2 = document.querySelector('[data-id="2"]');
 
-    tet0.style.setProperty("--tetromino-z", 10);
-    tet1.style.setProperty("--tetromino-z", 6);
-    tet2.style.setProperty("--tetromino-z", 4);
-    setTimeout( _ => {
-        tet0.style.setProperty("--tetromino-z", 0);
-        tet1.style.setProperty("--tetromino-z", 0);
-        tet2.style.setProperty("--tetromino-z", 0);
-    },100);
+    // tet0.style.setProperty("--tetromino-z", 10);
+    // tet1.style.setProperty("--tetromino-z", 6);
+    // tet2.style.setProperty("--tetromino-z", 4);
+    // setTimeout( _ => {
+    //     tet0.style.setProperty("--tetromino-z", 0);
+    //     tet1.style.setProperty("--tetromino-z", 0);
+    //     tet2.style.setProperty("--tetromino-z", 0);
+    // },100);
+    const pos = {x:0, y:0, z:0};
+
+    const move = (tetrominoNo, position) => {
+        const tetroView = document.querySelector(`[data-id="${tetrominoNo}"]`);
+        tetroView.style.setProperty("--tetromino-x", position.x );
+        tetroView.style.setProperty("--tetromino-y", position.y );
+        tetroView.style.setProperty("--tetromino-z", position.z );
+    }
+
+    document.onkeydown = keyEvt => {
+        switch (keyEvt.key) {
+            case "ArrowLeft":   pos.x = pos.x-1; move(0,pos);   break;
+            case "ArrowRight":  pos.x = pos.x+1; move(0,pos);   break;
+            case "ArrowUp":     pos.y = pos.y-1; move(0,pos);   break;
+            case "ArrowDown":   pos.y = pos.y+1; move(0,pos);   break;
+            default:            console.warn("unknown key" ,keyEvt.key);
+        }
+    }
 
 
 
