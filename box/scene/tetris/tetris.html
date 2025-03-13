@@ -70,6 +70,7 @@
              translate:          calc(var(--x) * var(--box-width) * 1cqmin)
                                  calc(var(--y) * var(--box-width) * 1cqmin)
                                  calc(var(--z) * var(--box-width) * 1cqmin);
+             transition:         all .1s linear;
          }
 
          /* all children go directly on top of each other */
@@ -100,67 +101,149 @@
     <div class="coords" style="
             --coords-rotate-x:  86;
             --coords-rotate-y: -15;
+            top:                70cqh;
     ">
         <div class="floor"><div class="toplight"></div></div>
 
         <div class="tetromino shapeI" data-id="0" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 1;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 2;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 3;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
-<!--        <div class="tetromino shapeI" data-id="1" style="&#45;&#45;tetromino-x: 5;&#45;&#45;tetromino-y: 0;&#45;&#45;tetromino-z: 0;">-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 1;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 2;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 3;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--        </div>-->
-<!--        <div class="tetromino shapeI" data-id="2" style="&#45;&#45;tetromino-x: 0;&#45;&#45;tetromino-y: 5;&#45;&#45;tetromino-z: 0;">-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 1;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 2;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--            <div class="box" style="&#45;&#45;x: 0;&#45;&#45;y: 0;&#45;&#45;z: 3;"><div></div><div></div><div></div><div></div><div></div><div></div></div>-->
-<!--        </div>-->
+
     </div>
 </main>
 <footer>
     Use mouse or touch to rotate the coords.
+    Arrow keys to move the tetromino.
+    Shift + arrow keys to rotate.
 </footer>
 
 <script>
-
     registerForMouseAndTouch(main);
 
-    // const tet0 = document.querySelector('[data-id="0"]');
-    // const tet1 = document.querySelector('[data-id="1"]');
-    // const tet2 = document.querySelector('[data-id="2"]');
+    const shapeIs = () => {
+        const l0f0 = [
+            {x:0, y:1, z:1},
+            {x:1, y:1, z:1},
+            {x:2, y:1, z:1},
+            {x:3, y:1, z:1},
+        ];
+        const l0f1 = l0f0; // nothing happens when original position is toppled to front
+        const l1f0 = [
+            {x:1, y:1, z:0},
+            {x:1, y:1, z:1},
+            {x:1, y:1, z:2},
+            {x:1, y:1, z:3},
+        ];
+        const l1f1 = [
+            {x:1, y:0, z:1},
+            {x:1, y:1, z:1},
+            {x:1, y:2, z:1},
+            {x:1, y:3, z:1},
+        ];
 
-    // tet0.style.setProperty("--tetromino-z", 10);
-    // tet1.style.setProperty("--tetromino-z", 6);
-    // tet2.style.setProperty("--tetromino-z", 4);
-    // setTimeout( _ => {
-    //     tet0.style.setProperty("--tetromino-z", 0);
-    //     tet1.style.setProperty("--tetromino-z", 0);
-    //     tet2.style.setProperty("--tetromino-z", 0);
-    // },100);
-    const pos = {x:0, y:0, z:0};
+        return [
+            [l0f0, l0f1],
+            [l1f0, l1f1]
+        ];
+    }
 
-    const move = (tetrominoNo, position) => {
+    const tetrominos = [
+        {
+            position: {x:0, y:0, z:0},
+            shape: shapeIs(),
+            leftTopples: 0,
+            frontTopples: 0,
+        },
+    ];
+
+    const move = tetrominoNo => {
+        const position = tetrominos[tetrominoNo].position;
         const tetroView = document.querySelector(`[data-id="${tetrominoNo}"]`);
         tetroView.style.setProperty("--tetromino-x", position.x );
         tetroView.style.setProperty("--tetromino-y", position.y );
         tetroView.style.setProperty("--tetromino-z", position.z );
     }
+    const align = tetrominoNo => {
+        const tetro = tetrominos[tetrominoNo];
+        const tetroView = document.querySelector(`[data-id="${tetrominoNo}"]`);
+        const curShape  = tetro.shape[tetro.leftTopples][tetro.frontTopples];
+        const boxViews  = tetroView.querySelectorAll(".box");
+        boxViews.forEach( (box, idx) => {
+            box.setAttribute("style",`--x: ${curShape[idx].x};--y: ${curShape[idx].y};--z: ${curShape[idx].z};`);
+        })
+    }
+
+
+    const toppleLeft = tetrominoNo => {
+        console.log("topple left");
+        const tetro = tetrominos[tetrominoNo];
+        tetro.leftTopples = (tetro.leftTopples + 1) % tetro.shape[tetro.leftTopples].length;
+        align(tetrominoNo);
+    }
+    const toppleRight = tetrominoNo => {
+        console.log("topple right");
+        const tetro = tetrominos[tetrominoNo];
+        tetro.leftTopples = tetro.leftTopples < 1
+            ?  tetro.shape[tetro.leftTopples].length - 1
+            :  tetro.leftTopples -1
+        align(tetrominoNo);
+    }
+    const toppleFront = tetrominoNo => {
+        console.log("topple front");
+        const tetro = tetrominos[tetrominoNo];
+        tetro.frontTopples = (tetro.frontTopples + 1) % tetro.shape[tetro.frontTopples].length;
+        align(tetrominoNo);
+    }
+    const toppleBack = tetrominoNo => {
+        console.log("topple back");
+        const tetro = tetrominos[tetrominoNo];
+        tetro.frontTopples = tetro.frontTopples < 1
+            ?  tetro.shape[tetro.frontTopples].length - 1
+            :  tetro.frontTopples -1
+        align(tetrominoNo);
+    }
 
     document.onkeydown = keyEvt => {
-        switch (keyEvt.key) {
-            case "ArrowLeft":   pos.x = pos.x-1; move(0,pos);   break;
-            case "ArrowRight":  pos.x = pos.x+1; move(0,pos);   break;
-            case "ArrowUp":     pos.y = pos.y-1; move(0,pos);   break;
-            case "ArrowDown":   pos.y = pos.y+1; move(0,pos);   break;
-            default:            console.warn("unknown key" ,keyEvt.key);
+        const n = currentTetrominoNumber;
+        if (keyEvt.shiftKey) {
+            switch (keyEvt.key) {
+                case "Shift":       break; // ignore the initial shift signal
+                case "ArrowLeft":   toppleLeft (n);    break;
+                case "ArrowRight":  toppleRight(n);   break;
+                case "ArrowUp":     toppleBack (n);    break;
+                case "ArrowDown":   toppleFront(n);   break;
+                default:            console.warn("unknown key" ,keyEvt.key);
+            }
+        } else {
+            const pos = tetrominos[n].position;
+            switch (keyEvt.key) {
+                case "ArrowLeft":   pos.x = pos.x-1; move(n);   break;
+                case "ArrowRight":  pos.x = pos.x+1; move(n);   break;
+                case "ArrowUp":     pos.y = pos.y-1; move(n);   break;
+                case "ArrowDown":   pos.y = pos.y+1; move(n);   break;
+                default:            console.warn("unknown key" ,keyEvt.key);
+            }
         }
+
     }
+
+    const currentTetrominoNumber = 0;
+
+    align(currentTetrominoNumber);
+
+    let i = 10;
+    const fall = () => {
+        if (--i < 0) return;
+        tetrominos[currentTetrominoNumber].position.z = i;
+        move(currentTetrominoNumber);
+        setTimeout(fall, 1 * 1000);
+    }
+    fall();
+
+
 
 
 
