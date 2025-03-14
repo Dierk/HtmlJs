@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>3D Tetris</title>
     <link rel="stylesheet" href="../scene.css">
-    <script src="../scene.js"></script>
     <style>
 
         :root {
@@ -94,6 +93,9 @@
         .shapeI .box * {
             background-color: cyan;
         }
+        .shapeT .box * {
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -111,6 +113,12 @@
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
+        <div class="tetromino shapeT" data-id="1" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
 
     </div>
 </main>
@@ -120,125 +128,112 @@
     Shift + arrow keys to rotate.
 </footer>
 
-<script>
+<script type="module">
+    import { registerForMouseAndTouch }     from "./scene.js";
+    import { toppleTetroLeft }           from "./controller.js";
+    import { shapeITetros,shapeTTetros } from "./model.js";
+
     registerForMouseAndTouch(main);
 
-    const shapeIs = () => {
-        const l0f0 = [
-            {x:0, y:1, z:1},
-            {x:1, y:1, z:1},
-            {x:2, y:1, z:1},
-            {x:3, y:1, z:1},
-        ];
-        const l0f1 = l0f0; // nothing happens when original position is toppled to front
-        const l1f0 = [
-            {x:1, y:1, z:0},
-            {x:1, y:1, z:1},
-            {x:1, y:1, z:2},
-            {x:1, y:1, z:3},
-        ];
-        const l1f1 = [
-            {x:1, y:0, z:1},
-            {x:1, y:1, z:1},
-            {x:1, y:2, z:1},
-            {x:1, y:3, z:1},
-        ];
 
-        return [
-            [l0f0, l0f1],
-            [l1f0, l1f1]
-        ];
+    const makeShapes = (shapeModel, dim) => {
+        const result = [ ]; // it's always possible to go four times to the left
+        result[0] = shapeModel;
+        result[1] = result[0].map( shape => toppleTetroLeft(shape, dim));
+        result[2] = result[1].map( shape => toppleTetroLeft(shape, dim));
+        result[3] = result[2].map( shape => toppleTetroLeft(shape, dim));
+        return result;
     }
 
     const tetrominos = [
         {
-            position: {x:0, y:0, z:0},
-            shape: shapeIs(),
-            leftTopples: 0,
-            frontTopples: 0,
+            position:       {x:0, y:0, z:0},
+            shape:          makeShapes(shapeITetros, 4) ,
+            leftTopples:    0,
+            frontTopples:   0,
+        },
+        {
+            position:       {x:0, y:5, z:0},
+            shape:          makeShapes(shapeTTetros,3) ,
+            leftTopples:    0,
+            frontTopples:   0,
         },
     ];
 
-    const move = tetrominoNo => {
-        const position = tetrominos[tetrominoNo].position;
-        const tetroView = document.querySelector(`[data-id="${tetrominoNo}"]`);
-        tetroView.style.setProperty("--tetromino-x", position.x );
-        tetroView.style.setProperty("--tetromino-y", position.y );
-        tetroView.style.setProperty("--tetromino-z", position.z );
+    const move = tetro => {
+        const position = tetro.position;
+        document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"]`).setAttribute("style",
+            `--tetromino-x: ${position.x};
+             --tetromino-y: ${position.y};
+             --tetromino-z: ${position.z};`
+        );
     }
-    const align = tetrominoNo => {
-        const tetro = tetrominos[tetrominoNo];
-        const tetroView = document.querySelector(`[data-id="${tetrominoNo}"]`);
+    const align = tetro => {
+        const tetroView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"]`);
         const curShape  = tetro.shape[tetro.leftTopples][tetro.frontTopples];
-        const boxViews  = tetroView.querySelectorAll(".box");
-        boxViews.forEach( (box, idx) => {
-            box.setAttribute("style",`--x: ${curShape[idx].x};--y: ${curShape[idx].y};--z: ${curShape[idx].z};`);
+        tetroView.querySelectorAll(".box").forEach( (box, idx) => {
+            box.setAttribute("style",
+                `--x: ${curShape[idx].x};
+                 --y: ${curShape[idx].y};
+                 --z: ${curShape[idx].z};`
+            );
         })
     }
 
-
-    const toppleLeft = tetrominoNo => {
-        console.log("topple left");
-        const tetro = tetrominos[tetrominoNo];
-        tetro.leftTopples = (tetro.leftTopples + 1) % tetro.shape[tetro.leftTopples].length;
-        align(tetrominoNo);
+    const rotateToBack  = tetro => {
+        tetro.leftTopples = (tetro.leftTopples + 1) % tetro.shape.length;
     }
-    const toppleRight = tetrominoNo => {
-        console.log("topple right");
-        const tetro = tetrominos[tetrominoNo];
+    const rotateToFront = tetro => {
         tetro.leftTopples = tetro.leftTopples < 1
-            ?  tetro.shape[tetro.leftTopples].length - 1
-            :  tetro.leftTopples -1
-        align(tetrominoNo);
+            ?  tetro.shape.length - 1
+            :  tetro.leftTopples - 1;
     }
-    const toppleFront = tetrominoNo => {
-        console.log("topple front");
-        const tetro = tetrominos[tetrominoNo];
-        tetro.frontTopples = (tetro.frontTopples + 1) % tetro.shape[tetro.frontTopples].length;
-        align(tetrominoNo);
+    const toppleRight = tetro => {
+        tetro.frontTopples = (tetro.frontTopples + 1) % tetro.shape[tetro.leftTopples].length;
     }
-    const toppleBack = tetrominoNo => {
-        console.log("topple back");
-        const tetro = tetrominos[tetrominoNo];
+    const toppleLeft    = tetro => {
         tetro.frontTopples = tetro.frontTopples < 1
-            ?  tetro.shape[tetro.frontTopples].length - 1
-            :  tetro.frontTopples -1
-        align(tetrominoNo);
+            ?  tetro.shape[tetro.leftTopples].length - 1
+            :  tetro.frontTopples - 1;
     }
 
     document.onkeydown = keyEvt => {
-        const n = currentTetrominoNumber;
+        const tetro = currentTetromino;
         if (keyEvt.shiftKey) {
             switch (keyEvt.key) {
                 case "Shift":       break; // ignore the initial shift signal
-                case "ArrowLeft":   toppleLeft (n);    break;
-                case "ArrowRight":  toppleRight(n);   break;
-                case "ArrowUp":     toppleBack (n);    break;
-                case "ArrowDown":   toppleFront(n);   break;
+                case "ArrowRight":  toppleRight  (tetro); align(tetro); break; // front topples clockwise
+                case "ArrowLeft":   toppleLeft   (tetro); align(tetro); break; // front topples counter-clockwise
+                case "ArrowUp":     rotateToBack (tetro); align(tetro); break; // top layer moves to the back
+                case "ArrowDown":   rotateToFront(tetro); align(tetro); break; // top layer moves to the front
                 default:            console.warn("unknown key" ,keyEvt.key);
             }
         } else {
-            const pos = tetrominos[n].position;
+            const pos = tetro.position;
             switch (keyEvt.key) {
-                case "ArrowLeft":   pos.x = pos.x-1; move(n);   break;
-                case "ArrowRight":  pos.x = pos.x+1; move(n);   break;
-                case "ArrowUp":     pos.y = pos.y-1; move(n);   break;
-                case "ArrowDown":   pos.y = pos.y+1; move(n);   break;
+                case "ArrowLeft":   pos.x = pos.x-1; move(tetro);   break;
+                case "ArrowRight":  pos.x = pos.x+1; move(tetro);   break;
+                case "ArrowUp":     pos.y = pos.y-1; move(tetro);   break;
+                case "ArrowDown":   pos.y = pos.y+1; move(tetro);   break;
                 default:            console.warn("unknown key" ,keyEvt.key);
             }
         }
 
     }
 
-    const currentTetrominoNumber = 0;
+    // init view
+    tetrominos.forEach( tetro => {
+        align(tetro);
+        move(tetro);
+    })
 
-    align(currentTetrominoNumber);
+    const currentTetromino = tetrominos[0];
 
     let i = 10;
     const fall = () => {
         if (--i < 0) return;
-        tetrominos[currentTetrominoNumber].position.z = i;
-        move(currentTetrominoNumber);
+        currentTetromino.position.z = i;
+        move(currentTetromino);
         setTimeout(fall, 1 * 1000);
     }
     fall();

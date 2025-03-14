@@ -1,105 +1,47 @@
 /**
- * @module model
+ * @module tetris/model
  */
 
-export { piecesModel };
+export { shapeITetros, shapeTTetros }
 
-/**
- * a quadratic array of dimension n where 0 means "empty" and 1 means "filled"
- * @typedef {Array<Array< 0 | 1 >>} PiecePositionType
- */
-
-/**
- * @typedef PieceModelType
- * @property { Boolean }    display - whether it should be displayed in the list of available pieces
- * @property { Number  }    showIndex - the index of the position that should be shown
- * @property { 1 | 2 | 4 }  turns   - how many turns can be positioned: 1, 2 or 4
- * @property { Boolean }    flips    - whether flipped versions of the turns are needed for positioning
- * @property { Array<PiecePositionType> }  positions - all distinct ways of positioning the piece (turned, flipped)
- * @property { PiecePositionType } shape   - the canonical shape of the piece in default position
- */
-
-/** There are 8 pieces. Each piece has a 4x4 array of cells where 0s and 1s where 0 means "empty" and 1 means "filled".
- * The piece might be displayed in the list of pieces. Once it is dropped on the board it is no
- * longer displayed in that list.
- * @type Array<PieceModelType>
- */
-const piecesModel   = Array.from({length: 10}, () => ( /** @type {PieceModelType}*/ {
-    display:   true,
-    showIndex: 0,
-    turns:     4,        // 1 or 2 or 4
-    flips:     true,     // whether it flips
-    positions: [],
-    shape:     undefined // will be set below
-}));
-
-piecesModel[0].flips = false;
-piecesModel[0].shape = [
-    [1, 1, 1, 0],
-    [1, 0, 1, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+const shapeITetros = [
+    [
+        {x: 0, y: 1, z: 1},
+        {x: 1, y: 1, z: 1},
+        {x: 2, y: 1, z: 1},
+        {x: 3, y: 1, z: 1},
+    ],
+    [
+        {x: 1, y: 0, z: 1},
+        {x: 1, y: 1, z: 1},
+        {x: 1, y: 2, z: 1},
+        {x: 1, y: 3, z: 1},
+    ],
 ];
 
-piecesModel[1].shape = [
-    [1, 0, 0, 0],
-    [1, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0]
-];
-
-piecesModel[2].shape = [
-    [1, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0]
-];
-piecesModel[3].shape = [
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 0, 0]
-];
-piecesModel[4].shape = [
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [1, 1, 0, 0]
-];
-piecesModel[5].shape = [
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 1, 0, 0],
-    [1, 0, 0, 0]
-];
-piecesModel[6].flips = false;
-piecesModel[6].turns = 2;
-piecesModel[6].shape = [
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
-    [0, 0, 0, 0]
-];
-piecesModel[7].flips = false;
-piecesModel[7].shape = [
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 1, 1, 0],
-    [0, 0, 0, 0]
-];
-piecesModel[8].flips = false;
-piecesModel[8].turns = 1;
-piecesModel[8].shape = [
-    [0, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-];
-piecesModel[9].flips = false;
-piecesModel[9].turns = 1;
-piecesModel[9].shape = [
-    [0, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
+const shapeTTetros = [
+    [
+        {x: 0, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 2, y: 0, z: 0},
+        {x: 1, y: 1, z: 0},
+    ],
+    [
+        {x: 0, y: 0, z: 0},
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 2, z: 0},
+        {x: 1, y: 1, z: 0},
+    ],
+    [
+        {x: 0, y: 2, z: 0},
+        {x: 1, y: 2, z: 0},
+        {x: 2, y: 2, z: 0},
+        {x: 1, y: 1, z: 0},
+    ],
+    [
+        {x: 2, y: 0, z: 0},
+        {x: 2, y: 1, z: 0},
+        {x: 2, y: 2, z: 0},
+        {x: 1, y: 1, z: 0},
+    ],
 ];

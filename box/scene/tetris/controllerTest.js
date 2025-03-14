@@ -2,7 +2,8 @@
  * @module controllerTest
  */
 
-import {rotateLeft,toppleLeft, toppleBack } from "./controller.js";
+import {rotateLeft, toppleLeft, newEmptyCube, tetrominoToCube, cubeAsTetromino} from "./controller.js";
+import {shapeITetros}                                                           from "./model.js";
 
 const test = (actual, expected) => {
     const result = actual === expected;
@@ -63,3 +64,23 @@ const testIsToppledBack = (cube, toppledCube) => {
 }
 
 testIsToppledBack(myCube, toppleBack(myCube));
+
+const emptyCube = newEmptyCube(4);
+test(emptyCube.length, 4);
+test(emptyCube[0].length, 4);
+test(emptyCube[0][0].length, 4);
+test(emptyCube[0][0][0], undefined);
+
+const shapeIasCube = tetrominoToCube(shapeITetros[0], 4);
+test(shapeIasCube[0][1][1], 1);
+test(shapeIasCube[1][1][1], 1);
+test(shapeIasCube[2][1][1], 1);
+test(shapeIasCube[3][1][1], 1);
+test(shapeIasCube[3][1][0], undefined); // all others should be undefined
+
+const IcubeAsTetro = cubeAsTetromino(shapeIasCube);
+shapeITetros[0].forEach((box, idx) => {
+    test(box.x, IcubeAsTetro[idx].x);
+    test(box.y, IcubeAsTetro[idx].y);
+    test(box.z, IcubeAsTetro[idx].z);
+});

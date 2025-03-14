@@ -2,7 +2,8 @@
  * @module controller
  */
 
-export { rotateLeft, toppleLeft, toppleBack };
+export { rotateLeft, toppleLeft, newEmptyCube, tetrominoToCube, cubeAsTetromino,
+         toppleTetroLeft };
 
 
 const rotateLeft = face =>
@@ -14,22 +15,27 @@ const rotateLeft = face =>
 
 const toppleLeft = cube => cube.map(frontFace => rotateLeft(frontFace));
 
-const toppleBack = cube => {
-    const result = cube;
-    const dim    = cube.length;
-    for (let col = 0; col < dim; col++) {
-        for (let i = 0; i < dim; i++) {
-            result[0]      [col][i]       = cube[dim-1-i][col][0];          // front to top
-            result[dim-1-i][col][dim-1]   = cube[0]      [col][dim-1-i];    // top to back
-            result[dim-1]  [col][dim-1-i] = cube[i]      [col][dim-1];      // back to floor
-            result[dim-1-i][col][0]       = cube[i]      [col][dim-1-i];    // floor to front
-        }
-    }
+const newEmptyCube = n =>
+    Array.from({length:n},
+       _x => Array.from({length:n},
+           _y=> Array.from({length:n})));
 
+const tetrominoToCube = (tetromino, cubeSize) => {
+    const cube = newEmptyCube(cubeSize);
+    tetromino.forEach( box => cube[box.x][box.y][box.z] = 1);
+    return cube;
+}
+
+const cubeAsTetromino = cube => {
+    const result = [];
+    cube.forEach( (xPlane,x) =>
+        xPlane.forEach( (yRow,y) =>
+            yRow.forEach( (zCell,z) => {
+                if (zCell === 1) {
+                    result.push( {x,y,z} );
+                }
+            })));
     return result;
 }
 
-// turn clockwise:
-// - toppleBack
-// - toppleLeft
-// - toppleBack * 2
+const toppleTetroLeft = (tetromino,size) => cubeAsTetromino(toppleLeft(tetrominoToCube(tetromino,size)));
