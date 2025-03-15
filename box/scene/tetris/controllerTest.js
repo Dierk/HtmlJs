@@ -63,7 +63,7 @@ const testIsToppledBack = (cube, toppledCube) => {
     test(toppledCube[0][0][0], cube[2][0][0]); // dupl
 }
 
-testIsToppledBack(myCube, toppleBack(myCube));
+testIsToppledBack(myCube, topplePitch(myCube));
 
 const emptyCube = newEmptyCube(4);
 test(emptyCube.length, 4);

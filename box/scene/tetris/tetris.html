@@ -90,18 +90,11 @@
          .box :nth-child(5) {transform: rotateX( 90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the top */
          .box :nth-child(6) {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
 
-        .shapeI .box * {
-            background-color: cyan;
-        }
-        .shapeT .box * {
-            background-color: red;
-        }
-        .shapeO .box * {
-            background-color: lightgray;
-        }
-        .shapeS .box * {
-            background-color: yellow;
-        }
+        .shapeI .box * { background-color: cyan; }
+        .shapeT .box * { background-color: red; }
+        .shapeO .box * { background-color: lightgray; }
+        .shapeS .box * { background-color: yellow; }
+        .shapeZ .box * { background-color: lime; }
     </style>
 </head>
 <body>
@@ -137,6 +130,12 @@
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
+        <div class="tetromino shapeZ" data-id="4" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
 
     </div>
 </main>
@@ -148,46 +147,46 @@
 
 <script type="module">
     import { registerForMouseAndTouch }  from "./scene.js";
-    import {normalize, toppleTetroLeft}  from "./controller.js";
-    import { shapeITetros,shapeTTetros, shape0Tetros, shapeSTetros } from "./model.js";
+    import { swapYZ, swapXZ}  from "./controller.js";
+    import { shapeITetros,shapeTTetros, shape0Tetros, shapeSTetros,shapeZTetros } from "./model.js";
 
     registerForMouseAndTouch(main);
-
-
-    const makeShapes = (shapeModel, dim) => {
-        let result = [ ]; // it's always possible to go four times to the left
-        result[0] = shapeModel;
-        result[1] = result[0].map( shape => toppleTetroLeft(shape, dim));
-        result[2] = result[1].map( shape => toppleTetroLeft(shape, dim));
-        result[3] = result[2].map( shape => toppleTetroLeft(shape, dim));
-        result = result.map( shapes => shapes.map(normalize));
-        return result;
-    }
 
     const tetrominos = [
         {
             position:       {x:0, y:0, z:0},
-            shape:          makeShapes(shapeITetros, 4) ,
-            leftTopples:    0,
-            frontTopples:   0,
+            shape:          shapeITetros,
+            swapXZ:         false,
+            swapYZ:         false,
+            rotations:      0,
         },
         {
             position:       {x:0, y:5, z:0},
-            shape:          makeShapes(shapeTTetros,3) ,
-            leftTopples:    0,
-            frontTopples:   0,
+            shape:          shapeTTetros,
+            swapXZ:         false,
+            swapYZ:         false,
+            rotations:      0,
         },
         {
             position:       {x:5, y:0, z:0},
-            shape:          makeShapes(shape0Tetros,2) ,
-            leftTopples:    0,
-            frontTopples:   0,
+            shape:          shape0Tetros,
+            swapXZ:         false,
+            swapYZ:         false,
+            rotations:      0,
         },
         {
             position:       {x:1, y:1, z:0},
-            shape:          makeShapes(shapeSTetros,3) ,
-            leftTopples:    0,
-            frontTopples:   0,
+            shape:          shapeSTetros,
+            swapXZ:         false,
+            swapYZ:         false,
+            rotations:      0,
+        },
+        {
+            position:       {x:2, y:3, z:0},
+            shape:          shapeZTetros,
+            swapXZ:         false,
+            swapYZ:         false,
+            rotations:      0,
         },
     ];
 
@@ -201,7 +200,9 @@
     }
     const align = tetro => {
         const tetroView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"]`);
-        const curShape  = tetro.shape[tetro.leftTopples][tetro.frontTopples];
+        let curShape  = tetro.shape[tetro.rotations];
+        if (tetro.swapXZ) curShape = swapXZ(curShape);
+        if (tetro.swapYZ) curShape = swapYZ(curShape);
         tetroView.querySelectorAll(".box").forEach( (box, idx) => {
             box.setAttribute("style",
                 `--x: ${curShape[idx].x};
@@ -211,36 +212,23 @@
         })
     }
 
-    const rotateToBack  = tetro => {
-        tetro.leftTopples = (tetro.leftTopples + 1) % tetro.shape.length;
-    }
-    const rotateToFront = tetro => {
-        tetro.leftTopples = tetro.leftTopples < 1
-            ?  tetro.shape.length - 1
-            :  tetro.leftTopples - 1;
-    }
-    const toppleRight = tetro => {
-        tetro.frontTopples = (tetro.frontTopples + 1) % tetro.shape[tetro.leftTopples].length;
-    }
-    const toppleLeft    = tetro => {
-        tetro.frontTopples = tetro.frontTopples < 1
-            ?  tetro.shape[tetro.leftTopples].length - 1
-            :  tetro.frontTopples - 1;
-    }
+    const toppleRoll  = tetro => tetro.swapXZ = !tetro.swapXZ
+    const topplePitch = tetro => tetro.swapYZ = !tetro.swapYZ
+    const rotateYaw   = tetro => tetro.rotations = (tetro.rotations + 1) % tetro.shape.length
 
     document.onkeydown = keyEvt => {
         const tetro = currentTetromino;
+        const pos = tetro.position;
         if (keyEvt.shiftKey) {
             switch (keyEvt.key) {
                 case "Shift":       break; // ignore the initial shift signal
-                case "ArrowRight":  toppleRight  (tetro); align(tetro); break; // front topples clockwise
-                case "ArrowLeft":   toppleLeft   (tetro); align(tetro); break; // front topples counter-clockwise
-                case "ArrowUp":     rotateToBack (tetro); align(tetro); break; // top layer moves to the back
-                case "ArrowDown":   rotateToFront(tetro); align(tetro); break; // top layer moves to the front
+                case "ArrowRight":  rotateYaw   (tetro); align(tetro); break;
+                case "ArrowLeft":   toppleRoll  (tetro); align(tetro); break;
+                case "ArrowUp":     topplePitch (tetro); align(tetro); break;
+                case "ArrowDown":   pos.z = pos.z-1;      move(tetro);   break;
                 default:            console.warn("unknown key" ,keyEvt.key);
             }
         } else {
-            const pos = tetro.position;
             switch (keyEvt.key) {
                 case "ArrowLeft":   pos.x = pos.x-1; move(tetro);   break;
                 case "ArrowRight":  pos.x = pos.x+1; move(tetro);   break;
@@ -258,9 +246,9 @@
         move(tetro);
     })
 
-    const currentTetromino = tetrominos[1];
+    const currentTetromino = tetrominos[4];
 
-    let i = 10;
+    let i = 0;
     const fall = () => {
         if (--i < 0) return;
         currentTetromino.position.z = i;

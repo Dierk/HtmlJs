@@ -3,7 +3,7 @@
  */
 
 export { rotateLeft, toppleLeft, newEmptyCube, tetrominoToCube, cubeAsTetromino,
-         toppleTetroLeft, normalize };
+         toppleTetroLeft, normalize, swapXZ, swapYZ };
 
 
 const rotateLeft = face =>
@@ -45,3 +45,6 @@ const normalize = tetro => {
     const minY = Math.min(...tetro.map(box => box.y));
     return tetro.map( box => ({x: box.x, y: box.y - minY, z: box.z - minZ}));
 };
+
+const swapXZ = tetro => tetro.map( box => ({x: box.z, y: box.y, z: box.x}));
+const swapYZ = tetro => tetro.map( box => ({x: box.x, y: box.z, z: box.y}));
