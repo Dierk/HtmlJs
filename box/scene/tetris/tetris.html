@@ -96,6 +96,9 @@
         .shapeT .box * {
             background-color: red;
         }
+        .shapeO .box * {
+            background-color: lightgray;
+        }
     </style>
 </head>
 <body>
@@ -119,6 +122,12 @@
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
+        <div class="tetromino shapeO" data-id="2" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
 
     </div>
 </main>
@@ -131,7 +140,7 @@
 <script type="module">
     import { registerForMouseAndTouch }  from "./scene.js";
     import {normalize, toppleTetroLeft}  from "./controller.js";
-    import { shapeITetros,shapeTTetros } from "./model.js";
+    import { shapeITetros,shapeTTetros, shape0Tetros } from "./model.js";
 
     registerForMouseAndTouch(main);
 
@@ -156,6 +165,12 @@
         {
             position:       {x:0, y:5, z:0},
             shape:          makeShapes(shapeTTetros,3) ,
+            leftTopples:    0,
+            frontTopples:   0,
+        },
+        {
+            position:       {x:5, y:0, z:0},
+            shape:          makeShapes(shape0Tetros,3) ,
             leftTopples:    0,
             frontTopples:   0,
         },
@@ -228,7 +243,7 @@
         move(tetro);
     })
 
-    const currentTetromino = tetrominos[1];
+    const currentTetromino = tetrominos[2];
 
     let i = 10;
     const fall = () => {
