@@ -129,19 +129,20 @@
 </footer>
 
 <script type="module">
-    import { registerForMouseAndTouch }     from "./scene.js";
-    import { toppleTetroLeft }           from "./controller.js";
+    import { registerForMouseAndTouch }  from "./scene.js";
+    import {normalize, toppleTetroLeft}  from "./controller.js";
     import { shapeITetros,shapeTTetros } from "./model.js";
 
     registerForMouseAndTouch(main);
 
 
     const makeShapes = (shapeModel, dim) => {
-        const result = [ ]; // it's always possible to go four times to the left
+        let result = [ ]; // it's always possible to go four times to the left
         result[0] = shapeModel;
         result[1] = result[0].map( shape => toppleTetroLeft(shape, dim));
         result[2] = result[1].map( shape => toppleTetroLeft(shape, dim));
         result[3] = result[2].map( shape => toppleTetroLeft(shape, dim));
+        result = result.map( shapes => shapes.map(normalize));
         return result;
     }
 
@@ -227,7 +228,7 @@
         move(tetro);
     })
 
-    const currentTetromino = tetrominos[0];
+    const currentTetromino = tetrominos[1];
 
     let i = 10;
     const fall = () => {
