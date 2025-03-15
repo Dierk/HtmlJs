@@ -2,7 +2,7 @@
  * @module tetris/model
  */
 
-export { shapeITetros, shapeTTetros, shape0Tetros, shapeSTetros, shapeZTetros }
+export { shapeITetros, shapeTTetros, shape0Tetros, shapeSTetros, shapeZTetros, shapeLTetros, shapeFTetros }
 
 const shape0Tetros = [
     [
@@ -105,5 +105,57 @@ const shapeZTetros = [
         {x: 0, y: 1, z: 0},
         {x: 1, y: 1, z: 0},
         {x: 1, y: 0, z: 0},
+    ],
+];
+const shapeLTetros = [
+    [
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 2, y: 0, z: 0},
+    ],
+    [
+        {x: 1, y: 0, z: 0},
+        {x: 2, y: 0, z: 0},
+        {x: 2, y: 1, z: 0},
+        {x: 2, y: 2, z: 0},
+    ],
+    [
+        {x: 2, y: 1, z: 0},
+        {x: 0, y: 2, z: 0},
+        {x: 1, y: 2, z: 0},
+        {x: 2, y: 2, z: 0},
+    ],
+    [
+        {x: 1, y: 2, z: 0},
+        {x: 0, y: 2, z: 0},
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 0, z: 0},
+    ],
+];
+const shapeFTetros = [
+    [
+        {x: 1, y: 0, z: 0},
+        {x: 0, y: 0, z: 0},
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 2, z: 0},
+    ],
+    [
+        {x: 2, y: 1, z: 0},
+        {x: 2, y: 0, z: 0},
+        {x: 1, y: 0, z: 0},
+        {x: 0, y: 0, z: 0},
+    ],
+    [
+        {x: 1, y: 2, z: 0},
+        {x: 2, y: 2, z: 0},
+        {x: 2, y: 1, z: 0},
+        {x: 2, y: 0, z: 0},
+    ],
+    [
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 2, z: 0},
+        {x: 1, y: 2, z: 0},
+        {x: 2, y: 2, z: 0},
     ],
 ];
