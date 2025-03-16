@@ -56,11 +56,10 @@
             --tetromino-z:      0;
             translate:          calc(var(--tetromino-x) * var(--box-width) * 1cqmin)
                                 calc(var(--tetromino-y) * var(--box-width) * 1cqmin)
-                                calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center));
-            transition:         translate 1s linear;
-        }
-        .tetromino.ghost {
-            transition:         translate .2s linear;
+                                ;
+            transform:          translateZ(calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center)));
+            transition:         translate .2s linear,
+                                transform  1s linear;
         }
 
         /* provides the logical group */
