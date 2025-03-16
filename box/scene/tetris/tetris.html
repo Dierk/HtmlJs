@@ -57,6 +57,9 @@
             translate:          calc(var(--tetromino-x) * var(--box-width) * 1cqmin)
                                 calc(var(--tetromino-y) * var(--box-width) * 1cqmin)
                                 calc(var(--tetromino-z) * var(--box-width) * 1cqmin + var(--z-center));
+            transition:         translate 1s linear;
+        }
+        .tetromino.ghost {
             transition:         translate .2s linear;
         }
 
@@ -145,8 +148,8 @@
 </footer>
 
 <script type="module">
-    import { registerForMouseAndTouch }  from "./scene.js";
-    import { swapYZ, swapXZ, normalize}  from "./controller.js";
+    import { registerForMouseAndTouch }                                                                       from "./scene.js";
+    import { yzSwaps, xzSwaps, normalize}                                                                     from "./controller.js";
     import { shapeITetros,shapeTTetros, shape0Tetros, shapeSTetros,shapeZTetros, shapeLTetros, shapeFTetros } from "./model.js";
 
     registerForMouseAndTouch(main);
@@ -159,8 +162,8 @@
         tetrominos.push({
                     position:       {x:0, y:0, z:30},
                     shape:          shape,
-                    swapXZ:         false,
-                    swapYZ:         false,
+                    swapXZ:         0,
+                    swapYZ:         0,
                     rotations:      0,
                 });
         const parent = document.querySelector(`.scene3d .coords`);
@@ -192,8 +195,8 @@
         const tetroView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"]`);
         const ghostView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"].ghost`);
         let curShape  = tetro.shape[tetro.rotations];
-        if (tetro.swapXZ) curShape = swapXZ(curShape);
-        if (tetro.swapYZ) curShape = swapYZ(curShape);
+        curShape = xzSwaps[tetro.swapXZ](curShape);
+        curShape = yzSwaps[tetro.swapYZ](curShape);
         curShape = normalize(curShape);
         tetroView.querySelectorAll(".box").forEach( (box, idx) => {
             box.setAttribute("style",
@@ -211,8 +214,8 @@
         })
     }
 
-    const toppleRoll  = tetro => tetro.swapXZ    = !tetro.swapXZ;
-    const topplePitch = tetro => tetro.swapYZ    = !tetro.swapYZ;
+    const toppleRoll  = tetro => tetro.swapXZ    = (tetro.swapXZ    + 1) % xzSwaps.length;
+    const topplePitch = tetro => tetro.swapYZ    = (tetro.swapYZ    + 1) % yzSwaps.length;
     const rotateYaw   = tetro => tetro.rotations = (tetro.rotations + 1) % tetro.shape.length;
 
     document.onkeydown = keyEvt => {
