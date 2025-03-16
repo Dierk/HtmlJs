@@ -10,6 +10,10 @@
             --box-width:        6;
         }
 
+        html {
+            overscroll-behavior:    none;
+        }
+
         body {
             min-height:             100dvh;
             display:                grid;
@@ -78,7 +82,7 @@
              background:         grey;
              opacity:            .8;
              border-radius:      3%;
-             border:             1px solid grey;
+             border:             1px solid #C9FF;
          }
 
          /* the transform origin for rotate is center by default, so rotations must first */
@@ -93,7 +97,7 @@
 
         .shapeI .box * { background-color: cyan; }
         .shapeT .box * { background-color: red; }
-        .shapeO .box * { background-color: lightgray; }
+        .shapeO .box * { background-color: blueviolet; }
         .shapeS .box * { background-color: yellow; }
         .shapeZ .box * { background-color: lime; }
         .shapeL .box * { background-color: orange; }
@@ -103,13 +107,14 @@
             background-color:   transparent;
             border:             none;
         }
-        .ghost .box :nth-child(2) {
+        .ghost .box :nth-child(2) { /* floor face */
             background-color:   yellow;
+            box-shadow:         0 0 3cqmin yellow;
             opacity:            1;
         }
 
         .plane {
-            border: 4px solid #99Fe;
+            border:             4px solid #99Fe;
             &.show {
                 background:     #99F9;
             }
@@ -130,51 +135,7 @@
         <div class="floor"><div class="toplight"></div></div>
         <div class="plane show xz-plane"></div>
         <div class="plane show yz-plane"></div>
-
-        <div class="tetromino shapeI" data-id="0" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-
-        <div class="tetromino shapeT" data-id="1" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeO" data-id="2" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeS" data-id="3" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeZ" data-id="4" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeL" data-id="5" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div class="tetromino shapeF" data-id="6" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-            <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-
+<!--    tetrominos to be added here -->
     </div>
 </main>
 <footer>
@@ -190,57 +151,29 @@
 
     registerForMouseAndTouch(main);
 
-    const tetrominos = [
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeITetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeTTetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shape0Tetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeSTetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeZTetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeLTetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-        {
-            position:       {x:0, y:0, z:30},
-            shape:          shapeFTetros,
-            swapXZ:         false,
-            swapYZ:         false,
-            rotations:      0,
-        },
-    ];
+    // initial setup of example shapes (only for experimentation)
+    const tetrominos = [];
+    const shapes     = [shapeITetros,shapeTTetros, shape0Tetros, shapeSTetros,shapeZTetros, shapeLTetros, shapeFTetros];
+    const shapeNames = ["shapeI","shapeT", "shape0", "shapeS","shapeZ", "shapeL", "shapeF"];
+    shapes.forEach( (shape, idx) => {
+        tetrominos.push({
+                    position:       {x:0, y:0, z:30},
+                    shape:          shape,
+                    swapXZ:         false,
+                    swapYZ:         false,
+                    rotations:      0,
+                });
+        const parent = document.querySelector(`.scene3d .coords`);
+        const viewHtml = `
+            <div class="tetromino ${shapeNames[idx]}" data-id="${idx}" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
+                <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+        `;
+        parent.innerHTML += viewHtml;
+    })
 
     const move = tetro => {
         const position = tetro.position;
@@ -283,6 +216,7 @@
     const rotateYaw   = tetro => tetro.rotations = (tetro.rotations + 1) % tetro.shape.length;
 
     document.onkeydown = keyEvt => {
+        keyEvt.preventDefault();
         const tetro = currentTetromino;
         const pos = tetro.position;
         if (keyEvt.shiftKey) {
@@ -303,7 +237,6 @@
                 default:            console.warn("unknown key" ,keyEvt.key);
             }
         }
-
     }
 
     const addGhost = tetroNum => {
@@ -345,11 +278,6 @@
         fall();
     }
     perTetro();
-
-
-
-
-
 
 
 </script>
