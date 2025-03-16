@@ -91,12 +91,6 @@
          .box :nth-child(6) {transform: rotateX(-90deg) translateZ(var(--z-center));}  /* center, then around X-axis to the bottom */
 
 
-        .box :nth-child(7) {
-            transform: rotateY(180deg) translateZ(var(--z-center));
-            background-color: white;
-            border: 3px solid cyan;
-        }  /* shadow */
-
         .shapeI .box * { background-color: cyan; }
         .shapeT .box * { background-color: red; }
         .shapeO .box * { background-color: lightgray; }
@@ -104,6 +98,15 @@
         .shapeZ .box * { background-color: lime; }
         .shapeL .box * { background-color: orange; }
         .shapeF .box * { background-color: white; }
+
+        .ghost .box * {
+            background-color:   transparent;
+            border:             none;
+        }
+        .ghost .box :nth-child(2) {
+            background-color:   yellow;
+            opacity:            1;
+        }
 
         .plane {
             border: 4px solid #99Fe;
@@ -134,6 +137,7 @@
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
+
         <div class="tetromino shapeT" data-id="1" style="--tetromino-x: 0;--tetromino-y: 0;--tetromino-z: 0;">
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
             <div class="box" style="--x: 0;--y: 0;--z: 0;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -245,9 +249,15 @@
              --tetromino-y: ${position.y};
              --tetromino-z: ${position.z};`
         );
+        document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"].ghost`)?.setAttribute("style",
+            `--tetromino-x: ${position.x};
+             --tetromino-y: ${position.y};
+             --tetromino-z: 0;`
+        );
     }
     const align = tetro => {
         const tetroView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"]`);
+        const ghostView = document.querySelector(`[data-id="${tetrominos.indexOf(tetro)}"].ghost`);
         let curShape  = tetro.shape[tetro.rotations];
         if (tetro.swapXZ) curShape = swapXZ(curShape);
         if (tetro.swapYZ) curShape = swapYZ(curShape);
@@ -257,6 +267,13 @@
                 `--x: ${curShape[idx].x};
                  --y: ${curShape[idx].y};
                  --z: ${curShape[idx].z};`
+            );
+        })
+        ghostView?.querySelectorAll(".box").forEach( (box, idx) => {
+            box.setAttribute("style",
+                `--x: ${curShape[idx].x};
+                 --y: ${curShape[idx].y};
+                 --z: 0;`
             );
         })
     }
@@ -289,6 +306,17 @@
 
     }
 
+    const addGhost = tetroNum => {
+        const tetroView = document.querySelector(`[data-id="${tetroNum}"]`);
+        const clone = tetroView.cloneNode(true);
+        clone.classList.add("ghost");
+        tetroView.parentElement.appendChild(clone);
+    }
+    const removeGhost = tetroNum => {
+        const tetroView = document.querySelector(`[data-id="${tetroNum}"].ghost`);
+        tetroView?.remove();
+    }
+
     // init view
     tetrominos.forEach( tetro => {
         align(tetro);
@@ -298,8 +326,10 @@
     let currentTetromino;
     let tetroNum = 7;
     const perTetro = () => {
+        removeGhost(tetroNum);
         if (--tetroNum < 0) return;
         currentTetromino = tetrominos[tetroNum];
+        addGhost(tetroNum);
 
         let i = 12;
         currentTetromino.position.z = i;
