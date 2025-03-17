@@ -9,16 +9,11 @@ const normalize = tetro => {
     return tetro.map( box => ({x: box.x, y: box.y, z: box.z - minZ}));
 };
 
-const swapXZ        = tetro => tetro.map( box => ({x:  box.z, y: box.y, z:  box.x}));
-const negateX       = tetro => tetro.map( box => ({x: -box.x, y: box.y, z:  box.z}));
-const swapNegateXZ  = tetro => tetro.map( box => ({x: -box.z, y: box.y, z: -box.x}));
+const swapXZ        = tetro => tetro.map( box => ({x:  box.z, y: box.y, z:   box.x}));
+const swapXZ2       = tetro => tetro.map( box => ({x:  box.z, y: box.y, z:  -box.x}));
 
-const id = x => x;
-const xzSwaps = [ id, swapXZ, negateX, swapNegateXZ];
+const xzSwaps = [swapXZ, swapXZ2];
 
-
-const swapYZ        = tetro => tetro.map( box => ({x: box.x, y:  box.z, z:  box.y}));
-const negateY       = tetro => tetro.map( box => ({x: box.x, y: -box.y, z:  box.z}));
-const swapNegateYZ  = tetro => tetro.map( box => ({x: box.x, y: -box.z, z: -box.y}));
-
-const yzSwaps = [id, swapYZ, negateY, swapNegateYZ];
+const swapYZ        = tetro => tetro.map( box => ({x: box.x, y:  box.z, z:   box.y}));
+const swapYZ2       = tetro => tetro.map( box => ({x: box.x, y:  box.z, z:  -box.y}));
+const yzSwaps = [swapYZ, swapYZ2];

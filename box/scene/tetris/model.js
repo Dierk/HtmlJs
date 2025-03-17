@@ -2,160 +2,50 @@
  * @module tetris/model
  */
 
-export { shapeITetros, shapeTTetros, shape0Tetros, shapeSTetros, shapeZTetros, shapeLTetros, shapeFTetros }
+export { shapeI, shapeT, shape0, shapeS, shapeZ, shapeL, shapeF }
 
-const shape0Tetros = [
-    [
+const shape0 = [
         {x: 0, y: 0, z: 0},
         {x: 0, y: 1, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 1, y: 1, z: 0},
-    ],
 ];
 
-const shapeITetros = [
-    [
-        {x: 0, y: 1, z: 1},
-        {x: 1, y: 1, z: 1},
-        {x: 2, y: 1, z: 1},
-        {x: 3, y: 1, z: 1},
-    ],
-    [
-        {x: 1, y: 0, z: 1},
-        {x: 1, y: 1, z: 1},
-        {x: 1, y: 2, z: 1},
-        {x: 1, y: 3, z: 1},
-    ],
+const shapeI = [
+        {x: 0, y: 1, z: 0},
+        {x: 1, y: 1, z: 0},
+        {x: 2, y: 1, z: 0},
+        {x: 3, y: 1, z: 0},
 ];
 
-const shapeTTetros = [
-    [
+const shapeT = [
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 2, y: 0, z: 0},
         {x: 1, y: 1, z: 0},
-    ],
-    [
-        {x: 2, y: 0, z: 0},
-        {x: 2, y: 1, z: 0},
-        {x: 2, y: 2, z: 0},
-        {x: 1, y: 1, z: 0},
-    ],
-    [
-        {x: 2, y: 2, z: 0},
-        {x: 1, y: 2, z: 0},
-        {x: 0, y: 2, z: 0},
-        {x: 1, y: 1, z: 0},
-    ],
-    [
-        {x: 0, y: 2, z: 0},
-        {x: 0, y: 1, z: 0},
-        {x: 0, y: 0, z: 0},
-        {x: 1, y: 1, z: 0},
-    ],
 ];
 
-const shapeSTetros = [
-    [
+const shapeS = [
         {x: 2, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 1, y: 1, z: 0},
         {x: 0, y: 1, z: 0},
-    ],
-    [
-        {x: 2, y: 2, z: 0},
-        {x: 2, y: 1, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 1, y: 0, z: 0},
-    ],
-    [
-        {x: 0, y: 2, z: 0},
-        {x: 1, y: 2, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 2, y: 1, z: 0},
-    ],
-    [
-        {x: 0, y: 0, z: 0},
-        {x: 0, y: 1, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 1, y: 2, z: 0},
-    ],
 ];
-const shapeZTetros = [
-    [
+const shapeZ = [
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 1, y: 1, z: 0},
         {x: 2, y: 1, z: 0},
-    ],
-    [
-        {x: 2, y: 0, z: 0},
-        {x: 2, y: 1, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 1, y: 2, z: 0},
-    ],
-    [
-        {x: 2, y: 2, z: 0},
-        {x: 1, y: 2, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 0, y: 1, z: 0},
-    ],
-    [
-        {x: 0, y: 2, z: 0},
-        {x: 0, y: 1, z: 0},
-        {x: 1, y: 1, z: 0},
-        {x: 1, y: 0, z: 0},
-    ],
 ];
-const shapeLTetros = [
-    [
+const shapeL = [
         {x: 0, y: 1, z: 0},
         {x: 0, y: 0, z: 0},
         {x: 1, y: 0, z: 0},
         {x: 2, y: 0, z: 0},
-    ],
-    [
-        {x: 1, y: 0, z: 0},
-        {x: 2, y: 0, z: 0},
-        {x: 2, y: 1, z: 0},
-        {x: 2, y: 2, z: 0},
-    ],
-    [
-        {x: 2, y: 1, z: 0},
-        {x: 0, y: 2, z: 0},
-        {x: 1, y: 2, z: 0},
-        {x: 2, y: 2, z: 0},
-    ],
-    [
-        {x: 1, y: 2, z: 0},
-        {x: 0, y: 2, z: 0},
-        {x: 0, y: 1, z: 0},
-        {x: 0, y: 0, z: 0},
-    ],
 ];
-const shapeFTetros = [
-    [
+const shapeF = [
         {x: 1, y: 0, z: 0},
         {x: 0, y: 0, z: 0},
         {x: 0, y: 1, z: 0},
         {x: 0, y: 2, z: 0},
-    ],
-    [
-        {x: 2, y: 1, z: 0},
-        {x: 2, y: 0, z: 0},
-        {x: 1, y: 0, z: 0},
-        {x: 0, y: 0, z: 0},
-    ],
-    [
-        {x: 1, y: 2, z: 0},
-        {x: 2, y: 2, z: 0},
-        {x: 2, y: 1, z: 0},
-        {x: 2, y: 0, z: 0},
-    ],
-    [
-        {x: 0, y: 1, z: 0},
-        {x: 0, y: 2, z: 0},
-        {x: 1, y: 2, z: 0},
-        {x: 2, y: 2, z: 0},
-    ],
 ];
