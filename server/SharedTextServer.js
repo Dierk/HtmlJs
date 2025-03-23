@@ -25,12 +25,22 @@ const textObservable = Observable("");
 let eventId = 1;
 
 function handleSSEstart(res, req) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/event-stream');
+    console.log("client accepts", req.headers['accept']); // should contain "text/event-stream"
     const lastEventId = req.headers['last-event-id'];
     if (lastEventId) {
+        // we can resurrect the state of an old connection
         console.info("got a last event id: " + lastEventId);
+    } else {
+        // we have a new connection
+        req.on('close', ()  => console.log("connection closed"));
+        req.on('error', err => {
+            if("aborted" === err.message) return; // socket closed => connection closed
+            console.log(err.stack);
+        });
+        console.log("new SSE connection");
     }
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/event-stream');
     const sendText = text => {
         eventId++;
         res.write('id:'    + eventId + '\n');
@@ -50,7 +60,7 @@ function handleTextUpdate(res, req) {
 }
 
 const server = createServer( (req, res) => {
-  console.dir(req.method, req.url);
+  console.log(req.method, req.url);
   if ( req.url === "/sharedText") {
       handleSSEstart(res, req);
       return;
