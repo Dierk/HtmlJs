@@ -147,8 +147,8 @@
 </footer>
 
 <script type="module">
-    import { registerForMouseAndTouch }                                                                       from "./scene.js";
-    import { yzSwaps, xzSwaps, normalize}                           from "./controller.js";
+    import { registerForMouseAndTouch }                             from "./scene.js";
+    import { normalize, swapXZ, swapYZ}                             from "./controller.js";
     import { shapeI,shapeT, shape0, shapeS,shapeZ, shapeL, shapeF } from "./model.js";
 
     registerForMouseAndTouch(main);
@@ -161,9 +161,6 @@
         tetrominos.push({
                     position:       {x:0, y:0, z:25},
                     shape:          shape,
-                    swapXZ:         0,
-                    swapYZ:         0,
-                    rotations:      0,
                 });
         const parent = document.querySelector(`.scene3d .coords`);
         const viewHtml = `
@@ -210,17 +207,15 @@
         })
     }
 
-    const toppleRoll  = tetro => {
-        tetro.swapXZ    = (tetro.swapXZ + 1) % xzSwaps.length;
-        tetro.shape     = xzSwaps[tetro.swapXZ](tetro.shape);
-    }
-    const topplePitch = tetro => {
-        tetro.swapYZ    = (tetro.swapYZ + 1) % yzSwaps.length;
-        tetro.shape     = yzSwaps[tetro.swapYZ](tetro.shape);
-    }
+    const toppleRoll  = tetro => tetro.shape = swapXZ(tetro.shape)
+    const topplePitch = tetro => tetro.shape = swapYZ(tetro.shape)
     const rotateYaw   = tetro => {
         toppleRoll(tetro);
-        topplePitch(tetro);topplePitch(tetro);topplePitch(tetro);
+        topplePitch(tetro);
+        topplePitch(tetro);
+        topplePitch(tetro);
+        toppleRoll(tetro);
+        toppleRoll(tetro);
         toppleRoll(tetro);
     }
 
@@ -288,6 +283,13 @@
     }
     perTetro();
 
+    // inspection setting
+    // removeGhost(tetroNum);
+    // --tetroNum
+    // currentTetromino = tetrominos[tetroNum];
+    // addGhost(tetroNum);
+    // currentTetromino.position.z = 0;
+    // move(currentTetromino);
 
 </script>
 </body>
