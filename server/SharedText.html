@@ -7,30 +7,35 @@
 <body>
 <h1>Shared Text</h1>
 <pre id="out"></pre>
-<input id="textInput">
+<input id="textInput" >
 
-<script>
+<script type="module">
+    import { channelName, updateActionName, updateActionParam } from "./sharedConstants.js";
 
     const baseUrl = window.location.origin;
 
     const textInput = document.getElementById("textInput");
 
-    const eventSource = new EventSource(baseUrl + '/sharedText');
-
-    eventSource.addEventListener('sharedText', event => {
-        textInput.value = JSON.parse(event.data).text;
+    const eventSource = new EventSource(baseUrl + '/' + channelName);
+    eventSource.addEventListener('message', event =>
+        console.warn("unknown event type",event)
+    );
+    eventSource.addEventListener('error', err =>
+        console.warn("SSE error", err)
+    );
+    eventSource.addEventListener(channelName, event => {
+        textInput.value = JSON.parse(event.data)[updateActionParam];
     });
-    eventSource.addEventListener('message', event => {
-        console.warn("unknown event type",event);// handle events to which no type has been annotated
-    });
-    eventSource.addEventListener('error', err => {
-        console.warn("SSE error", err);
-    });
-
-    textInput.oninput = _evt => {
-        fetch(baseUrl + '/updateText?text='+textInput.value); // url encoding is automatic
+    const updateText = text => {
+        if( text.length > 8000) {
+            console.error( "update: max text length is 8000 but was " + text.length);
+            return;
+        }
+        fetch(baseUrl + '/' + updateActionName + '?' + updateActionParam + '=' + text); // url encoding is automatic
     }
 
+    textInput.oninput = _ =>
+        updateText(textInput.value);
 
 </script>
 
