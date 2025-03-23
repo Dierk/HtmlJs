@@ -16,24 +16,16 @@
         out.textContent = "Your Browser/Device does not support orientation features";
     } else {
         console.log("DeviceOrientation is supported");
-
-        DeviceOrientationEvent.requestPermission()
-          .then(permissionState => {
-              if ("granted" === permissionState) {
-                  window.addEventListener('deviceorientation', eventData => {
-                      // gamma is the left-to-right tilt in degrees, where right is positive
-
-                                  out.textContent = `
-              Device Orientation
-              alpha: ${eventData.alpha}
-              beta:  ${eventData.beta}
-              gamma: ${eventData.gamma}
-          `;
-                  }, true);
-              } else {
-                  console.warn("permissions not granted");
-              }
-          });
+        window.addEventListener('deviceorientation', eventData => {
+                        // gamma is the left-to-right tilt in degrees, where right is positive
+            console.dir(eventData);
+            out.textContent = `
+                Device Orientation
+                alpha: ${eventData.alpha}
+                beta:  ${eventData.beta}
+                gamma: ${eventData.gamma}
+            `;
+            }, true);
 
     }
 
