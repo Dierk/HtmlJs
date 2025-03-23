@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Orientation</title>
+</head>
+<body>
+<h1>Orientation Check</h1>
+
+<pre id="out">empty</pre>
+
+
+
+<script type="module">
+
+    if (window.DeviceOrientationEvent) {
+      console.log("DeviceOrientation is supported");
+      window.addEventListener('deviceorientation', eventData => {
+          // gamma is the left-to-right tilt in degrees, where right is positive
+
+          out.textContent = `
+            Device Orientation
+            alpha: ${eventData.alpha}
+            beta:  ${eventData.beta}
+            gamma: ${eventData.gamma}
+        `;
+      });
+    } else {
+        out.textContent = "Your Browser/Device does not support orientation features";
+    }
+
+</script>
+
+</body>
+</html>
