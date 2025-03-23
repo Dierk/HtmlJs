@@ -10,12 +10,14 @@
 <input id="textInput">
 
 <script>
+
+    const baseUrl = window.location.origin;
+
     const textInput = document.getElementById("textInput");
 
-    const eventSource = new EventSource('http://localhost:3000/sharedText');
+    const eventSource = new EventSource(baseUrl + '/sharedText');
 
     eventSource.addEventListener('sharedText', event => {
-        // console.log("received text", JSON.parse(event.data).text);
         textInput.value = JSON.parse(event.data).text;
     });
     eventSource.addEventListener('message', event => {
@@ -26,7 +28,7 @@
     });
 
     textInput.oninput = _evt => {
-        fetch('http://localhost:3000/updateText?text='+textInput.value);
+        fetch(baseUrl + '/updateText?text='+textInput.value); // url encoding is automatic
     }
 
 
