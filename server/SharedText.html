@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Text</title>
+</head>
+<body>
+<h1>Shared Text</h1>
+<pre id="out"></pre>
+<input id="textInput">
+
+<script>
+    const textInput = document.getElementById("textInput");
+
+    const eventSource = new EventSource('http://localhost:3000/sharedText');
+
+    eventSource.addEventListener('sharedText', event => {
+        // console.log("received text", JSON.parse(event.data).text);
+        textInput.value = JSON.parse(event.data).text;
+    });
+    eventSource.addEventListener('message', event => {
+        console.warn("unknown event type",event);// handle events to which no type has been annotated
+    });
+    eventSource.addEventListener('error', err => {
+        console.warn("SSE error", err);
+    });
+
+    textInput.oninput = _evt => {
+        fetch('http://localhost:3000/updateText?text='+textInput.value);
+    }
+
+
+</script>
+
+</body>
+</html>

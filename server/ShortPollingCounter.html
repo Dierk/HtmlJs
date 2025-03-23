@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Short Polling Example</title>
+</head>
+<body>
+<h1>Server connect</h1>
+<pre id="out"></pre>
+
+<script>
+    const POLL_SECONDS = 1;
+    const baseUrl = window.location.origin;
+
+    const getNextData = () => {
+        fetch(baseUrl + "/counter")
+            .then( res  => res.json())
+            .then( data => {
+                out.textContent = data;
+                setTimeout(getNextData, POLL_SECONDS * 1000);
+                } 
+              );
+    }
+    getNextData();
+
+</script>
+
+</body>
+</html>

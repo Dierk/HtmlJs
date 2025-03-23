@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>show SSE</title>
+</head>
+<body>
+<h1>Show SSE</h1>
+<pre id="out"></pre>
+<button id="stopButton">stop</button>
+
+<script>
+
+    const eventSource = new EventSource('http://localhost:3000/counter');
+
+    eventSource.addEventListener('counter', event => {
+        // console.dir(event);
+        out.textContent = "counter: " + JSON.parse(event.data).counter;
+    });
+
+    eventSource.addEventListener('message', event => {
+    // handle events to which no type has been annotated
+        console.warn("unknown event type",event);
+    });
+
+    eventSource.addEventListener('error', err => {
+        console.warn("SSE error", err);
+    });
+
+    document.getElementById("stopButton").onclick = _evt => {
+        console.log("stop clicked");
+        eventSource.close();
+        console.log("readystate", eventSource.readyState);
+    }
+
+
+</script>
+
+</body>
+</html>
