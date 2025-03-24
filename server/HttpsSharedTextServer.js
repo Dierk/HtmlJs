@@ -20,7 +20,7 @@ const Observable = value => {
 };
 
 const hostname  = 'localhost';
-const port      = 8443;
+const port      = 443;
 const baseURL   = `https://${hostname}:${port}`
 
 const textObservable = Observable("");
