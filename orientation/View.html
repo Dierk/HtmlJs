@@ -6,7 +6,7 @@
 <body>
 <h1>Orientation Check</h1>
 
-<pre id="out">empty 2</pre>
+<pre id="out">empty</pre>
 
 
 
@@ -15,10 +15,11 @@
     if (!window.DeviceOrientationEvent) {
         out.textContent = "Your Browser/Device does not support orientation features";
     } else {
-        out.textContent = "DeviceOrientation is supported";
+        out.textContent = "DeviceOrientation is supported 2";
         window.addEventListener('deviceorientation', eventData => {
                         // gamma is the left-to-right tilt in degrees, where right is positive
             console.dir(eventData);
+            out.textContent = "got data";
             out.textContent = `
                 Device Orientation
                 alpha: ${eventData.alpha}
