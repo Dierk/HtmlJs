@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Orientation</title>
+  <title>Device Orientation Demo</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #enableMotion { padding: 10px 20px; font-size: 16px; }
+  </style>
 </head>
 <body>
-<h1>Orientation Check</h1>
+  <h1>Device Orientation Example</h1>
+  <button id="enableMotion">Enable Motion</button>
+  <pre id="output">Waiting for motion data...</pre>
 
-<pre id="out">empty</pre>
-
-
-
-<script>
-
-    if (!window.DeviceOrientationEvent) {
-        out.textContent = "Your Browser/Device does not support orientation features";
-    } else {
-        out.textContent = "DeviceOrientation is supported 2";
-        window.addEventListener('deviceorientation', eventData => {
-                        // gamma is the left-to-right tilt in degrees, where right is positive
-            console.dir(eventData);
-            out.textContent = "got data";
-            out.textContent = `
-                Device Orientation
-                alpha: ${eventData.alpha}
-                beta:  ${eventData.beta}
-                gamma: ${eventData.gamma}
-            `;
-            }, true);
-
+  <script>
+    function handleOrientation(event) {
+      const { alpha, beta, gamma } = event;
+      document.getElementById('output').innerText =
+        `alpha: ${alpha?.toFixed(1)}\nbeta: ${beta?.toFixed(1)}\ngamma: ${gamma?.toFixed(1)}`;
     }
 
-</script>
-
+    if (window.DeviceOrientationEvent) {
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        document.getElementById('enableMotion').addEventListener('click', async () => {
+          try {
+            const permission = await DeviceOrientationEvent.requestPermission();
+            if (permission === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        });
+      } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    } else {
+      document.getElementById('output').innerText = 'Device Orientation not supported.';
+    }
+  </script>
 </body>
 </html>
