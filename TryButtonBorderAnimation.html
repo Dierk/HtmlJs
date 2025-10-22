@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        :root {
+            font-family: system-ui;
+        }
+
+        main {
+            min-height:     100vh;
+            display:        grid;
+            place-content:  center;
+        }
+        @property --degree {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+        .bordered:hover {
+            border-radius:  .2em;
+            border-width:   .1em;
+        }
+        .bordered:hover {
+            border-color:   transparent;
+            --degree: 0deg;
+            background:
+                linear-gradient(buttonface) padding-box,
+                conic-gradient(from var(--degree) in oklch, red , 90deg, blue, 270deg, red) border-box;
+            animation: rundummeli linear 1s infinite;
+        }
+        @keyframes rundummeli {
+            to { --degree: 360deg; }
+        }
+
+    </style>
+</head>
+<body>
+
+
+<main>
+    <button class="bordered">Button</button>
+</main>
+
+
+
+</body>
+
+</html>
