@@ -2,36 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pictures</title>
+    <title>Paitings</title>
     <style>
+        :root {
+            color-scheme:   dark;
+        }
         body {
-            display: flex;
+            display:        flex;
             flex-direction: column;
-            max-height: 100vh;
+            max-height:     100vh;
+            background-image: linear-gradient(-20deg, #333, #888 66%, #333);
+            margin:         2rem;
+        }
+        h1 {
+            margin:         0 2rem 2rem 2rem;
         }
         main {
             container-name: main_container;
             container-type: inline-size;
-            flex-grow: 1;
-            overflow-y: scroll;
+            flex-grow:      1;
+            overflow-y:     scroll;
             scroll-snap-type: y mandatory;
         }
         article {
-            scroll-snap-align: start;
-            border: 2px solid red;
-            margin-bottom: 2rem;
-            display: grid;
+            scroll-snap-align:  start;
+            margin-bottom:      3rem;
+            display:            grid;
             grid-template-columns: auto;
         }
         article > img {
-            object-fit: contain;
-            max-width: 100cqw;
+            box-sizing:         border-box;
+            object-fit:         contain;
+            max-width:          calc(100cqw - 2em);
+            padding:            2rem;
+            background:         #999;
+            box-shadow:         .5em 1em 1em 0 black;
+            border: 1px solid white;
+        }
+        article > * {
+            padding-inline-start: 2rem;
         }
     </style>
 </head>
 <body>
 <header>
-    <h1>Pictures</h1>
+    <h1>Bildergalerie Dierk König</h1>
 </header>
 
 <main>
@@ -48,10 +63,29 @@
                 (width <= 1280px) 1280px,
                 (width <= 3526px) 3526px,
                 "
-             alt="forest">
-        <h2>my title</h2>
-        <span class="subtitle">my sub title</span>
-        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
+             alt="Herbstwald">
+        <h2>Herbstwald</h2>
+        <span class="subtitle">Wanderweg zwischen Wasserfluh und Saalhöhe</span>
+        <span class="description">Aquarell, Oktober 2022, 40cm x 30cm, Schmincke Horadam auf Hahnemühle Leonardo Papier</span>
+    </article>
+    <article class="art portrait">
+        <img
+             src=""
+             srcset="
+                painting/dafoe_med_475x640.jpeg     475w,
+                painting/dafoe_big_949x1280.jpeg    949w,
+                painting/dafoe_orig_2588x3492.jpeg 2588w,
+                "
+             sizes="
+                (width <= 475px)   475px,
+                (width <= 949px)   949px,
+                (width <= 2588px) 2588px,
+                "
+             alt="William Dafoe">
+        <h2>William Dafoe</h2>
+        <span class="subtitle">Schauspieler, van Gogh Darsteller in "At Eternity's Gate" (2018)</span>
+        <span class="description">Öl auf Malplatte, September 2024, 24cm x 36cm, Schmincke Norma Blue</span>
+        <span class="description">Ausgestellt in der Gruppenausstellung Atelier Nützel 2024, Wien.</span>
     </article>
     <article class="art portrait">
         <img src="https://unsplash.it/600/800" alt="mytitle">
