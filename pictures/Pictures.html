@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pictures</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            max-height: 100vh;
+        }
+        main {
+            container-name: main_container;
+            container-type: inline-size;
+            flex-grow: 1;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
+        article {
+            scroll-snap-align: start;
+            border: 2px solid red;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: auto;
+        }
+        article > img {
+            object-fit: contain;
+            max-width: 100cqw;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Pictures</h1>
+</header>
+
+<main>
+    <article class="art landscape">
+        <img
+             src=""
+             srcset="
+                painting/forest_med_640x450.jpeg     640w,
+                painting/forest_big_1280x899.jpeg   1280w,
+                painting/forest_orig_3526x2476.jpeg 3526w,
+                "
+             sizes="
+                (width <= 640px)   640px,
+                (width <= 1280px) 1280px,
+                (width <= 3526px) 3526px,
+                "
+             alt="forest">
+        <h2>my title</h2>
+        <span class="subtitle">my sub title</span>
+        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
+    </article>
+    <article class="art portrait">
+        <img src="https://unsplash.it/600/800" alt="mytitle">
+        <h2>my title</h2>
+        <span class="subtitle">my sub title</span>
+        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
+    </article>
+    <article class="art landscape">
+        <img src="https://unsplash.it/800/600" alt="mytitle">
+        <h2>my title</h2>
+        <span class="subtitle">my sub title</span>
+        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
+    </article>
+    <article class="art landscape">
+        <img src="https://unsplash.it/1024/768" alt="mytitle">
+        <h2>my title</h2>
+        <span class="subtitle">my sub title</span>
+        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
+    </article>
+</main>
+
+</body>
+</html>
