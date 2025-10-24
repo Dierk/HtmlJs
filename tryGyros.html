@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gyros</title>
+</head>
+<body>
+<output id="out">out</output>
+<script>
+
+    // send tilt changes to the server
+    if (window.DeviceOrientationEvent) {
+      let lastOrientation = 0;
+      console.log("DeviceOrientation is supported");
+      window.addEventListener('deviceorientation', function (eventData) {
+        // gamma is the left-to-right tilt in degrees, where right is positive
+        let newOrientation = (Math.floor(Number(eventData.gamma))) % 100;
+        if (newOrientation !== lastOrientation) {
+          lastOrientation = newOrientation;
+          document.getElementById("out").innerHTML = "value: "+newOrientation;
+        }
+      }, true);
+    } else {
+        console.log("device orientation not supported")
+    }
+
+
+
+</script>
+
+
+</body>
+</html>

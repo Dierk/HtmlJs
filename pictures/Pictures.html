@@ -24,23 +24,33 @@
             overflow-y:     scroll;
             scroll-snap-type: y mandatory;
         }
+        .gallery {
+            display: grid;
+            grid-template-columns: auto;
+            @media (orientation: landscape) {
+                & {
+                    grid-template-columns: auto auto;
+                }
+            }
+        }
         article {
             scroll-snap-align:  start;
             margin-bottom:      3rem;
             display:            grid;
             grid-template-columns: auto;
+            align-content:      start;
         }
         article > img {
             box-sizing:         border-box;
             object-fit:         contain;
-            max-width:          calc(100cqw - 2em);
+            max-width:          calc(100% - 2em);
             padding:            2rem;
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
-            border: 1px solid white;
+            border:             1px solid white;
         }
         article > * {
-            padding-inline-start: 2rem;
+            padding-inline:     2rem;
         }
     </style>
 </head>
@@ -50,6 +60,7 @@
 </header>
 
 <main>
+    <div class="gallery">
     <article class="art landscape">
         <img
              src=""
@@ -105,6 +116,7 @@
         <span class="subtitle">my sub title</span>
         <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
     </article>
+    </div>
 </main>
 
 </body>

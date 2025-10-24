@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css clips</title>
+    <style>
+        body {
+            background-color: maroon;
+        }
+        .gizeh {
+            margin-block: 2rem;
+            background-image: radial-gradient(white 20%, yellow 40%, maroon 70%);
+            width: 50vi;
+            aspect-ratio: 1 / 1;
+            clip-path: polygon(
+                            0    0
+                        ,   0  100%
+                        ,  99%  99%
+                        , 100% 100%
+                        , 100%   0
+                       );
+            transition: .5s ease-in-out;
+        }
+        .gizeh:hover {
+            clip-path: polygon(
+                            0    0
+                        ,   0  100%
+                        ,  50%  50%
+                        , 100% 100%
+                        , 100%   0
+                       );
+            transition: all  .5s ease-in-out;
+        }
+        .bar {
+            clip-path: shape(
+                from top left,
+                hline to 100%,
+                vline to 100%,
+                curve to 0% 100% with 50% 100%
+              );
+        }
+        .bar:hover {
+            clip-path: shape(
+                from top left,
+                hline to 100%,
+                vline to 100%,
+                curve to 0% 100% with 50% 0%
+              );
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div class="gizeh"></div>
+<div class="gizeh bar"></div>
+
+
+https://css-tricks.com/css-shape-commands/
+</body>
+
+</html>
