@@ -5,17 +5,28 @@
     <title>Paitings</title>
     <style>
         :root {
-            color-scheme:   dark;
+            color-scheme:    dark;
+            --header-height: 4rem;
+        }
+        html {
+            overflow: clip;
         }
         body {
             display:        flex;
             flex-direction: column;
-            max-height:     100vh;
+            max-height:     100dvb;
             background-image: linear-gradient(-20deg, #333, #888 66%, #333);
-            margin:         2rem;
+            margin:         1rem 0 0 2rem;
         }
         h1 {
-            margin:         0 2rem 2rem 2rem;
+            margin:         0;
+            opacity:        0.7;
+            font-weight:    lighter;
+            letter-spacing: 0.05em;
+            text-align:     center;
+            flex-grow:      0;
+            flex-shrink:    0;
+            height:         var(--header-height);
         }
         main {
             container-name: main_container;
@@ -25,11 +36,13 @@
             scroll-snap-type: y mandatory;
         }
         .gallery {
-            display: grid;
+            display:        grid;
             grid-template-columns: auto;
+            --font-factor:  2cqw;
             @media (orientation: landscape) and (width > 1430px) {
                 & {
                     grid-template-columns: auto auto;
+                    --font-factor:   1cqw;
                 }
             }
         }
@@ -39,19 +52,25 @@
             display:            grid;
             grid-template-columns: auto;
             align-content:      start;
+            --shadow-space:     2em;
+        }
+        article > * {
+            --pad-size:         max(1rem, 5%);
+            padding-inline:     var(--pad-size);
+            font-size:          clamp(1rem, var(--font-factor), 3rem);
         }
         article > img {
             box-sizing:         border-box;
             object-fit:         contain;
-            max-width:          calc(100% - 2em);
-            max-height:         calc(100vh - 6.5rem);
-            padding:            2rem;
+            max-width:          calc(100% - var(--shadow-space));
+            max-height:         calc(100dvb - var(--header-height) - var(--shadow-space));
+            padding:            var(--pad-size);
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
         }
-        article > * {
-            padding-inline:     2rem;
+        article > h2 {
+            margin-block-start: var(--shadow-space);
         }
         article > p {
             max-width:          42ch;
@@ -61,9 +80,9 @@
     </style>
 </head>
 <body>
-<header>
-    <h1>Bildergalerie Dierk König</h1>
-</header>
+
+<h1>Bildergalerie Dierk König</h1>
+
 
 <main>
     <div class="gallery"></div>
