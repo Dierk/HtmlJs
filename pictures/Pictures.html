@@ -53,8 +53,10 @@
         article > * {
             padding-inline:     2rem;
         }
-        article > span {
+        article > p {
             max-width:          42ch;
+            margin-top:         0;
+            margin-bottom:      .5em;
         }
     </style>
 </head>
@@ -64,62 +66,97 @@
 </header>
 
 <main>
-    <div class="gallery">
-    <article class="art landscape">
-        <img
-             src=""
-             srcset="
-                painting/forest_med_640x450.jpeg     640w,
-                painting/forest_big_1280x899.jpeg   1280w,
-                "
-             sizes="
-                (width <= 640px)  640px,
-                (width >  640px) 1280px,
-                "
-             alt="Herbstwald">
-        <h2>Herbstwald</h2>
-        <span class="subtitle">Wanderweg zwischen Wasserfluh und Saalhöhe</span>
-        <span class="description">Aquarell, Oktober 2022, 40cm x 30cm, Schmincke Horadam auf Hahnemühle Leonardo Papier</span>
-    </article>
-    <article class="art portrait">
-        <img
-             src=""
-             srcset="
-                painting/dafoe_med_475x640.jpeg     475w,
-                painting/dafoe_big_949x1280.jpeg    949w,
-                painting/dafoe_orig_2588x3492.jpeg 2588w,
-                "
-             sizes="
-                (width <= 475px)   475px,
-                (width <= 949px)   949px,
-                (width <= 2588px) 2588px,
-                "
-             alt="William Dafoe">
-        <h2>William Dafoe</h2>
-        <span class="subtitle">Schauspieler, van Gogh Darsteller in "At Eternity's Gate" (2018)</span>
-        <span class="description">Öl auf Malplatte, September 2024, 24cm x 36cm, Schmincke Norma Blue</span>
-        <span class="description">Ausgestellt in der Gruppenausstellung Atelier Nützel 2024, Wien.</span>
-    </article>
-    <article class="art portrait">
-        <img src="https://unsplash.it/600/800" alt="mytitle">
-        <h2>my title</h2>
-        <span class="subtitle">my sub title</span>
-        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
-    </article>
-    <article class="art landscape">
-        <img src="https://unsplash.it/800/600" alt="mytitle">
-        <h2>my title</h2>
-        <span class="subtitle">my sub title</span>
-        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
-    </article>
-    <article class="art landscape">
-        <img src="https://unsplash.it/1024/768" alt="mytitle">
-        <h2>my title</h2>
-        <span class="subtitle">my sub title</span>
-        <span class="description">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
-    </article>
-    </div>
+    <div class="gallery"></div>
 </main>
+
+<script>
+    const [gallery] = document.getElementsByClassName("gallery");
+
+    const paintings = [
+        {
+            title:       "Herbstwald",
+            orientation: "landscape",
+            medium:      "painting/forest_med_640x450.jpeg",
+            big:         "painting/forest_big_1280x899.jpeg",
+            lines:       [
+                "Wanderweg zwischen Wasserfluh und Saalhöhe",
+                "Aquarell, Oktober 2022, 40cm x 30cm, Schmincke Horadam auf Hahnemühle Leonardo Papier"
+            ],
+        },
+        {
+            title:       "William Dafoe",
+            orientation: "portrait",
+            medium:      "painting/dafoe_med_475x640.jpeg",
+            big:         "painting/dafoe_big_949x1280.jpeg",
+            lines:       [
+                "Schauspieler, van Gogh Darsteller in \"At Eternity's Gate\" (2018)",
+                "Öl auf Malplatte, September 2024, 24cm x 36cm, Schmincke Norma Blue",
+                "Ausgestellt in der Gruppenausstellung Atelier Nützel 2024, Wien."
+            ],
+        },
+        {
+            title:       "title1",
+            orientation: "portrait",
+            medium:      "https://unsplash.it/600/800",
+            big:         "https://unsplash.it/1200/1600",
+            lines:       [
+                "bla bla bla bla bla bla ",
+            ],
+        },
+        {
+            title:       "title2",
+            orientation: "landscape",
+            medium:      "https://unsplash.it/600/800",
+            big:         "https://unsplash.it/1200/1600",
+            lines:       [
+                "bla bla bla bla bla bla ",
+            ],
+        },
+    ];
+
+    const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
+            <article class="art ${painting.orientation}">
+                <img
+                     src="${painting.medium}"
+                     data-big="${painting.big}"
+                     alt="${painting.title}">
+                <h2>${painting.title}</h2>
+                ${painting.lines.reduce( (acc, cur) => acc + '<p>' + cur + '</p>', '')}
+            </article>
+        `, "");
+
+
+    gallery.innerHTML = paintingsHtml;
+
+    // setting up the intersection observer to lazily increase resolution for pictures when they come in view
+
+    const options = {
+      root: document.querySelector("main"),
+      rootMargin: "0px",
+      scrollMargin: "0px",
+      threshold: 1.0,
+    };
+    const callback = (entries, observer) => {
+      entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+              entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
+              observer.unobserve(entry.target);
+          }
+      });
+    };
+    const observer = new IntersectionObserver(callback, options);
+
+    paintings.forEach( painting => {
+        const target = document.querySelector(`[alt="${painting.title}"]`);
+        observer.observe(target);
+    });
+
+
+
+
+
+
+</script>
 
 </body>
 </html>
