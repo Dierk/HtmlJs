@@ -38,26 +38,28 @@
         .gallery {
             display:        grid;
             grid-template-columns: auto;
+            justify-content: stretch;
             --font-factor:  2cqw;
+            --max-div-width: 30cqw;
             @media (orientation: landscape) and (width > 1430px) {
                 & {
                     grid-template-columns: auto auto;
                     --font-factor:   1cqw;
+                    --max-div-width: 15cqw;
                 }
             }
         }
         article {
             scroll-snap-align:  start;
             margin-bottom:      3rem;
-            display:            grid;
-            grid-template-columns: auto;
+            display:            flex;
+            flex-wrap:          wrap;
+            justify-content:    stretch;
             align-content:      start;
             --shadow-space:     2em;
         }
         article > * {
             --pad-size:         max(1rem, 5%);
-            padding-inline:     var(--pad-size);
-            font-size:          clamp(1rem, var(--font-factor), 3rem);
         }
         article > img {
             box-sizing:         border-box;
@@ -69,13 +71,18 @@
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
         }
-        article > h2 {
-            margin-block-start: var(--shadow-space);
+        article > div {
+            padding:            var(--pad-size) 0 0 var(--pad-size);
+            max-width:          var(--max-div-width);
+            margin:             0;
         }
-        article > p {
-            max-width:          42ch;
-            margin-top:         0;
-            margin-bottom:      .5em;
+        article > div > * {
+            padding-inline:     0;
+            margin-block:       .5em;
+            font-size:          clamp(1rem, var(--font-factor), 1.2rem);
+        }
+        article > div > h2 {
+            margin-block-start: 0;
         }
     </style>
 </head>
@@ -261,8 +268,10 @@
                      src="${painting.medium}"
                      data-big="${painting.big}"
                      alt="${painting.title}">
+                <div>
                 <h2>${painting.title}</h2>
                 ${painting.lines.reduce( (acc, cur) => acc + '<p>' + cur + '</p>', '')}
+                </div>
             </article>
         `, "");
 
