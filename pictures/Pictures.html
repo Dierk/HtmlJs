@@ -58,29 +58,29 @@
             justify-content:    stretch;
             align-content:      start;
             --shadow-space:     2em;
-            position:           relative;
+            /*position:           relative;*/
         }
         article:not(:has(+article)) {
             margin-bottom:      100%;
         }
-        article::before {
-            content: "";
-            position: absolute;
-            inset: 0 2em 0 0;
-            z-index: 10;
-            background-image:   linear-gradient(#0004, 20%, #000f);
-            opacity:            0; /* in case a non-finished animation messed with the value */
+        /*article::before {*/
+        /*    content: "";*/
+        /*    position: absolute;*/
+        /*    inset: 0 2em 0 0;*/
+        /*    z-index: 10;*/
+        /*    background-image:   linear-gradient(#0004, 20%, #000f);*/
+        /*    opacity:            0; !* in case a non-finished animation messed with the value *!*/
 
-            animation-name:      appear;
-            animation-duration:  1ms; /* Firefox requires this to apply the animation */
-            animation-direction: alternate;
-            animation-timeline:  view(); /* Does not work in Firefox as of Okt 2025 ) */
-            animation-timing-function: ease-in-out;
-        }
-        @keyframes appear {
-            0%  { opacity: 1; }
-            70% { opacity: 0; }
-        }
+        /*    animation-name:      appear;*/
+        /*    animation-duration:  1ms; !* Firefox requires this to apply the animation *!*/
+        /*    animation-direction: alternate;*/
+        /*    animation-timeline:  view(block 80% 0%); !* Does not work in Firefox as of Okt 2025 ) *!*/
+        /*    animation-timing-function: linear;*/
+        /*}*/
+        /*@keyframes appear {*/
+        /*    0%  { opacity: 1; }*/
+        /*    70% { opacity: 0; }*/
+        /*}*/
 
         article > * {
             --pad-size:         max(1rem, 5%);
