@@ -302,7 +302,7 @@
 
     const options = {
       root: document.querySelector("main"),
-      rootMargin:   "0px 0px 10% 0px", // when close to bottom of scroll container
+      rootMargin:   "10% 0px 10% 0px", // when close to bottom of scroll container
       scrollMargin: "0px",
       threshold:    0,                 // barely touching
     };
@@ -310,7 +310,7 @@
       entries.forEach((entry) => {
           if (entry.isIntersecting) {
               entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
-              observer.unobserve(entry.target);
+              // observer.unobserve(entry.target);
           }
       });
     };
