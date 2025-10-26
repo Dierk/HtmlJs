@@ -46,13 +46,12 @@
             @media (orientation: landscape) and (width > 1430px) {
                 & {
                     grid-template-columns: auto auto;
-                    --font-factor:   1cqw;
+                    --font-factor:   .5cqw;
                     --max-div-width: 15cqw;
                 }
             }
         }
         article {
-            scroll-snap-align:  start;
             margin-bottom:      3rem;
             display:            flex;
             flex-wrap:          wrap;
@@ -67,8 +66,8 @@
             --pad-size:         max(1rem, 5%);
         }
         article > img {
+            scroll-snap-align:  start;
             box-sizing:         border-box;
-            object-fit:         contain;
             max-width:          calc(100% - var(--shadow-space));
             max-height:         calc(100dvb - var(--header-height) - var(--shadow-space));
             padding:            var(--pad-size);
@@ -286,9 +285,8 @@
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
-                     loading="lazy"
-                     ${ i++ < 4 ? 'fetchPriority="high"' : '' }
-                     src="${painting.big}"
+                     src="${painting.medium}"
+                     data-big="${painting.big}"
                      alt="${painting.title}">
                 <div>
                 <h2>${painting.title}</h2>
@@ -299,6 +297,34 @@
 
 
     gallery.innerHTML = paintingsHtml;
+
+    // setting up the intersection observer to lazily increase resolution for pictures when they come in view
+
+    const options = {
+      root: document.querySelector("main"),
+      rootMargin:   "0px 0px 10% 0px", // when close to bottom of scroll container
+      scrollMargin: "0px",
+      threshold:    0,                 // barely touching
+    };
+    const callback = (entries, observer) => {
+      entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+              entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
+              observer.unobserve(entry.target);
+          }
+      });
+    };
+    const observer = new IntersectionObserver(callback, options);
+
+    paintings.forEach( painting => {
+        const target = document.querySelector(`[alt="${painting.title}"]`);
+        observer.observe(target);
+    });
+
+
+
+
+
 
 </script>
 
