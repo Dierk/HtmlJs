@@ -74,22 +74,22 @@
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
-            opacity:            1; /* in case a non-finished animation messed with the value */
+            /*opacity:            1; !* in case a non-finished animation messed with the value *!*/
 
-            animation-name:      appear;
-            animation-duration:  1ms; /* Firefox requires this to apply the animation */
-            animation-direction: alternate;
-            animation-timeline:  view(); /* Does not work in Firefox as of Okt 2025 ) */
-            animation-timing-function: ease-in-out;
+            /*animation-name:      appear;*/
+            /*animation-duration:  1ms; !* Firefox requires this to apply the animation *!*/
+            /*animation-direction: alternate;*/
+            /*animation-timeline:  view(); !* Does not work in Firefox as of Okt 2025 ) *!*/
+            /*animation-timing-function: ease-in-out;*/
         }
-        @keyframes appear {
-            0% {
-                opacity: .2;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
+        /*@keyframes appear {*/
+        /*    0% {*/
+        /*        opacity: .2;*/
+        /*    }*/
+        /*    50% {*/
+        /*        opacity: 1;*/
+        /*    }*/
+        /*}*/
 
         article > div {
             padding:            var(--pad-size) 0 0 var(--pad-size);
