@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Paitings</title>
+    <title>Bildergalerie Dierk König</title>
     <style>
         :root {
             color-scheme:    dark;
@@ -282,10 +282,12 @@
         },
     ];
 
+    let i = 0;
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
                      loading="lazy"
+                     ${ i++ < 4 ? 'fetchPriority="high"' : '' }
                      src="${painting.big}"
                      alt="${painting.title}">
                 <div>
