@@ -79,14 +79,14 @@
             animation-name:      appear;
             animation-duration:  1ms; /* Firefox requires this to apply the animation */
             animation-direction: alternate;
-            animation-timeline:  view(block 50% 0%); /* Does not work in Firefox as of Okt 2025 ) */
+            animation-timeline:  view(); /* Does not work in Firefox as of Okt 2025 ) */
             animation-timing-function: ease-in-out;
         }
         @keyframes appear {
-            from {
+            0% {
                 opacity: .2;
             }
-            to {
+            50% {
                 opacity: 1;
             }
         }
