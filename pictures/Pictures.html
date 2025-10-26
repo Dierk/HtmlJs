@@ -27,6 +27,8 @@
             flex-grow:      0;
             flex-shrink:    0;
             height:         var(--header-height);
+            overflow:       clip;
+            white-space:    preserve nowrap;
         }
         main {
             container-name: main_container;
@@ -36,11 +38,11 @@
             scroll-snap-type: y mandatory;
         }
         .gallery {
-            display:        grid;
+            display:            grid;
             grid-template-columns: auto;
-            justify-content: stretch;
-            --font-factor:  2cqw;
-            --max-div-width: 30cqw;
+            justify-content:    stretch;
+            --font-factor:      2cqw;
+            --max-div-width:    30cqw;
             @media (orientation: landscape) and (width > 1430px) {
                 & {
                     grid-template-columns: auto auto;
@@ -58,6 +60,9 @@
             align-content:      start;
             --shadow-space:     2em;
         }
+        article:not(:has(+article)) {
+            margin-bottom:      100%;
+        }
         article > * {
             --pad-size:         max(1rem, 5%);
         }
@@ -70,7 +75,22 @@
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
+
+            animation-name:      appear;
+            animation-duration:  1ms; /* Firefox requires this to apply the animation */
+            animation-direction: alternate;
+            animation-timeline:  view(block 50% 0%); /* Does not work in Firefox as of Okt 2025 ) */
+            animation-timing-function: ease-in-out;
         }
+        @keyframes appear {
+            from {
+                opacity: .2;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         article > div {
             padding:            var(--pad-size) 0 0 var(--pad-size);
             max-width:          var(--max-div-width);
@@ -265,8 +285,8 @@
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
-                     src="${painting.medium}"
-                     data-big="${painting.big}"
+                     loading="lazy"
+                     src="${painting.big}"
                      alt="${painting.title}">
                 <div>
                 <h2>${painting.title}</h2>
@@ -277,34 +297,6 @@
 
 
     gallery.innerHTML = paintingsHtml;
-
-    // setting up the intersection observer to lazily increase resolution for pictures when they come in view
-
-    const options = {
-      root: document.querySelector("main"),
-      rootMargin: "0px",
-      scrollMargin: "0px",
-      threshold: 1.0,
-    };
-    const callback = (entries, observer) => {
-      entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-              entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
-              observer.unobserve(entry.target);
-          }
-      });
-    };
-    const observer = new IntersectionObserver(callback, options);
-
-    paintings.forEach( painting => {
-        const target = document.querySelector(`[alt="${painting.title}"]`);
-        observer.observe(target);
-    });
-
-
-
-
-
 
 </script>
 
