@@ -74,6 +74,7 @@
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
+            opacity:            1; /* in case a non-finished animation messed with the value */
 
             animation-name:      appear;
             animation-duration:  1ms; /* Firefox requires this to apply the animation */
@@ -302,9 +303,9 @@
 
     const options = {
       root: document.querySelector("main"),
-      rootMargin:   "10% 0px 10% 0px", // when close to bottom of scroll container
+      rootMargin:   "50% 0px 50% 0px", // when close to bottom of scroll container
       scrollMargin: "0px",
-      threshold:    0,                 // barely touching
+      threshold:    0,                 // barely touching the sensitive area
     };
     const callback = (entries, observer) => {
       entries.forEach((entry) => {
