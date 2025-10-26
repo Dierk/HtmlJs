@@ -58,10 +58,30 @@
             justify-content:    stretch;
             align-content:      start;
             --shadow-space:     2em;
+            position:           relative;
         }
         article:not(:has(+article)) {
             margin-bottom:      100%;
         }
+        article::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            backdrop-filter: grayscale(50%) blur(.2em);
+            opacity:            0; /* in case a non-finished animation messed with the value */
+
+            animation-name:      appear;
+            animation-duration:  1ms; /* Firefox requires this to apply the animation */
+            animation-direction: alternate;
+            animation-timeline:  view(); /* Does not work in Firefox as of Okt 2025 ) */
+            animation-timing-function: ease-in-out;
+        }
+        @keyframes appear {
+            0%   { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
         article > * {
             --pad-size:         max(1rem, 5%);
         }
@@ -74,22 +94,7 @@
             background:         #999;
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
-            /*opacity:            1; !* in case a non-finished animation messed with the value *!*/
-
-            /*animation-name:      appear;*/
-            /*animation-duration:  1ms; !* Firefox requires this to apply the animation *!*/
-            /*animation-direction: alternate;*/
-            /*animation-timeline:  view(); !* Does not work in Firefox as of Okt 2025 ) *!*/
-            /*animation-timing-function: ease-in-out;*/
         }
-        /*@keyframes appear {*/
-        /*    0% {*/
-        /*        opacity: .2;*/
-        /*    }*/
-        /*    50% {*/
-        /*        opacity: 1;*/
-        /*    }*/
-        /*}*/
 
         article > div {
             padding:            var(--pad-size) 0 0 var(--pad-size);
