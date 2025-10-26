@@ -75,20 +75,20 @@
             box-shadow:         .5em 1em 1em 0 black;
             border:             1px solid white;
 
-            animation-name:      appear;
-            animation-duration:  1ms; /* Firefox requires this to apply the animation */
-            animation-direction: alternate;
-            animation-timeline:  view(block 50% 0%); /* Does not work in Firefox as of Okt 2025 ) */
-            animation-timing-function: ease-in-out;
+            /*animation-name:      appear;*/
+            /*animation-duration:  1ms; !* Firefox requires this to apply the animation *!*/
+            /*animation-direction: alternate;*/
+            /*animation-timeline:  view(block 50% 0%); !* Does not work in Firefox as of Okt 2025 ) *!*/
+            /*animation-timing-function: ease-in-out;*/
         }
-        @keyframes appear {
-            from {
-                opacity: .2;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+        /*@keyframes appear {*/
+        /*    from {*/
+        /*        opacity: .2;*/
+        /*    }*/
+        /*    to {*/
+        /*        opacity: 1;*/
+        /*    }*/
+        /*}*/
 
         article > div {
             padding:            var(--pad-size) 0 0 var(--pad-size);
@@ -285,7 +285,7 @@
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
-                     src="${painting.medium}"
+                     src=""
                      data-big="${painting.big}"
                      alt="${painting.title}">
                 <div>
@@ -310,7 +310,7 @@
       entries.forEach((entry) => {
           if (entry.isIntersecting) {
               entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
-              // observer.unobserve(entry.target);
+              observer.unobserve(entry.target);
           }
       });
     };
