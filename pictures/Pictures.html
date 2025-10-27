@@ -369,7 +369,6 @@
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
-                     src=""
                      data-big="${painting.big}"
                      alt="${painting.title}">
                 <div>
@@ -386,7 +385,7 @@
 
     const options = {
       root: document.querySelector("main"),
-      rootMargin:   "50% 0px 50% 0px", // when close to bottom of scroll container
+      rootMargin:   "0px",             // when close to bottom of scroll container
       scrollMargin: "0px",
       threshold:    0,                 // barely touching the sensitive area
     };
@@ -404,10 +403,6 @@
         const target = document.querySelector(`[alt="${painting.title}"]`);
         observer.observe(target);
     });
-
-
-
-
 
 
 </script>
