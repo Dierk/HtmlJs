@@ -8,9 +8,9 @@
             color-scheme:    dark;
             --header-height: 4rem;
         }
-        ::view-transition-group(root){
-            animation-duration: .7s;
-        }
+        /*::view-transition-group(root){*/
+        /*    animation-duration: .7s;*/
+        /*}*/
 
         html {
             overflow: clip;
@@ -388,16 +388,16 @@
           const useImplicitDimensions = () => {                                     // some arbitrary change to the dom
               image.removeAttribute("width");
               image.removeAttribute("height");
-
           };
-          // Fallback for browsers that don't support View Transitions:
-          if (!document.startViewTransition) {
-            useImplicitDimensions();
-            console.warn("could not do view transition, falling back");
-            return;
-          }
-          // With View Transitions:
-          document.startViewTransition(useImplicitDimensions);
+          useImplicitDimensions();
+          // // Fallback for browsers that don't support View Transitions:
+          // if (!document.startViewTransition) {
+          //   useImplicitDimensions();
+          //   console.warn("could not do view transition, falling back");
+          //   return;
+          // }
+          // // With View Transitions:
+          // document.startViewTransition(useImplicitDimensions);
     };
 
     gallery.innerHTML = paintingsHtml;
