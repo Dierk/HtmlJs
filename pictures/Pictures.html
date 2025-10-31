@@ -8,6 +8,10 @@
             color-scheme:    dark;
             --header-height: 4rem;
         }
+        ::view-transition-group(root){
+            animation-duration: .7s;
+        }
+
         html {
             overflow: clip;
         }
@@ -59,6 +63,9 @@
             align-content:      start;
             --shadow-space:     2em;
         }
+        article:not(:has(+article)) { /* last article needs space below or it might be transparent */
+            margin-bottom:      50cqb;
+        }
 
         article {
             opacity:            1; /* in case a non-finished animation messed with the value */
@@ -106,7 +113,6 @@
 <body>
 
 <h1>Bildergalerie Dierk König</h1>
-
 
 <main>
     <div class="gallery"></div>
@@ -358,11 +364,16 @@
         },
     ];
 
-    let i = 0;
+    const initialSize = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight);
     const paintingsHtml = paintings.reduce( (acc, painting) => acc + `
             <article class="art ${painting.orientation}">
                 <img
+                     loading="lazy"
+                     width="${initialSize}"
+                     height="${initialSize}"
+                     src="${painting.big}"
                      data-big="${painting.big}"
+                     onload="whenImageLoaded(this)"
                      alt="${painting.title}">
                 <div>
                 <h2>${painting.title}</h2>
@@ -372,30 +383,24 @@
         `, "");
 
 
-    gallery.innerHTML = paintingsHtml;
+    const whenImageLoaded = image => {
 
-    // setting up the intersection observer to lazily increase resolution for pictures when they come in view
+          const useImplicitDimensions = () => {                                     // some arbitrary change to the dom
+              image.removeAttribute("width");
+              image.removeAttribute("height");
 
-    const options = {
-      root: document.querySelector("main"),
-      rootMargin:   "0px",             // when close to bottom of scroll container
-      scrollMargin: "0px",
-      threshold:    0,                 // barely touching the sensitive area
-    };
-    const callback = (entries, observer) => {
-      entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-              entry.target.setAttribute("src", entry.target.getAttribute("data-big"));
-              observer.unobserve(entry.target);
+          };
+          // Fallback for browsers that don't support View Transitions:
+          if (!document.startViewTransition) {
+            useImplicitDimensions();
+            console.warn("could not do view transition, falling back");
+            return;
           }
-      });
+          // With View Transitions:
+          document.startViewTransition(useImplicitDimensions);
     };
-    const observer = new IntersectionObserver(callback, options);
 
-    paintings.forEach( painting => {
-        const target = document.querySelector(`[alt="${painting.title}"]`);
-        observer.observe(target);
-    });
+    gallery.innerHTML = paintingsHtml;
 
 
 </script>
