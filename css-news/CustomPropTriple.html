@@ -5,21 +5,25 @@
     <title>Css custom property with triple values</title>
     <style>
         body {
-            --base-hs:  240, 100%;
-            --base-hsl: var(--base-hs), 50%;
-            background-color: coral;
+            --base-hs:          240deg 100%;
+            --base-hsl:         var(--base-hs) 50%;
+            background-color:   coral;
+            display:            grid;
+            grid-template-rows: repeat(auto-fit, 1fr);
+            min-height:         100dvb;
+            color:              white;
         }
         .base {
             background-color: hsl(var(--base-hsl));
         }
         .lighter {
-            background-color: hsl(var(--base-hs), 80%);
+            background-color: hsl(var(--base-hs) 80%);
         }
         .darker {
-            background-color: hsl(var(--base-hs), 30%);
+            background-color: hsl(var(--base-hs) 30%);
         }
         .halfTransparent {
-            background-color: hsla(var(--base-hsl), 0.2);
+            background-color: hsl(var(--base-hsl) / 0.2);
         }
 
     </style>

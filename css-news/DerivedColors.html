@@ -26,7 +26,7 @@
           background: rgb(from var(--base-color) r g b / calc(alpha * 0.5));
         }
         .invert {
-          background: rgb(from var(--base-color) calc(1 - r) calc(1 - g) calc(1 - b));
+          background: rgb(from var(--base-color) calc(255 - r) calc(255 - g) calc(255 - b));
         }
         .complementary {
           background: hsl(from var(--base-color) calc(h + 180) s l);
@@ -38,8 +38,8 @@
 <body>
 
 <div class="base">
-    as of 2023-11-26 T 23:11:12 MEZ
-    this works in chrome and most of it in Safari
+    as of Nov 2025
+    this works in chrome, firefox, and safari
 </div>
 <div class="lighten">
     lighten <a href="https://developer.chrome.com/blog/css-relative-color-syntax/#lighten-a-color"> developer.chrome.com</a>
@@ -50,8 +50,11 @@
 <div class="half-transparent">
     half-transparent
 </div>
+<div class="invert">
+    rbg invert
+</div>
 <div class="complementary">
-    complementary
+    hsl complement
 </div>
 
 
