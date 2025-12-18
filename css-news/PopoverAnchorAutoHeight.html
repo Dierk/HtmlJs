@@ -44,6 +44,14 @@
             }
         }
 
+        #my-popover {
+            /*no position-anchor or anchor name since the association is implicit in this case*/
+            position:           absolute;   /* override the popover-hidden default */
+            inset:              unset;
+            top:                anchor(bottom); /* auto - assoc does not seem to work in FF*/
+            left:               anchor(left);
+        }
+
         #source3 {
             position:           relative;
             anchor-name:        --source3-anchor;
@@ -75,9 +83,10 @@
 </head>
 <body>
 
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur doloribus excepturi nobis unde. A animi aspernatur dolorum expedita hic natus odio officiis quisquam sint veritatis. Corporis doloremque magni rerum!
 
 <button popovertarget="my-popover">Open Popover</button>
-<div    popover    id="my-popover">Greetings from popover=auto !</div>
+<div    popover    id="my-popover">Greetings from popover=auto and implicit anchor association!</div>
 
 
 <div id="source2" >
@@ -91,11 +100,12 @@
 
 <div id="source3">
     Toggles popover on hover witch anchoring next to trigger.
-    <div popover id="popover3">
-        <div>Popover is cool</div>
-        <div>Anchor-Positioning</div>
-        <div>Animate to auto height</div>
-    </div>
+</div>
+
+<div popover id="popover3">
+    <div>Popover is cool</div>
+    <div>Anchor-Positioning</div>
+    <div>Animate to auto height</div>
 </div>
 
 <script>
@@ -105,9 +115,8 @@
 
 <div>
     This uses the anchor-positioning, which seems to be
-    working in all latest browsers (dec. 2024) - at least as long
-    as the popover is a nested element, despite
-    mdn claiming that it only works in Chrome.
+    working in all latest browsers (dec. 2025) - except for FF
+    not setting up the auto-association between popover with commandfor.
 </div>
 
 

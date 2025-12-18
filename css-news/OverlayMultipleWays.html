@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popover</title>
+    <style>
+
+        body {
+            display:        grid;
+            grid-template-columns: 1fr;
+            justify-items:  center;
+            gap:            3em;
+        }
+        .parent {
+            width:          30%;
+            aspect-ratio:   1 / 1;
+            color:          white;
+            border:         1em solid color-mix(in srgb, rebeccapurple, transparent);
+            & * {
+                background: #3338;
+            }
+        }
+
+
+        #parent0 {
+            & * {
+                height:             100%;
+                /*width:              100%;*/
+            }
+        }
+
+        #parent1 {
+            position:       relative;
+            & * {
+                position:   absolute;
+                inset:      0;
+            }
+        }
+
+        #parent2 {
+            display:grid;
+            & * {
+                grid-area: 1 / 1;
+            }
+        }
+
+        #parent3 {
+            anchor-name:            --parent3;
+            & * {
+                position:           fixed;
+                position-anchor:    --parent3;
+                position-area:      center center;
+                height:             100%;
+                width:              100%;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div id="parent0" class="parent">
+    <div>ok, but try multiple ones...</div>
+</div>
+
+<div id="parent1" class="parent">
+    <div>relative - absolute</div>
+</div>
+
+<div id="parent2" class="parent">
+    <div>grid</div>
+</div>
+
+<div id="parent3" class="parent">
+    <div>anchor</div>
+</div>
+
+</body>
+</html>
