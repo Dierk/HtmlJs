@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css Color Mix</title>
+    <style>
+        body {
+            --color-start:         red;
+            --color-end:           green;
+            display:               grid;
+            grid-template-columns: max-content auto;
+            gap:                   0 1em;
+            align-items:           center;
+            & :nth-child(2n+1) {
+                text-align:        right;
+            }
+        }
+        .gradient {
+            min-height:             3em;
+            --space:                sRGB;
+            background-image:       linear-gradient(
+                                        in var(--space) to right,
+                                        var(--color-start),
+                                        var(--color-end)
+                                    );
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div>               sRGB</div>
+<div style="--space:sRGB" class="gradient"></div>
+<div>               sRGB-linear</div>
+<div style="--space:sRGB-linear" class="gradient"></div>
+<div>               xyz</div>
+<div style="--space:xyz" class="gradient"></div>
+<div>               hsl</div>
+<div style="--space:hsl" class="gradient"></div>
+<div>               hwb</div>
+<div style="--space:hwb" class="gradient"></div>
+<div>               lch</div>
+<div style="--space:lch" class="gradient"></div>
+<div>               oklch</div>
+<div style="--space:oklch" class="gradient"></div>
+<div>               lab</div>
+<div style="--space:lab" class="gradient"></div>
+<div>               oklab</div>
+<div style="--space:oklab" class="gradient"></div>
+
+</body>
+
+</html>
