@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css corner shape</title>
+    <style>
+        main {
+            display:            flex;
+            flex-wrap:          wrap;
+            & > * {
+                margin:             1rem;
+                background-image:   url("https://unsplash.it/200/200");
+                width:              100px;
+                aspect-ratio:       1 / 1;
+                background-color:   lightblue;
+                border:             .5em solid steelblue;
+                /*border-radius: 10% 50% 10% 50% /*/
+                /*               50% 10% 50% 10%;*/
+                transition: 1.5s ease-in-out;
+                box-shadow:         .1rem .1rem .5rem 0 slateblue;
+                &:nth-child(1) { border-radius: 50%; corner-shape: round; }
+                &:nth-child(2) { border-radius: 10%; corner-shape: scoop; }
+                &:nth-child(3) { border-radius: 10%; corner-shape: bevel; }
+                &:nth-child(4) { border-radius: 10%; corner-shape: notch; }
+                &:nth-child(5) { border-radius: 10%; corner-shape: square; }
+                &:nth-child(6) { border-radius: 50%; corner-shape: squircle; }
+                &:nth-child(7) { border-radius: 30%; corner-shape: superellipse(1.5); }
+                &:nth-child(8) { border-radius: 50%; corner-shape: scoop bevel round bevel; }
+                @starting-style {
+                    &:nth-child(n) {
+                        border-radius: 0;
+                        corner-shape:  unset;
+                        box-shadow:    unset;
+                    }
+                }
+            }
+        }
+
+
+    </style>
+</head>
+
+<body>
+<p>Chrome-based only, as of Jan. 2026</p>
+<main>
+    <div>asdasdfasdfasdfasdfasdfasdfads</div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</main>
+
+
+</body>
+
+</html>
