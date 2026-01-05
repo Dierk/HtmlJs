@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css clips</title>
+    <style>
+        body {
+          aspect-ratio:     1 / 1;
+          border-radius:    20%;
+          outline:           2em solid palegoldenrod;
+          margin:           10%;
+        }
+        .box {
+          width:            4em;
+          aspect-ratio:     2 / 1;
+          animation:        move 8000ms infinite ease-in-out;
+          border-radius:    20% 40% 40% 20%;
+          box-shadow:       0 0.2em .5em -.2em black;
+        }
+
+        .greenBox {
+            background:           green;
+            offset-distance:      0;
+            offset-path:          shape(
+                                      from  25% 0%,
+                                      curve to  50%  50% with  50%   0%,
+                                      curve to  75% 100% with  50% 100%,
+                                      curve to 100%  75% with 100% 100%,
+                                      curve to  50%  50% with 100%  50%,
+                                      curve to   0%  25% with   0%  50%,
+                                      curve to  25%   0% with   0%   0%
+                                );
+        }
+
+        @keyframes move {
+          0% {
+            offset-distance:    0%;
+          }
+          100% {
+            offset-distance:    100%;
+          }
+        }
+
+    </style>
+</head>
+
+<body>
+<p style="text-align: center">Chrome and Safari, no FF (Jan 26)</p>
+<div class="box greenBox"></div>
+
+</body>
+
+</html>
