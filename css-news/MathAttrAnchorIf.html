@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<!--original: https://codepen.io/t_afif/pen/wBWWKxP-->
+<head>
+    <title>Math Spring Attr</title>
+    <style>
+
+        @property --_m0 {syntax: "<integer>";initial-value: 1;inherits: true}
+
+        .arrow {
+          /* arrow dimension */
+          --r: 25px;
+          --a: 40deg;
+          --d: 5px;
+          /**/
+          --g: 10px; /* gap between the arrow and circles */
+          --c: #556270;
+          pointer-events: none;
+          --x: attr(x type(<custom-ident>));
+          --y: attr(y type(<custom-ident>));
+          --r1: calc(attr(size_x type(<length>))/2 + var(--g));
+          --r2: calc(attr(size_y type(<length>))/2 + var(--g));
+        }
+
+        .arrow :is(a,b,c,d) {
+          position: absolute;
+          display: grid;
+          --_x: calc(anchor(var(--x) inside) + anchor-size(var(--x))/2 - .1px);
+          --_y: calc(anchor(var(--y) inside) + anchor-size(var(--y))/2);
+          container-type: size;
+        }
+        .arrow :is(a,b) {top:  var(--_x); bottom: var(--_y)}
+        .arrow :is(a,c) {left: var(--_x); right:  var(--_y)}
+        .arrow :is(c,d) {top:  var(--_y); bottom: var(--_x)}
+        .arrow :is(b,d) {left: var(--_y); right:  var(--_x)}
+
+        .arrow :is(a,b,c,d):before {
+          content: "";
+          border-image: conic-gradient(var(--c)) fill 0//900px;
+          --_a: atan(100cqh/100cqw);
+          --_aa: atan(var(--d)/(var(--r)*cos(var(--a))));
+          --_m0: max(sign(100cqh/sin(var(--_a)) - (var(--r1) + var(--r2) + 4*var(--r))),0);
+          --_m1: max(sign(100cqh/sin(var(--_a)) - (var(--r1) + var(--r2) - 2*var(--g))),0);
+          opacity: calc(sign(1cqw)*sign(1cqh)*var(--_m1));
+          clip-path: if(style(--_m0: 1):
+            polygon(
+              calc((var(--d)/sin(var(--_aa)))*cos(var(--_a) - var(--_aa)))
+              calc((var(--d)/sin(var(--_aa)))*sin(var(--_a) - var(--_aa))),
+              calc(var(--r)*cos(var(--_a) - var(--a)))
+              calc(var(--r)*sin(var(--_a) - var(--a))),
+              0 0,
+              calc(var(--r)*cos(var(--_a) + var(--a)))
+              calc(var(--r)*sin(var(--_a) + var(--a))),
+              calc((var(--d)/sin(var(--_aa)))*cos(var(--_a) + var(--_aa)))
+              calc((var(--d)/sin(var(--_aa)))*sin(var(--_a) + var(--_aa))),
+              calc(100% - (var(--d)/sin(var(--_aa)))*cos(var(--_a) - var(--_aa)))
+              calc(100% - (var(--d)/sin(var(--_aa)))*sin(var(--_a) - var(--_aa))),
+              calc(100% - (var(--r))*cos(var(--_a) - var(--a)))
+              calc(100% - (var(--r))*sin(var(--_a) - var(--a))),
+              100% 100%,
+              calc(100% - (var(--r))*cos(var(--_a) + var(--a)))
+              calc(100% - (var(--r))*sin(var(--_a) + var(--a))),
+              calc(100% - (var(--d)/sin(var(--_aa)))*cos(var(--_a) + var(--_aa)))
+              calc(100% - (var(--d)/sin(var(--_aa)))*sin(var(--_a) + var(--_aa)))
+            );
+            else:
+            shape(
+              from   calc(100% - var(--r)*cos(var(--_a) - atan(2*var(--d)/var(--r)))/2)
+                     calc(100% - var(--r)*sin(var(--_a) - atan(2*var(--d)/var(--r)))/2),
+              arc to calc(100% - var(--r)*cos(var(--_a) + atan(2*var(--d)/var(--r)))/2)
+                     calc(100% - var(--r)*sin(var(--_a) + atan(2*var(--d)/var(--r)))/2) of calc(var(--r)/2) large,
+              line to calc(var(--r)*cos(var(--_a) - atan(2*var(--d)/var(--r)))/2)
+                      calc(var(--r)*sin(var(--_a) - atan(2*var(--d)/var(--r)))/2),
+              arc to  calc(var(--r)*cos(var(--_a) + atan(2*var(--d)/var(--r)))/2)
+                      calc(var(--r)*sin(var(--_a) + atan(2*var(--d)/var(--r)))/2) of calc(var(--r)/2) large,
+            ););
+        }
+        .arrow a:before {
+          margin:
+            calc(var(--_m0)*sin(var(--_a))*var(--r1))
+            calc(var(--_m0)*cos(var(--_a))*var(--r2))
+            calc(var(--_m0)*sin(var(--_a))*var(--r2))
+            calc(var(--_m0)*cos(var(--_a))*var(--r1));
+        }
+        .arrow b:before {
+          margin:
+            calc(var(--_m0)*sin(var(--_a))*var(--r1))
+            calc(var(--_m0)*cos(var(--_a))*var(--r1))
+            calc(var(--_m0)*sin(var(--_a))*var(--r2))
+            calc(var(--_m0)*cos(var(--_a))*var(--r2));
+          scale: -1 1;
+        }
+        .arrow c:before {
+          margin:
+            calc(var(--_m0)*sin(var(--_a))*var(--r2))
+            calc(var(--_m0)*cos(var(--_a))*var(--r2))
+            calc(var(--_m0)*sin(var(--_a))*var(--r1))
+            calc(var(--_m0)*cos(var(--_a))*var(--r1));
+          scale: 1 -1;
+        }
+        .arrow d:before {
+          margin:
+            calc(var(--_m0)*sin(var(--_a))*var(--r2))
+            calc(var(--_m0)*cos(var(--_a))*var(--r1))
+            calc(var(--_m0)*sin(var(--_a))*var(--r1))
+            calc(var(--_m0)*cos(var(--_a))*var(--r2));
+          scale: -1 -1;
+        }
+
+        .arrow :is(a,b,c,d):after {
+          content: counter(dis);
+          counter-reset: dis var(--_d);
+          position: absolute;
+          --_a: atan(100cqh/100cqw);
+          --_m0: max(sign(100cqh/sin(var(--_a)) - (var(--r1) + var(--r2) + 4*var(--r))),0);
+          --_m1: max(sign(100cqh/sin(var(--_a)) - (var(--r1) + var(--r2) - 2*var(--g))),0);
+          opacity: calc(sign(1cqw)*sign(1cqh)*var(--_m1));
+          --_d: calc((100cqh/sin(var(--_a)) - var(--r1) - var(--r2) + 2*var(--g))/1px);
+          place-self: center;
+          rotate: var(--_a);
+          translate: calc(cos(var(--_a))*(var(--r1) - var(--r2))/2) calc(sin(var(--_a))*(var(--r1) - var(--r2))/2);
+          background: var(--c);
+          padding: 5px 10px;
+          border-radius: calc(var(--_m0)*4px);
+          color: if(style(--_m0: 1):#fff;else:pink);
+          font: bold 20px system-ui, sans-serif;
+        }
+        .arrow b:after {
+          rotate: calc(-1*var(--_a));
+          translate: calc(cos(var(--_a))*(var(--r2) - var(--r1))/2) calc(sin(var(--_a))*(var(--r2) - var(--r1))/-2);
+        }
+        .arrow c:after {
+          rotate: calc(-1*var(--_a));
+          translate: calc(cos(var(--_a))*(var(--r1) - var(--r2))/2) calc(sin(var(--_a))*(var(--r1) - var(--r2))/-2);
+        }
+        .arrow d:after {
+          translate: calc(cos(var(--_a))*(var(--r2) - var(--r1))/2) calc(sin(var(--_a))*(var(--r2) - var(--r1))/2);
+        }
+
+        .circle {
+          position: absolute;
+          left: 10%;
+          top: 10%;
+          width: calc(attr(size type(<length>)));
+          aspect-ratio: 1;
+          background: #45ADA8;
+          border-radius: 50%;
+          anchor-name: attr(name type(<custom-ident>));
+        }
+        .circle + .circle {
+          background: #FA6900;
+          left: 72%;
+          top: 40%;
+        }
+
+
+
+
+    </style>
+</head>
+
+<body>
+Chrome only (Jan 26)
+
+
+<div class="circle" name="--a" size="170px"></div>
+<div class="circle" name="--b" size="100px"></div>
+
+<div class="arrow" x="--a" y="--b" size_x="170px" size_y="100px">
+  <a></a>
+  <b></b>
+  <c></c>
+  <d></d>
+</div>
+
+<script>
+    const A = document.querySelectorAll('.circle');
+    let D = [];
+    let O = [[]];
+
+    for(let i = 0;i<A.length;i++) {
+      D[i] = 0;O[i] = [];
+      A[i].addEventListener('mousedown', (e) => {
+        D[i] = 1;
+        const rect = e.target.getBoundingClientRect();
+        O[i][0] = e.clientX - rect.left;
+        O[i][1] = e.clientY - rect.top;
+      });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      for(let i = 0;i<A.length;i++) {
+        if(D[i]) {
+          A[i].style.left = (e.clientX - O[i][0]) + 'px';
+          A[i].style.top = (e.clientY - O[i][1]) + 'px';
+        }
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      for(let i = 0;i<A.length;i++) {D[i] = 0;}
+    });
+
+</script>
+
+</body>
+
+</html>
