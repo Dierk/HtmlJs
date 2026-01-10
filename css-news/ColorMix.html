@@ -5,23 +5,51 @@
     <title>Css Color Mix</title>
     <style>
         body {
-            --base-color: blue;
-            background-color: coral;
+            /*--base-color: blue;*/
+            /*--base-color: oklch(50% 100% 240deg);*/
+            /*--base-color: color(display-p3 0 0 100%);*/
+            --base-color: color(rec2020 0 0 100%);
+            background-color: var(--base-color);
+            margin: 2em;
         }
         .base {
             background-color: var(--base-color);
         }
-        .plain {
+        .plain:nth-child(2) {
+            background-color: color-mix(in srgb-linear, var(--base-color), red);
+        }
+        .plain:nth-child(3) {
             background-color: color-mix(in oklch, var(--base-color), red);
         }
+        .plain:nth-child(4) {
+            background-color: color-mix(in hsl, var(--base-color), red);
+        }
         .lighter {
-            background-color: color-mix(in srgb , var(--base-color) 40%, white 60%);
+            background-color: color-mix(in srgb-linear , var(--base-color) , white 50%);
+        }
+        .lighter2 {
+            background-color: oklch(from var(--base-color) calc(l*1.7) c h);
+        }
+        .lighter3 {
+            background-color: hsl(from var(--base-color) h s calc(l*1.7));
         }
         .darker {
-            background-color: color-mix(in srgb , var(--base-color) 80%, black 20%);
+            background-color: color-mix(in srgb-linear , var(--base-color) , black 50%);
+        }
+        .darker2 {
+            background-color: oklch(from var(--base-color) calc(l/1.7) c h);
+        }
+        .darker3 {
+            background-color: hsl(from var(--base-color) h s calc(l/1.4));
         }
         .halfTransparent {
-            background-color: color-mix(in srgb , var(--base-color) 40%, transparent 60%);
+            background-color: color-mix(in srgb-linear , red, transparent);
+        }
+        div {
+            line-height: 3lh;
+            color: white;
+            padding-inline: 2em;
+            /*color: contrast-color();*/
         }
 
     </style>
@@ -30,9 +58,15 @@
 <body>
 
 <div class="base">Base</div>
-<div class="plain">Plain mix, mixing hue but keeping the light</div>
-<div class="lighter">Lighter</div>
-<div class="darker">Darker</div>
+<div class="plain">Plain mix, mixing hue srgb-linear</div>
+<div class="plain">Plain mix, mixing hue oklch</div>
+<div class="plain">Plain mix, mixing hue hsl</div>
+<div class="lighter">Lighter srgb-linear white mix</div>
+<div class="lighter2">Lighter from oklch</div>
+<div class="lighter3">Lighter from hsl</div>
+<div class="darker">Darker srgb-linear black mix</div>
+<div class="darker2">Darker from oklch</div>
+<div class="darker3">Darker from hsl</div>
 <div class="halfTransparent">Half transparent</div>
 
 
