@@ -26,6 +26,12 @@
                 &:nth-child(6) { border-radius: 50%; corner-shape: squircle; }
                 &:nth-child(7) { border-radius: 30%; corner-shape: superellipse(1.5); }
                 &:nth-child(8) { border-radius: 50%; corner-shape: scoop bevel round bevel; }
+                &:nth-child(9) { border-radius: 0 100% 100% 0  /
+                                                0  50%  50% 0 ;
+                                                     corner-shape: bevel; }
+                &:nth-child(10) { border-radius: 5% 100% 100% 5%  /
+                                                 5%  50%  50% 5% ;
+                                                     corner-shape: superellipse(0.5); }
                 @starting-style {
                     &:nth-child(n) {
                         border-radius: 0;
@@ -44,6 +50,8 @@
 <p>Chrome-based only, as of Jan. 2026</p>
 <main>
     <div>asdasdfasdfasdfasdfasdfasdfads</div>
+    <div></div>
+    <div></div>
     <div></div>
     <div></div>
     <div></div>
