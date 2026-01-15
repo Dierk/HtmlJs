@@ -8,16 +8,15 @@
             background-image: url("https://unsplash.it/300");
         }
         div {
-            --base-color: limegreen;
-            padding: 3em;
+            --base-color: red;
+            padding:      3em;
         }
         .base {
             background-color: var(--base-color);
         }
         .lighten {
-            background: hsl(from var(--base-color) h s calc(l * 1.3));
-            /*the below is slightly nicer but only works in chrome*/
-            /*background: oklch(from var(--base-color) calc(l + 25) c h);*/
+            /*background: hsl(from var(--base-color) h s calc(l * 1.5)); alternative, but the below is better*/
+            background: oklch(from var(--base-color) calc(l + 25) c h);
         }
         .desaturate {
           background: hsl(from var(--base-color) h calc(s * 0.7) l);
