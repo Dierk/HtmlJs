@@ -18,10 +18,10 @@
           --g: 10px; /* gap between the arrow and circles */
           --c: #556270;
           pointer-events: none;
-          --x: attr(x type(<custom-ident>));
-          --y: attr(y type(<custom-ident>));
-          --r1: calc(attr(size_x type(<length>))/2 + var(--g));
-          --r2: calc(attr(size_y type(<length>))/2 + var(--g));
+          --x: attr(data-x type(<custom-ident>));
+          --y: attr(data-y type(<custom-ident>));
+          --r1: calc(attr(data-size_x type(<length>))/2 + var(--g));
+          --r2: calc(attr(data-size_y type(<length>))/2 + var(--g));
         }
 
         .arrow :is(a,b,c,d) {
@@ -143,11 +143,11 @@
           position: absolute;
           left: 10%;
           top: 10%;
-          width: calc(attr(size type(<length>)));
+          width: calc(attr(data-size type(<length>)));
           aspect-ratio: 1;
           background: #45ADA8;
           border-radius: 50%;
-          anchor-name: attr(name type(<custom-ident>));
+          anchor-name: attr(data-name type(<custom-ident>));
         }
         .circle + .circle {
           background: #FA6900;
@@ -165,10 +165,10 @@
 Chrome only (Jan 26)
 
 
-<div class="circle" name="--a" size="170px"></div>
-<div class="circle" name="--b" size="100px"></div>
+<div class="circle" data-name="--a" data-size="170px"></div>
+<div class="circle" data-name="--b" data-size="100px"></div>
 
-<div class="arrow" x="--a" y="--b" size_x="170px" size_y="100px">
+<div class="arrow" data-x="--a" data-y="--b" data-size_x="170px" data-size_y="100px">
   <a></a>
   <b></b>
   <c></c>
