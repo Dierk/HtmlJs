@@ -13,20 +13,48 @@
             inherits:      true
         }
 
+
+        /* keep the shared information in the common parent of anchor and circles */
+        body {
+            --anchor-name-a: --a;
+            --anchor-name-b: --b;
+            --diameter-a:    170px;
+            --diameter-b:    100px;
+        }
+
+        /* while the circles have only their role and their specifics */
+
+        .circle:nth-child(1) {
+            anchor-name:   var(--anchor-name-a);
+            width:         var(--diameter-a);
+            background:    green;
+            left:          10%;
+            top:           10%;
+        }
+
+        .circle:nth-child(2) {
+            anchor-name:   var(--anchor-name-b);
+            width:         var(--diameter-b);
+            background:    red;
+            left:          72%;
+            top:           40%;
+        }
+
+
         .arrow {
+            pointer-events: none;
+
           /* arrow dimension */
-          --r: 25px;  /* radius = side length of the arrowhead */
+          --r: 25px;  /* radius: side length of the arrowhead */
           --a: 40deg; /* pointiness of the arrowhead */
-          --d: 5px;   /* thickness of the arrow bar */
-          /**/
+          --d: 5px;   /* diameter: thickness of the arrow bar */
+
           --g: 10px; /* gap between the arrow and circles */
           --c: grey;
-          pointer-events: none;
-          --x: attr(data-x type(<custom-ident>)); /* anchor name of the first circle */
-          --y: attr(data-y type(<custom-ident>)); /* anchor name of the other circle */
+
           /* radius is half the circle width plus gap  */
-          --r1: calc(attr(data-size_x type(<length>))/2 + var(--g));
-          --r2: calc(attr(data-size_y type(<length>))/2 + var(--g));
+          --r1: calc( var(--diameter-a) / 2 + var(--g));
+          --r2: calc( var(--diameter-b) / 2 + var(--g));
         }
 
         /* there are 4 arrow children for the 4 possible layout quadrants in which */
@@ -43,8 +71,8 @@
             Pretty nifty.
             */
 
-            --_x:           calc(anchor(var(--x) inside) + anchor-size(var(--x)) / 2 );
-            --_y:           calc(anchor(var(--y) inside) + anchor-size(var(--y)) / 2);
+            --_x: calc(anchor(var(--anchor-name-a) inside) + anchor-size(var(--anchor-name-a)) / 2 );
+            --_y: calc(anchor(var(--anchor-name-b) inside) + anchor-size(var(--anchor-name-b)) / 2);
         }
 /*
         The size and position of each quadrant is calculated via anchor positioning.
@@ -169,21 +197,8 @@
             position:      absolute;
             aspect-ratio:  1;
             border-radius: 50%;
-            width:         attr(data-size type(<length>));
-            anchor-name:   attr(data-name type(<custom-ident>));
         }
 
-        .circle:nth-child(1) {
-            background: green;
-            left:       10%;
-            top:        10%;
-        }
-
-        .circle:nth-child(2) {
-            background: red;
-            left:       72%;
-            top:        40%;
-        }
 
     </style>
 </head>
@@ -192,15 +207,10 @@
 Chrome only (Jan 26)
 
 
-<div class="circle" data-name="--a" data-size="170px"></div>
-<div class="circle" data-name="--b" data-size="100px"></div>
+<div class="circle" ></div>
+<div class="circle" ></div>
 
-<div class="arrow"
-     data-x="--a"
-     data-y="--b"
-     data-size_x="170px"
-     data-size_y="100px"
->
+<div class="arrow">
   <a></a>
   <b></b>
   <c></c>
