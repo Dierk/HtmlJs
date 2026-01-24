@@ -140,19 +140,23 @@
         }
 
         .circle {
-          position: absolute;
-          left: 10%;
-          top: 10%;
-          width: calc(attr(data-size type(<length>)));
-          aspect-ratio: 1;
-          background: #45ADA8;
-          border-radius: 50%;
-          anchor-name: attr(data-name type(<custom-ident>));
+            position:      absolute;
+            aspect-ratio:  1;
+            border-radius: 50%;
+            width:         attr(data-size type(<length>));
+            anchor-name:   attr(data-name type(<custom-ident>));
         }
-        .circle + .circle {
-          background: #FA6900;
-          left: 72%;
-          top: 40%;
+
+        .circle:nth-child(1) {
+            background: green;
+            left:       10%;
+            top:        10%;
+        }
+
+        .circle:nth-child(2) {
+            background: red;
+            left:       72%;
+            top:        40%;
         }
 
 
