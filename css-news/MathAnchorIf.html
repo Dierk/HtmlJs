@@ -68,7 +68,7 @@
         /* the arrow might need to be positioned in */
 
         .arrow > * {
-            container-type: size;
+            container-type: size; /* used to with cq units to e.g. find the diagonal */
             position:       absolute;
             display:        grid;
 
@@ -169,6 +169,8 @@
             calc(var(--_m0)*cos(var(--_a))*var(--r2));
           scale: -1 -1;
         }
+
+        /* the ::after element shows the distance in pixel with some cool tricks */
 
         .arrow :is(:nth-child(1),:nth-child(2),:nth-child(3),:nth-child(4)):after {
           content: counter(dis);
