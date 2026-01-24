@@ -2,6 +2,7 @@
 <html lang="en">
 
 <!--original: https://codepen.io/t_afif/pen/wBWWKxP-->
+
 <head>
     <title>Math Spring Attr</title>
     <style>
@@ -175,32 +176,35 @@ Chrome only (Jan 26)
 </div>
 
 <script>
-    const A = document.querySelectorAll('.circle');
-    let D = [];
-    let O = [[]];
 
-    for(let i = 0;i<A.length;i++) {
-      D[i] = 0;O[i] = [];
-      A[i].addEventListener('mousedown', (e) => {
-        D[i] = 1;
-        const rect = e.target.getBoundingClientRect();
-        O[i][0] = e.clientX - rect.left;
-        O[i][1] = e.clientY - rect.top;
-      });
+    /* The JS code is only here to move a dom element (here a circle) with the mouse. */
+
+    const circles = document.querySelectorAll('.circle');
+
+    for (const circle of circles) {
+        circle._active = false;     // whether this circle is to be moved (reacts to current mouse move)
+        circle._xDiff = 0;          // diff between mouse position and circle bounds
+        circle._yDiff = 0;
+
+        circle.addEventListener('mousedown', mouseEvent => {
+            circle._active  = true;
+            const rect      = circle.getBoundingClientRect();
+            circle._xDiff   = mouseEvent.clientX - rect.left;
+            circle._yDiff   = mouseEvent.clientY - rect.top;
+        });
     }
 
-    document.addEventListener('mousemove', (e) => {
-      for(let i = 0;i<A.length;i++) {
-        if(D[i]) {
-          A[i].style.left = (e.clientX - O[i][0]) + 'px';
-          A[i].style.top = (e.clientY - O[i][1]) + 'px';
-        }
-      }
+    // We register the mouse move listener on the document rather than the specific circle
+    // to allow quick mouse movement across the element border without losing track
+    document.addEventListener('mousemove', mouseEvent => {
+        circles.forEach( circle =>  {
+            if ( ! circle._active) return;
+            circle.style.left = (mouseEvent.clientX - circle._xDiff) + 'px';
+            circle.style.top  = (mouseEvent.clientY - circle._yDiff) + 'px';
+      });
     });
-
-    document.addEventListener('mouseup', () => {
-      for(let i = 0;i<A.length;i++) {D[i] = 0;}
-    });
+    // it's actually quicker to just go over all circles instead of only
+    document.addEventListener('mouseup', _e => circles.forEach(circle => circle._active = false));
 
 </script>
 
