@@ -7,30 +7,56 @@
     <title>Math Spring Attr</title>
     <style>
 
-        @property --_m0 {syntax: "<integer>";initial-value: 1;inherits: true}
+        @property --_m0 {
+            syntax:        "<integer>";
+            initial-value: 1;
+            inherits:      true
+        }
 
         .arrow {
           /* arrow dimension */
-          --r: 25px;
-          --a: 40deg;
-          --d: 5px;
+          --r: 25px;  /* radius = side length of the arrowhead */
+          --a: 40deg; /* pointiness of the arrowhead */
+          --d: 5px;   /* thickness of the arrow bar */
           /**/
           --g: 10px; /* gap between the arrow and circles */
-          --c: #556270;
+          --c: grey;
           pointer-events: none;
-          --x: attr(data-x type(<custom-ident>));
-          --y: attr(data-y type(<custom-ident>));
+          --x: attr(data-x type(<custom-ident>)); /* anchor name of the first circle */
+          --y: attr(data-y type(<custom-ident>)); /* anchor name of the other circle */
+          /* radius is half the circle width plus gap  */
           --r1: calc(attr(data-size_x type(<length>))/2 + var(--g));
           --r2: calc(attr(data-size_y type(<length>))/2 + var(--g));
         }
 
-        .arrow :is(a,b,c,d) {
-          position: absolute;
-          display: grid;
-          --_x: calc(anchor(var(--x) inside) + anchor-size(var(--x))/2 - .1px);
-          --_y: calc(anchor(var(--y) inside) + anchor-size(var(--y))/2);
-          container-type: size;
+        /* there are 4 arrow children for the 4 possible layout quadrants in which */
+        /* the arrow might need to be positioned in */
+
+        .arrow > * {
+            container-type: size;
+            position:       absolute;
+            display:        grid;
+
+            /*
+            The value of "inside" will be resolved lazily, when it is clear which "inset"
+            (left,right,top,bottom) is to be set.
+            Pretty nifty.
+            */
+
+            --_x:           calc(anchor(var(--x) inside) + anchor-size(var(--x)) / 2 );
+            --_y:           calc(anchor(var(--y) inside) + anchor-size(var(--y)) / 2);
         }
+/*
+        The size and position of each quadrant is calculated via anchor positioning.
+        The first quadrant "a" in the upper left corner has its
+           left side in the middle of x,
+           the right side at the middle of y,
+           the top at the middle of x,
+           and the bottom at the middle of y.
+        What is used as the side boundaries
+        changes with the quadrants.
+*/
+
         .arrow :is(a,b) {top:  var(--_x); bottom: var(--_y)}
         .arrow :is(a,c) {left: var(--_x); right:  var(--_y)}
         .arrow :is(c,d) {top:  var(--_y); bottom: var(--_x)}
@@ -159,9 +185,6 @@
             top:        40%;
         }
 
-
-
-
     </style>
 </head>
 
@@ -172,7 +195,12 @@ Chrome only (Jan 26)
 <div class="circle" data-name="--a" data-size="170px"></div>
 <div class="circle" data-name="--b" data-size="100px"></div>
 
-<div class="arrow" data-x="--a" data-y="--b" data-size_x="170px" data-size_y="100px">
+<div class="arrow"
+     data-x="--a"
+     data-y="--b"
+     data-size_x="170px"
+     data-size_y="100px"
+>
   <a></a>
   <b></b>
   <c></c>
