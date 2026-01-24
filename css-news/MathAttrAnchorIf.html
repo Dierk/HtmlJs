@@ -22,6 +22,13 @@
             --diameter-b:    100px;
         }
 
+
+        .circle {
+            position:      absolute;
+            aspect-ratio:  1;
+            border-radius: 50%;
+        }
+
         /* while the circles have only their role and their specifics */
 
         .circle:nth-child(1) {
@@ -85,12 +92,12 @@
         changes with the quadrants.
 */
 
-        .arrow :is(a,b) {top:  var(--_x); bottom: var(--_y)}
-        .arrow :is(a,c) {left: var(--_x); right:  var(--_y)}
-        .arrow :is(c,d) {top:  var(--_y); bottom: var(--_x)}
-        .arrow :is(b,d) {left: var(--_y); right:  var(--_x)}
+        .arrow :is(:nth-child(1),:nth-child(2)) {top:  var(--_x); bottom: var(--_y)}
+        .arrow :is(:nth-child(1),:nth-child(3)) {left: var(--_x); right:  var(--_y)}
+        .arrow :is(:nth-child(3),:nth-child(4)) {top:  var(--_y); bottom: var(--_x)}
+        .arrow :is(:nth-child(2),:nth-child(4)) {left: var(--_y); right:  var(--_x)}
 
-        .arrow :is(a,b,c,d):before {
+        .arrow :is(:nth-child(1),:nth-child(2),:nth-child(3),:nth-child(4)):before {
           content: "";
           border-image: conic-gradient(var(--c)) fill 0//900px;
           --_a: atan(100cqh/100cqw);
@@ -131,14 +138,14 @@
                       calc(var(--r)*sin(var(--_a) + atan(2*var(--d)/var(--r)))/2) of calc(var(--r)/2) large,
             ););
         }
-        .arrow a:before {
+        .arrow :nth-child(1):before {
           margin:
             calc(var(--_m0)*sin(var(--_a))*var(--r1))
             calc(var(--_m0)*cos(var(--_a))*var(--r2))
             calc(var(--_m0)*sin(var(--_a))*var(--r2))
             calc(var(--_m0)*cos(var(--_a))*var(--r1));
         }
-        .arrow b:before {
+        .arrow :nth-child(2):before {
           margin:
             calc(var(--_m0)*sin(var(--_a))*var(--r1))
             calc(var(--_m0)*cos(var(--_a))*var(--r1))
@@ -146,7 +153,7 @@
             calc(var(--_m0)*cos(var(--_a))*var(--r2));
           scale: -1 1;
         }
-        .arrow c:before {
+        .arrow :nth-child(3):before {
           margin:
             calc(var(--_m0)*sin(var(--_a))*var(--r2))
             calc(var(--_m0)*cos(var(--_a))*var(--r2))
@@ -154,7 +161,7 @@
             calc(var(--_m0)*cos(var(--_a))*var(--r1));
           scale: 1 -1;
         }
-        .arrow d:before {
+        .arrow :nth-child(4):before {
           margin:
             calc(var(--_m0)*sin(var(--_a))*var(--r2))
             calc(var(--_m0)*cos(var(--_a))*var(--r1))
@@ -163,7 +170,7 @@
           scale: -1 -1;
         }
 
-        .arrow :is(a,b,c,d):after {
+        .arrow :is(:nth-child(1),:nth-child(2),:nth-child(3),:nth-child(4)):after {
           content: counter(dis);
           counter-reset: dis var(--_d);
           position: absolute;
@@ -181,22 +188,16 @@
           color: if(style(--_m0: 1):#fff;else:pink);
           font: bold 20px system-ui, sans-serif;
         }
-        .arrow b:after {
+        .arrow :nth-child(2):after {
           rotate: calc(-1*var(--_a));
           translate: calc(cos(var(--_a))*(var(--r2) - var(--r1))/2) calc(sin(var(--_a))*(var(--r2) - var(--r1))/-2);
         }
-        .arrow c:after {
+        .arrow :nth-child(3):after {
           rotate: calc(-1*var(--_a));
           translate: calc(cos(var(--_a))*(var(--r1) - var(--r2))/2) calc(sin(var(--_a))*(var(--r1) - var(--r2))/-2);
         }
-        .arrow d:after {
+        .arrow :nth-child(4):after {
           translate: calc(cos(var(--_a))*(var(--r2) - var(--r1))/2) calc(sin(var(--_a))*(var(--r2) - var(--r1))/2);
-        }
-
-        .circle {
-            position:      absolute;
-            aspect-ratio:  1;
-            border-radius: 50%;
         }
 
 
@@ -211,10 +212,10 @@ Chrome only (Jan 26)
 <div class="circle" ></div>
 
 <div class="arrow">
-  <a></a>
-  <b></b>
-  <c></c>
-  <d></d>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
 </div>
 
 <script>
@@ -245,7 +246,7 @@ Chrome only (Jan 26)
             circle.style.top  = (mouseEvent.clientY - circle._yDiff) + 'px';
       });
     });
-    // it's actually quicker to just go over all circles instead of only
+    // it's actually quicker to just go over all circles instead of only the active ones
     document.addEventListener('mouseup', _e => circles.forEach(circle => circle._active = false));
 
 </script>
