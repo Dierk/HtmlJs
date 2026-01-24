@@ -78,24 +78,24 @@
             Pretty nifty.
             */
 
-            --_x: calc(anchor(var(--anchor-name-a) inside) + anchor-size(var(--anchor-name-a)) / 2 );
-            --_y: calc(anchor(var(--anchor-name-b) inside) + anchor-size(var(--anchor-name-b)) / 2);
+            --middle-a: calc(anchor(var(--anchor-name-a) inside) + anchor-size(var(--anchor-name-a)) / 2 );
+            --middle-b: calc(anchor(var(--anchor-name-b) inside) + anchor-size(var(--anchor-name-b)) / 2);
         }
 /*
         The size and position of each quadrant is calculated via anchor positioning.
-        The first quadrant "a" in the upper left corner has its
-           left side in the middle of x,
-           the right side at the middle of y,
-           the top at the middle of x,
-           and the bottom at the middle of y.
+        The first quadrant in the upper left corner has its
+           left side in the middle of "a",
+           the right side at the middle of "b",
+           the top at the middle of "a",
+           and the bottom at the middle of "b".
         What is used as the side boundaries
         changes with the quadrants.
 */
 
-        .arrow :is(:nth-child(1),:nth-child(2)) {top:  var(--_x); bottom: var(--_y)}
-        .arrow :is(:nth-child(1),:nth-child(3)) {left: var(--_x); right:  var(--_y)}
-        .arrow :is(:nth-child(3),:nth-child(4)) {top:  var(--_y); bottom: var(--_x)}
-        .arrow :is(:nth-child(2),:nth-child(4)) {left: var(--_y); right:  var(--_x)}
+        .arrow :is(:nth-child(1),:nth-child(2)) {top:  var(--middle-a); bottom: var(--middle-b)}
+        .arrow :is(:nth-child(1),:nth-child(3)) {left: var(--middle-a); right:  var(--middle-b)}
+        .arrow :is(:nth-child(3),:nth-child(4)) {top:  var(--middle-b); bottom: var(--middle-a)}
+        .arrow :is(:nth-child(2),:nth-child(4)) {left: var(--middle-b); right:  var(--middle-a)}
 
         .arrow :is(:nth-child(1),:nth-child(2),:nth-child(3),:nth-child(4)):before {
           content: "";
