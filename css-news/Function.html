@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Css blobs</title>
+    <style>
+        @function --transparent(--color <color>, --alpha <percentage>) returns <color> {
+          result: oklch(from var(--color) l c h / var(--alpha));
+        }
+
+        section {
+            background-color: var(--base-color);
+        }
+
+        body {
+            --base-color: peachpuff;
+            background-color: --transparent(var(--base-color), 50%);
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+
+<section>
+    Should read with background base color on a body
+    with more transparent version.
+    As of jan 26, it works only in chrome.
+</section>
+
+
+
+</body>
+
+</html>
