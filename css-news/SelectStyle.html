@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Css blobs</title>
+    <style>
+
+        select,
+        ::picker(select) {
+          appearance: base-select;
+        }
+        ::picker(select) {
+            border: none;
+        }
+        select {
+          border: 2px solid #dddddd;
+          background: #eeeeee;
+          padding: 10px;
+          transition: 0.4s;
+        }
+
+        select:hover,
+        select:focus {
+          background: #dddddd;
+        }
+        select::picker-icon {
+          color: #999999;
+          transition: 0.4s rotate;
+        }
+        select:open::picker-icon {
+          rotate: 180deg;
+        }
+        option {
+          display: flex;
+          justify-content: flex-start;
+          gap: 20px;
+
+          border: 2px solid #dddddd;
+          background: #eeeeee;
+          padding: 10px;
+          transition: 0.4s;
+        }
+        option:first-of-type {
+          border-radius: 8px 8px 0 0;
+        }
+
+        option:last-of-type {
+          border-radius: 0 0 8px 8px;
+        }
+
+        ::picker(select) {
+          border-radius: 8px;
+        }
+
+        option:not(option:last-of-type) {
+          border-bottom: none;
+        }
+
+        option:nth-of-type(odd) {
+          background: white;
+        }
+
+        option:hover,
+        option:focus {
+          background: plum;
+        }
+
+        option .icon {
+          font-size: 1.6rem;
+          text-box: trim-both cap alphabetic;
+        }
+
+        selectedcontent .icon {
+          display: none;
+        }
+        option:checked {
+          font-weight: bold;
+        }
+
+        option::checkmark {
+          order: 1;
+          margin-left: auto;
+          content: "☑️";
+        }
+        ::picker(select) {
+          opacity: 0;
+          transition: all 0.4s allow-discrete;
+        }
+        ::picker(select):popover-open {
+          opacity: 1;
+        }
+        @starting-style {
+          ::picker(select):popover-open {
+            opacity: 0;
+          }
+        }
+        ::picker(select) {
+          top: calc(anchor(bottom) + 1px);
+          left: anchor(10%);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<form>
+  <p>
+    <label for="pet-select">Select pet:</label>
+    <select id="pet-select">
+      <button>
+        <selectedcontent></selectedcontent>
+      </button>
+
+      <option value="">Please select a pet</option>
+      <option value="cat">
+        <span class="icon" aria-hidden="true">🐱</span
+        ><span class="option-label">Cat</span>
+      </option>
+      <option value="dog">
+        <span class="icon" aria-hidden="true">🐶</span
+        ><span class="option-label">Dog</span>
+      </option>
+      <option value="hamster">
+        <span class="icon" aria-hidden="true">🐹</span
+        ><span class="option-label">Hamster</span>
+      </option>
+      <option value="chicken">
+        <span class="icon" aria-hidden="true">🐔</span
+        ><span class="option-label">Chicken</span>
+      </option>
+      <option value="fish">
+        <span class="icon" aria-hidden="true">🐟</span
+        ><span class="option-label">Fish</span>
+      </option>
+      <option value="snake">
+        <span class="icon" aria-hidden="true">🐍</span
+        ><span class="option-label">Snake</span>
+      </option>
+    </select>
+  </p>
+</form>
+
+
+
+</body>
+
+</html>
