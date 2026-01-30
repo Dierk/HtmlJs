@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <title>Two Anchors</title>
+    <style>
+        :root {
+            --show-diag: 0;
+        }
+        *:has(.element:hover) {
+            --show-diag: 1;
+        }
+
+        .element {
+            position:         absolute;
+            width:            10em;
+            aspect-ratio:     1 /1;
+            background-color: red;
+            box-shadow:       0 0 .2em 1em Canvas;
+        }
+
+        .element:nth-child(1) {
+            anchor-name: --anchor-one;
+            left:        10%;
+            top:         10%;
+        }
+
+        .element:nth-child(2) {
+            anchor-name: --anchor-two;
+            right:       10%;
+            bottom:      10%;
+        }
+
+        .connector {
+            position:         absolute;
+            z-index:          -1;
+            top:              anchor(center --anchor-one);
+            left:             anchor(center --anchor-one);
+            right:            anchor(center --anchor-two);
+            bottom:           anchor(center --anchor-two);
+
+            border-width:     .3em;
+            border-radius:    0 0 0 1em;
+            border-style:     none none solid solid;
+            border-color:     transparent transparent blue blue;
+
+            @container style(--show-diag:1) {
+                /*background-image: linear-gradient(to left bottom, transparent 49.5%, blue 49.5%, blue 50.5%, transparent 50.5%);*/
+                /*border-radius:    0 0 0 80%;*/
+                corner-shape: bevel;
+                border-radius: 0 0 0 100%;
+            }
+
+
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+
+<div class="element"></div>
+<div class="element"></div>
+<div class="connector"></div>
+
+
+<script>
+
+</script>
+
+</body>
+
+</html>
