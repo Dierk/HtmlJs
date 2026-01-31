@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Null Safe </title>
+
+</head>
+<body>
+
+
+<script>
+
+    function* foo(label) {
+        let i = 0
+        while ( i < 5 ) {
+            yield(i);
+            i+=1;
+        }
+        console.log("after production", label);
+    }
+    foo("forEach").forEach( it => console.log(it));
+
+    for (const it of foo("for-of")) {
+        console.log(it);
+    }
+
+    console.log([...foo("de-ctor").map(String)]);
+
+    const iterator = foo();
+    console.log(iterator);
+
+</script>
+
+</body>
+</html>
