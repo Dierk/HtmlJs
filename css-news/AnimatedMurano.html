@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <title>Two Anchors</title>
+    <style>
+
+        body { margin-inline: 2em;}
+        @property --progress {
+          syntax: "<number>";
+            initial-value: 0;
+            inherits: true;
+        }
+        @keyframes progress {
+            from { --progress: 0;}
+            to   { --progress: 1;}
+        }
+        .line {
+            --progress: 1;
+            margin-block: 2em ;
+            display: flex;
+            width: calc(100px + (var(--progress) * 100% - 100px));
+            &:hover {
+                animation: progress 1s ease-out alternate infinite;
+            }
+        }
+        .element {
+            height: 50px;
+            aspect-ratio: 1 / 1;
+            background-color: black;
+            border-radius: 10%;
+        }
+        .connector {
+            flex-grow: 1;
+            flex-shrink: 1;
+            width: 0;
+            background-color: hsl(from red h s calc(l*var(--progress)));
+            clip-path: shape(
+                from top left,
+                curve to 100% 0% with 50% calc(var(--progress) * 70%),
+                vline to 100%,
+                curve to 0% 100% with 50% calc(100% - var(--progress) * 70%)
+              );;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="line">
+    <div class="element"></div>
+    <div class="element connector"></div>
+    <div class="element"></div>
+</div>
+
+
+
+<script>
+
+</script>
+
+</body>
+
+</html>
