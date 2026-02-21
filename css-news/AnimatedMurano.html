@@ -11,7 +11,7 @@
             container-type: inline-size;
         }
         @property --progress {
-            syntax: "<number>";
+            syntax:        "<number>";
             initial-value: 0;
             inherits:      true;
         }
@@ -25,7 +25,7 @@
             --progress:       min(1, calc(100cqi / (var(--max-stretch-at) * var(--element-height))));
             margin-block:     2em;
             display:          flex;
-            width:            calc((var(--progress) * 100% )); /* the math is silly but we need the % unit */
+            width:            calc((var(--progress) * 100cqi ));
             &:hover {
                 animation: progress 1s ease-out alternate infinite;
             }
