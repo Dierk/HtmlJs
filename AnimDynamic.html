@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Move with dynamics</title>
+    <style>
+        main {
+            margin: 2rem;
+        }
+        .x {
+            width: 5rem;
+            aspect-ratio: 1 / 1;
+            background-color: mediumvioletred;
+            border-radius: 10%;
+        }
+        .move {
+            animation:
+                move  1s ease-in-out forwards,
+                point 1s ease-in-out forwards
+            ;
+            animation-duration: 2s;
+        }
+        @keyframes move {
+              0% { translate:  0;     }
+            100% { translate: 25rem;  }
+        }
+        @keyframes point {
+              0% { transform: skewX(0)      scaleY(1);    }
+             10% { transform: skewX(-10deg) scaleY(0.9);  }
+             90% { transform: skewX( 5deg)  scaleY(0.95);  }
+            100% { transform: skewX(0)      scaleY(1);    }
+        }
+
+    </style>
+</head>
+
+<body>
+<main>
+    <div class="x" onclick="this.classList.add('move');">
+    </div>
+</main>
+</body>
+
+</html>
