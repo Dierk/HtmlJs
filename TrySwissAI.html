@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swiss AI</title>
+    <style>
+        .form {
+            display: grid;
+            grid-template-columns: max-content max-content;
+            gap: .5lh 2em;
+            max-width: 40ch;
+            margin-inline: auto;
+        }
+        output {
+            display: block;
+            text-wrap: wrap;
+            max-width: 40ch;
+            margin-inline: auto;
+            margin-top: 2lh;
+        }
+    </style>
+</head>
+<body>
+
+
+<main>
+
+    <div class="form">
+        <label for="service">Service</label><input size="50" id ="service" name="service" value="https://api.swissai.svc.cscs.ch/v1/chat/completions">
+        <label for="key">Key</label>        <input size="50" id ="key" name="key" type="password">
+        <label for="model">Model</label>    <input size="50" id ="model" name="model" value="swiss-ai/Apertus-8B-Instruct-2509">
+        <label for="content">Content</label><input size="50" id ="content" name="content" >
+
+        <label for="go">Go</label><button id="go">Submit</button>
+    </div>
+    <output id="out">
+
+    </output>
+
+</main>
+
+<script>
+    const client = (url, method = 'GET', data = null) => {
+        const request = {
+            method:      method,             // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json', // 'application/x-www-form-urlencoded'
+                'Authorization': 'Bearer '+key.value
+            },
+        };
+        if (null != data) {
+            request.body = JSON.stringify(data)
+        }
+        return fetch(url, request)
+            .then(resp => {                             // fetch API cares for the general error handling
+                if (resp.ok) {
+                    return resp.json()
+                }
+                if (Number(resp.status) < 400) {
+                    console.log("status", resp.status);
+                    return resp.text();
+                }
+                return Promise.reject(resp.status);
+            })
+    };
+    go.onclick = _evt => {
+        const data = {
+            "model": model.value,
+            "messages": [
+              {
+                "role": "user",
+                "content": content.value
+              }
+            ],
+            "stream": false
+          }
+        client(service.value, "POST", data)
+            .then( answer => out.textContent = answer.choices[0].message.content)
+            .catch( e => console.error(e))
+    }
+</script>
+
+<!--https://api.swissai.svc.cscs.ch/docs#/default/list_models_v1_models_get-->
+</body>
+
+</html>
