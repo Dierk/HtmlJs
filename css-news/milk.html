@@ -14,9 +14,14 @@
             padding: 2em;
         }
         .milk {
-            background-color: #fffc;
+            background-color: #fff8;
             box-shadow: 0 0 2em .5em white inset;
-            backdrop-filter:  blur(2px) ;
+            backdrop-filter:
+                /*drop-shadow(0 0 .1em white)*/
+                /*brightness(3)*/
+                blur(.2em)
+                grayscale(.5)
+        ;
         }
 
     </style>
@@ -24,7 +29,7 @@
 
 <body>
 
-<div>
+<div style="color:blue;">
     Some standard text in standard text. Some standard text in standard text. Some standard text in standard text.
     Some standard text in standard text. Some standard text in standard text. Some standard text in standard text.
     Some standard text in standard text. Some standard text in standard text. Some standard text in standard text.
