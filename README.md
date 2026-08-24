@@ -40,5 +40,6 @@ see HTML files e.g.
 - [Tetris 3D](https://dierk.github.io/HtmlJs/box/scene/tetris/tetris.html)
 - [Device Orientation](https://dierk.github.io/HtmlJs/orientation/View.html)
 - [Gallery](https://dierk.github.io/pictures/Pictures.html)
+- [Gear](https://dierk.github.io/HtmlJs/gear/Gear4.html)
 
 

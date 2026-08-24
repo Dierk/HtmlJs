@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gear</title>
+    <style>
+
+
+        .mode_carbon {
+            --clr-tooth_rim : grey;
+            --clr-tooth:      linear-gradient(lightgrey, darkgray);
+            --clr-gear_body : darkgrey;
+            --clr-shadow:     grey;
+        }
+        .mode_ice {
+            --clr-tooth_rim : color-mix(in oklch, cyan, white);
+            --clr-tooth:      radial-gradient(at 50% 10%, white, cyan, 20%,  white, cyan);
+            --clr-gear_body:  color-mix(in oklch, cyan, white);
+        }
+
+        main {
+            margin-inline: auto;
+            max-width: 50ch;
+            & p {
+                font-size: 1.4rem;
+                background-color: #fff6;
+                padding: 3rem;
+                backdrop-filter: blur(.5em);
+                border-radius: .5em;
+                /*box-shadow: 0 0 .5em 50px black;*/
+            }
+        }
+
+        .gearbox {
+            position: fixed;
+            width: 100vmin;
+            aspect-ratio: 1 / 1;
+            left: calc((100vw - 100vmin) / 2);
+
+            z-index: -1;
+
+            container-name: gearbox;
+            container-type: size;
+
+        }
+
+
+        .gear {
+            --progress:    0;
+            --velocity:    1; /* relative; negative values change direction */
+            --offset:      0deg;
+            width:         60%;
+            aspect-ratio:  1 /1;
+            display:       grid;
+            justify-items: center;
+            animation-name:     progress;
+            animation-duration: 1s; /* FF only :-( */
+            animation-direction: alternate;
+            animation-timeline: scroll();
+
+            & .roundFill {
+                border-radius: 50%;
+                background-image: radial-gradient(
+                                      circle at 40% 20%,
+                                      white 10%,
+                                      var(--clr-gear_body) 80%
+                                  );
+                width:70%;
+                aspect-ratio: 1/1;
+
+                grid-area: 1 / 1;
+                place-self: center;
+                z-index: 10;
+                box-shadow: 2px 6px 4px 0 var(--clr-tooth_rim);
+                position: relative;
+            }
+            & .roundFill::before {
+                            content:'';
+                            border-radius: 50%;
+                            background-image: radial-gradient(
+                                                  circle at 55% 80%,
+                                                  white 20%,
+                                                  var(--clr-gear_body)
+                                              );
+
+                            box-shadow: 0px 4px 4px 0 var(--clr-tooth_rim) inset;
+                            position: absolute;
+                            inset: 20%;
+
+                        }
+        }
+
+        .gear.big_right {
+            position: absolute;
+            top: 0;
+            left: 50cqw;
+            width: 120%;
+            /*bottom: 100cqw;*/
+            /*right: -50cqw;*/
+            /*transform: scale(2);*/
+
+            & .tooth {
+                width: 29%;
+            }
+        }
+
+        @property --progress {
+            syntax:        "<number>";
+            initial-value: 0;
+            inherits:      true;
+        }
+
+        @keyframes progress {
+            100% {
+                --progress: 1;
+            }
+        }
+
+        .tooth_strip {
+            grid-area: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+            height: 100%;
+            --rotation: calc(var(--progress)*var(--velocity)* 360deg + var(--offset) + var(--angle));
+            transform: rotate(var(--rotation));
+        }
+
+        .tooth {
+            aspect-ratio:            2 / 3;
+            width:                   50%;
+            background:              var(--clr-tooth);
+            border-color:            var(--clr-tooth_rim);
+            border-top-left-radius:  40% 100%;
+            border-top-right-radius: 40% 100%;
+            border-width:            2px;
+            border-style:            solid;
+            box-shadow:
+                calc( 4px * cos(var(--rotation) - 90deg))
+                calc(-4px * sin(var(--rotation) - 90deg))
+                4px 0 var(--clr-tooth_rim);
+        }
+
+    </style>
+</head>
+
+<body class="mode_carbon">
+
+<script>
+    const strips = (gearDiv, toothCount) => {
+        const angleMult = (360 / toothCount) | 0;
+        const stripDivs = Array.from(
+            {length:toothCount},
+            (_,idx) => `<div class="tooth_strip" style="--angle: ${idx * angleMult}deg;"><div class="tooth"></div></div>`);
+        gearDiv.innerHTML += stripDivs.join("");
+    }
+</script>
+
+
+ <div class="gearbox">
+    <div class="gear" id="gear1"
+         style="transform: translateX(-16%);--offset:8deg;--velocity:1;">
+        <div class="roundFill"></div>
+    </div><script> strips(gear1, 12);</script>
+
+    <div class="gear" id="gear2"
+         style="transform: translateY(-16%);--offset:15deg;--velocity:-1;">
+        <div class="roundFill"></div>
+    </div><script> strips(gear2, 12);</script>
+
+    <div class="gear big_right" id="gearBig"
+         style="--offset:8.5deg;--velocity:0.5;">
+        <div class="roundFill"></div>
+    </div><script> strips(gearBig, 24);</script>
+ </div>
+
+ <main>
+ <h1>Some content</h1>
+
+<select onchange="document.body.className=''; document.body.classList.add(this.value)">
+    <option value="">select mode</option>
+    <option>mode_carbon</option>
+    <option>mode_ice</option>
+</select>
+
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+ </main>
+<div style="min-height: 500vh;"></div>
+
+
+</body>
+</html>
