@@ -41,5 +41,6 @@ see HTML files e.g.
 - [Device Orientation](https://dierk.github.io/HtmlJs/orientation/View.html)
 - [Gallery](https://dierk.github.io/pictures/Pictures.html)
 - [Gear](https://dierk.github.io/HtmlJs/gear/Gear4.html)
+- [Gear Mask](https://dierk.github.io/HtmlJs/gear/GearMask.html)
 
 
