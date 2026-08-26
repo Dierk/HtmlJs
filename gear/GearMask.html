@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Mask</title>
+    <style>
+
+        body {
+            min-height: 500vh;
+        }
+        div {
+            width: 60dvmin;
+            aspect-ratio: 1 / 1;
+            --angle: 0deg;
+            --angle-offset: 0deg;
+            --direction: 1;
+            --effective-angle: calc( var(--direction) * (var(--angle) + var(--angle-offset)));
+            transform: rotate(var(--effective-angle));
+            background: conic-gradient(
+                from calc( (-1) * var(--effective-angle) + 180deg * min(0,var(--direction))  ),
+                blue, 15%, magenta, 60%, blue);
+            animation-name: turn;
+            animation-timeline: scroll();
+        }
+        @property --angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: true;
+        }
+        @keyframes turn {
+            to   { --angle: 180deg; }
+        }
+        .gear_mask {
+            mask: url("./GearSVG.svg");
+        }
+        .fixed_position {
+            position: fixed;
+            inset: 5em auto auto 1em;
+        }
+        .offset {
+            translate: 40dvmin 40dvmin;
+            --direction: -1;
+            --angle-offset: 15deg;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gear_mask fixed_position"></div>
+<div class="gear_mask fixed_position offset"></div>
+
+</body>
+
+</html>
