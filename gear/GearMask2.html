@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try Mask</title>
+    <style>
+
+        body {
+            min-height: 500vh;
+        }
+
+        .gearContainer {
+            container: gearContainer / size;
+
+            position:  fixed;
+            inset:     2em;
+            overflow:  clip;
+        }
+
+        .gear {
+            mask:               url("./GearSVG.svg");
+            position:           absolute;
+            width:              60cqmin;
+            aspect-ratio:       1 / 1;
+            --progress:         0;
+            --angle:            calc(var(--progress) * 360deg);
+            --angle-offset:     0deg;
+            --direction:        1;
+            --effective-angle:  calc(var(--direction) * (var(--angle) + var(--angle-offset)));
+            transform:          rotate(calc((-1)*var(--effective-angle)));
+            background:         conic-gradient(
+                                    from calc(var(--effective-angle) + 180deg * min(0, var(--direction))) in oklch,
+                                    blue, 15%, magenta, 60%, blue);
+            animation:          turn 1s linear;
+            animation-timeline: scroll();
+        }
+
+        @property --progress {
+            syntax:        "<number>";
+            initial-value: 0;
+            inherits:      true;
+        }
+
+        @keyframes turn {
+            to {
+                --progress: 1;
+            }
+        }
+
+        .offset {
+            translate:      40cqmin 40cqmin;
+            --direction:    -1;
+            --angle-offset: 15deg;
+        }
+
+        .chapter {
+            background-color: #eee;
+            border-radius: .6em;
+            border: 2px solid transparent;
+            background:
+                linear-gradient(#fffe, #fffe) padding-box,
+                conic-gradient(from 120deg in oklch, blue, 15%, magenta, 60%, blue) border-box
+        ;
+            padding: .3em 1em;
+            margin: 1em;
+            max-width: 24ch;
+            font-family: "Helvetica Neue", system-ui;
+            & h2 {
+                color: blue;
+                & span {
+                    margin-right: 1ch;
+                    color: magenta;
+                    letter-spacing: .1ch;
+                }
+            }
+            p {
+                padding-left: 3em;
+            }
+            position: absolute;
+            top:      18cqmin;
+            left:     10cqmin;
+
+            animation:          turn 1s linear;
+            animation-timeline: scroll();
+
+            --angle: calc(var(--chapter-index) * 60deg - var(--progress) * 120deg);
+            translate:
+                calc( 70cqmin * cos(var(--angle)) )
+                calc( 70cqmin * sin(var(--angle)) )
+            ;
+            rotate: var(--angle);
+            transform: translateX(-50%) translateY(-50%);
+
+            z-index: -1;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="gearContainer">
+    <div style="background: #fffa;position:absolute;top:0;left:0;width:60cqmin;min-height: 100cqmin;"></div>
+    <div style="background: #fffa;position:absolute;top:40cqmin;left:60cqmin;width:100cqmin;min-height: 100cqmin;"></div>
+    <div class="gear "></div>
+    <div class="gear offset"></div>
+
+    <div class="chapter" style="--chapter-index:0">
+        <h2><span>01</span>Gestaltung</h2>
+        <p>Ideen visualisieren, verstehen und auswählen.</p>
+    </div>
+    <div class="chapter" style="--chapter-index:1">
+        <h2><span>02</span>Umsetzung</h2>
+        <p>Technik verstehen und ingenieursmässig einsetzen.</p>
+    </div>
+    <div class="chapter" style="--chapter-index:2">
+        <h2><span>03</span>Verzahnung</h2>
+        <p>Gestaltung und Umsetzung ergänzen sich gegenseitig.</p>
+    </div>
+
+</div>
+
+</body>
+
+</html>

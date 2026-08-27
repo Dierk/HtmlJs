@@ -42,5 +42,6 @@ see HTML files e.g.
 - [Gallery](https://dierk.github.io/pictures/Pictures.html)
 - [Gear](https://dierk.github.io/HtmlJs/gear/Gear4.html)
 - [Gear Mask](https://dierk.github.io/HtmlJs/gear/GearMask.html)
+- [Gear Mask2](https://dierk.github.io/HtmlJs/gear/GearMask2.html)
 
 
