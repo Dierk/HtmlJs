@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gear</title>
+    <style>
+
+
+        .mode_carbon {
+            --clr-tooth_rim : grey;
+            --clr-tooth:      linear-gradient(lightgrey, darkgray);
+            --clr-gear_body : darkgrey;
+        }
+        .mode_ice {
+            --clr-tooth_rim : color-mix(in oklch, cyan, white);
+            --clr-tooth:      radial-gradient(at 50% 10%, white, cyan, 20%,  white, cyan);
+            --clr-gear_body:  color-mix(in oklch, cyan, white);
+        }
+
+        main {
+            margin-inline: auto;
+            max-width: 50ch;
+            & p {
+                font-size: 1.4rem;
+                background-color: #fff6;
+                padding: 3rem;
+                backdrop-filter: blur(.5em);
+                border-radius: .5em;
+                /*box-shadow: 0 0 .5em 50px black;*/
+            }
+        }
+
+        .gearbox {
+            position: fixed;
+            width: 100vmin;
+            aspect-ratio: 1 / 1;
+            left: calc((100vw - 100vmin) / 2);
+
+            z-index: -1;
+
+            container-name: gearbox;
+            container-type: size;
+
+        }
+
+
+        .gear {
+            --progress:    0;
+            --direction:   1;
+            --offset:      0deg;
+            width:         60%;
+            aspect-ratio:  1 /1;
+            display:       grid;
+            justify-items: center;
+            animation-name:     progress;
+            animation-timeline: scroll();
+            background:    radial-gradient(
+                               var(--clr-gear_body),
+                               var(--clr-gear_body) 49%,
+                               transparent          49%);
+            border-radius: 50%;
+
+        }
+
+        .gear.big_right {
+            position: absolute;
+            top: 0;
+            left: 50cqw;
+            width: 120%;
+            /*bottom: 100cqw;*/
+            /*right: -50cqw;*/
+            /*transform: scale(2);*/
+        }
+
+        @property --progress {
+            syntax:        "<number>";
+            initial-value: 0;
+            inherits:      true;
+        }
+
+        @keyframes progress {
+            100% {
+                --progress: 1;
+            }
+        }
+
+        .tooth_strip {
+            grid-area: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+            height: 100%;
+            --rotationBaseAngle: calc(var(--progress)*var(--direction)* 360deg + var(--offset));
+            &:nth-child(1)  { transform: rotate(calc(var(--rotationBaseAngle) + 0deg)); }
+            &:nth-child(2)  { transform: rotate(calc(var(--rotationBaseAngle) + 30deg)); }
+            &:nth-child(3)  { transform: rotate(calc(var(--rotationBaseAngle) + 60deg)); }
+            &:nth-child(4)  { transform: rotate(calc(var(--rotationBaseAngle) + 90deg)); }
+            &:nth-child(5)  { transform: rotate(calc(var(--rotationBaseAngle) + 120deg)); }
+            &:nth-child(6)  { transform: rotate(calc(var(--rotationBaseAngle) + 150deg)); }
+            &:nth-child(7)  { transform: rotate(calc(var(--rotationBaseAngle) + 180deg)); }
+            &:nth-child(8)  { transform: rotate(calc(var(--rotationBaseAngle) + 210deg)); }
+            &:nth-child(9)  { transform: rotate(calc(var(--rotationBaseAngle) + 240deg)); }
+            &:nth-child(10) { transform: rotate(calc(var(--rotationBaseAngle) + 270deg)); }
+            &:nth-child(11) { transform: rotate(calc(var(--rotationBaseAngle) + 300deg)); }
+            &:nth-child(12) { transform: rotate(calc(var(--rotationBaseAngle) + 330deg)); }
+
+        }
+
+        .tooth {
+            aspect-ratio:            2 / 3;
+            width:                   50%;
+            background:              var(--clr-tooth);
+            border-color:            var(--clr-tooth_rim);
+            border-bottom-color:     transparent;
+            border-top-left-radius:  40% 100%;
+            border-top-right-radius: 40% 100%;
+            border-width:            2px;
+            border-style:            solid;
+        }
+
+    </style>
+</head>
+
+<body class="mode_carbon">
+
+
+ <div class="gearbox">
+    <div class="gear">
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+
+    </div>
+    <div class="gear" style="transform: translateY(-16%);--offset:15deg;--direction:-1;">
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+    </div>
+    <div class="gear big_right" >
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+        <div class="tooth_strip"><div class="tooth"></div></div>
+    </div>
+ </div>
+
+ <main>
+ <h1>Some content</h1>
+
+<select onchange="document.body.className=''; document.body.classList.add(this.value)">
+    <option value="">select mode</option>
+    <option>mode_carbon</option>
+    <option>mode_ice</option>
+</select>
+
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+    lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </p>
+ </main>
+<div style="min-height: 500vh;"></div>
+
+
+</body>
+</html>

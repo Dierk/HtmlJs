@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG</title>
+    <style>
+
+        .gear {
+            --progress:    0;
+            --direction:   1;
+            --offset:      0deg;
+            width:         60%;
+            aspect-ratio:  1 /1;
+            display:       grid;
+            justify-items: center;
+            /*animation:     progress 10s infinite alternate ease-in-out;*/
+        }
+
+        @property --progress {
+            syntax:        "<number>";
+            initial-value: 0;
+            inherits:      true;
+        }
+
+        @keyframes progress {
+            100% {
+                --progress: 1;
+            }
+        }
+        
+        .tooth_strip {
+            grid-area: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+            height: 100%;
+            --rotationBaseAngle: calc(var(--progress)*var(--direction)* 360deg + var(--offset));
+            &:nth-child(1)  { transform: rotate(calc(var(--rotationBaseAngle) + 0deg)); }
+            &:nth-child(2)  { transform: rotate(calc(var(--rotationBaseAngle) + 30deg)); }
+            &:nth-child(3)  { transform: rotate(calc(var(--rotationBaseAngle) + 60deg)); }
+            &:nth-child(4)  { transform: rotate(calc(var(--rotationBaseAngle) + 90deg)); }
+            &:nth-child(5)  { transform: rotate(calc(var(--rotationBaseAngle) + 120deg)); }
+            &:nth-child(6)  { transform: rotate(calc(var(--rotationBaseAngle) + 150deg)); }
+            &:nth-child(7)  { transform: rotate(calc(var(--rotationBaseAngle) + 180deg)); }
+            &:nth-child(8)  { transform: rotate(calc(var(--rotationBaseAngle) + 210deg)); }
+            &:nth-child(9)  { transform: rotate(calc(var(--rotationBaseAngle) + 240deg)); }
+            &:nth-child(10) { transform: rotate(calc(var(--rotationBaseAngle) + 270deg)); }
+            &:nth-child(11) { transform: rotate(calc(var(--rotationBaseAngle) + 300deg)); }
+            &:nth-child(12) { transform: rotate(calc(var(--rotationBaseAngle) + 330deg)); }
+            
+        }
+        .tooth {
+            stroke-width:   4px;
+            stroke-opacity: 1;
+            stroke-linecap: square;
+            stroke:         grey;
+            fill:           darkgray;
+            /*transform: scaleY(.6);*/
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="gear">
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+
+</div>
+<div class="gear" style="transform: translateY(-16%);--offset:15deg;--direction:-1;">
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+    <div class="tooth_strip"><svg viewBox="0 -2 120 120" xmlns="http://www.w3.org/2000/svg"><path class="tooth" d=" M  30 120 Q 30  60 50   0 H 70 Q 90 60 90 120 "/></svg></div>
+
+</div>
+
+
+</body>
+</html>

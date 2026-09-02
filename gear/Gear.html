@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG</title>
+    <style>
+        
+        .gear {
+            width: 60%;
+            aspect-ratio: 1 /1 ;
+            background-color: lightcyan;
+            
+        }
+        .tooth {
+            stroke-width:   1px;
+            stroke-opacity: 1;
+            stroke-linecap: square;
+            stroke:         black;
+            scale:          .3;
+            /*translate: 50%;*/
+            &:nth-child(2) {transform: translate(150%, 14%) rotate(30deg);}
+            &:nth-child(3) {transform: translate(272%, 100%) rotate(60deg);}
+            &:nth-child(4) {transform: translate(335%, 236%) rotate(90deg);}
+            
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="gear">
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="tooth" d=" M  0 120 H 30 Q3 0  60 50   0 H 70 Q 90 60 90 120 H 120     "/>    
+    <path class="tooth" d=" M  0 120 H 30 Q 30  60 50   0 H 70 Q 90 60 90 120 H 120     "/>
+    <path class="tooth" d=" M  0 120 H 30 Q 30  60 50   0 H 70 Q 90 60 90 120 H 120     "/>
+    <path class="tooth" d=" M  0 120 H 30 Q 30  60 50   0 H 70 Q 90 60 90 120 H 120     "/>
+</svg>
+</div>
+
+
+</body>
+</html>

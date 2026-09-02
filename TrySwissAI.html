@@ -4,37 +4,58 @@
     <meta charset="UTF-8">
     <title>Swiss AI</title>
     <style>
+        main {
+            margin: 3lh auto auto 3em;
+        }
         .form {
             display: grid;
             grid-template-columns: max-content max-content;
             gap: .5lh 2em;
             max-width: 40ch;
-            margin-inline: auto;
         }
         output {
             display: block;
             text-wrap: wrap;
             max-width: 40ch;
-            margin-inline: auto;
+            min-height: 2lh;
             margin-top: 2lh;
         }
+        .wait {
+            background-color: lightsalmon;
+        }
+
     </style>
 </head>
 <body>
 
 
 <main>
+    <h1><a href="https://fhnw-hpc.pages.fhnw.ch/docs/llm-server/">Swiss AI</a></h1>
+    
 
     <div class="form">
         <label for="service">Service</label><input size="50" id ="service" name="service" value="https://api.swissai.svc.cscs.ch/v1/chat/completions">
-        <label for="key">Key</label>        <input size="50" id ="key" name="key" type="password">
-        <label for="model">Model</label>    <input size="50" id ="model" name="model" value="swiss-ai/Apertus-8B-Instruct-2509">
-        <label for="content">Content</label><input size="50" id ="content" name="content" >
+        <label for="key">Key</label>        <input size="50" id ="key"     name="key"     type="password">
+        <label for="model">Model</label>    <input size="50" id ="model"   name="model"   value="-- refresh --">
+        <label for="content">Content</label><textarea id ="content" name="content" ></textarea>
 
-        <label for="go">Go</label><button id="go">Submit</button>
+        <label for="format">Format</label>
+            <select id ="format"   name="format" >
+                <option></option>
+                <option>Formatiere die Antwort ohne Markdown Zeichen als HTML snippet.</option>
+                <option>Formatiere die Antwort ohne Markdown Zeichen als HTML unordered list.</option>
+                <option>Formatiere die Antwort ohne Markdown Zeichen als HTML table.</option>
+                <option>Formatiere die Antwort ohne Markdown Zeichen als JSON.</option>
+            </select>
+
+        <label for="go">Go</label>
+        <div>
+            <button id="go"     >Submit</button>
+            <button id="refresh">Refresh</button>
+        </div>
     </div>
     <output id="out">
-
+        n/a
     </output>
 
 </main>
@@ -69,18 +90,40 @@
             "messages": [
               {
                 "role": "user",
-                "content": content.value
+                "content": content.value + "" + format.value
               }
             ],
             "stream": false
           }
+        out.classList.add("wait");
         client(service.value, "POST", data)
-            .then( answer => out.textContent = answer.choices[0].message.content)
+            .then( answer => out.innerHTML = answer.choices[0].message.content)
+            .catch( e => console.error(e))
+            .finally( () => out.classList.remove("wait"))
+    }
+    refresh.onclick = _evt => {
+        client('https://api.swissai.svc.cscs.ch/v1/models', "GET")
+            .then( models => {
+                const ids = new Set(models.data
+                  .filter(  model => model.has_service && model.status === "ready")
+                  .map(     model => model.id )
+                  .toSorted()
+                )
+                const select = document.createElement("SELECT");
+                select.setAttribute("id","model");
+                let optionStr = "";
+                ids.values().forEach( id => {
+                   console.log(id);
+                    optionStr += `<option value="${id}">${id}</option>`;
+                });
+                select.innerHTML = optionStr;
+                document.getElementById("model").replaceWith(select);
+            })
             .catch( e => console.error(e))
     }
 </script>
 
-<!--https://api.swissai.svc.cscs.ch/docs#/default/list_models_v1_models_get-->
+<!--https://api.swissai.svc.cscs.ch/docs#/default/list_models_v1_models_get -->
 </body>
 
 </html>
