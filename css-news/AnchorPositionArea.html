@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <title>Anchor Position Area</title>
+    <style>
+        :root {
+        }
+        .element {
+            width : 20cqi;
+            aspect-ratio: 1/1;
+        }
+        .anchor {
+            anchor-name: --anchor-0;
+            anchor-scope: all;
+            background-color: hsl( calc(sibling-index()*30deg) 100% 50% );
+        }
+        .positioned {
+            position: fixed;
+            position-anchor: --anchor-0;
+            position-area: bottom right;
+
+            background-color: inherit;
+        }
+
+    </style>
+</head>
+
+<body>
+<pre>
+Anchor positioning consider
+- anchor element with unique id and unique anchor name
+- nesting positioned element below anchor and disambiguate with anchor-scope
+</pre>
+
+<div class="element anchor">
+    <div class="element positioned"></div>
+</div>
+<div class="element anchor">
+    <div class="element positioned"></div>
+</div>
+<div class="element anchor">
+    <div class="element positioned"></div>
+</div>
+
+
+
+
+<script>
+
+</script>
+
+</body>
+
+</html>
