@@ -12,14 +12,15 @@
             aspect-ratio: 1/1;
         }
         .anchor {
-            anchor-name: --anchor-0;
-            anchor-scope: all;
+            anchor-name:  --anchor-0;
+            anchor-scope: --anchor-0;
             background-color: hsl( calc(sibling-index()*30deg) 100% 50% );
         }
         .positioned {
             position: fixed;
             position-anchor: --anchor-0;
             position-area: bottom right;
+            height: calc(anchor-size() * .3) ;
 
             background-color: inherit;
         }
