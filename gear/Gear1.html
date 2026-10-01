@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG</title>
+    <style>
+        
+        .gear {
+            width: 60%;
+            aspect-ratio: 1 /1 ;
+            background-color: lightcyan;
+        }
+
+        .tooth {
+            stroke-width:   0.01;
+            stroke-opacity: 1;
+            stroke-linecap: square;
+            stroke:         black;
+            /*fill:              transparent;*/
+            stroke-dasharray:  100 100;
+            stroke-dashoffset: 0;
+            transition:        stroke-dashoffset 10s ;
+            @starting-style {
+                stroke-dashoffset: 100;
+            }
+        }
+        .controls {
+            width: max-content;
+            display: grid;
+            input {
+                float:right;
+                margin-left: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="gear">
+    <svg viewBox="-1 -1 2 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="tooth" />
+    </svg>
+</div>
+<div class="controls" style="display: grid;">
+    <label>
+        Tooth Count
+        <input id="toothCountEl" type="number" value="12" oninput="repaint()" min="0"  step="1">
+    </label>
+    <label>
+        how round the tops of the teeth should be
+        <input id="roundnessEl" type="number" value="0.3" oninput="repaint()" min="0" max="1" step="0.02">
+    </label>
+    <label>
+        how much of the available space the bases of the teeth cover
+        <input id="ratioEl" type="number" value="0.8" oninput="repaint()" min="0" max="1" step="0.02">
+    </label>
+    <label>
+        inner radius
+        <input id="radiusEl" type="number" value="0.8" oninput="repaint()" min="0" max="1" step="0.02">
+    </label>
+</div>
+<script>
+    const repaint = () => {
+        const p          = document.querySelector(".gear svg path");
+        const toothCount = Number(toothCountEl.value);
+        const roundness  = Number(roundnessEl.value); // how round the tops of the teeth should be
+        const ratio      = Number(ratioEl.value); //
+        const radius      = Number(radiusEl.value); //
+        let data         = "";
+        for (let i = 0; i < toothCount; i++) {
+            const angleDistance = Math.PI * 2 / toothCount;     // from start to next start in rad
+            const angleStart    = angleDistance * i;              // angles are relative to the _vertical_ axis
+            const angleEnd      = angleStart + angleDistance * ratio;    // end of the tooth
+            const angleMid      = (angleEnd + angleStart) / 2;       // mid of the tooth
+            const angleNext     = angleStart + angleDistance;
+            const x1            = Math.sin(angleStart) * radius;   // tooth base coords
+            const y1            = Math.cos(angleStart) * radius;
+            const x2            = Math.sin(angleEnd) * radius;
+            const y2            = Math.cos(angleEnd) * radius;
+
+            const mx = Math.sin(angleMid);
+            const my = Math.cos(angleMid);
+
+            const c1x = Math.sin((angleStart * roundness + angleMid) / (roundness + 1));
+            const c1y = Math.cos((angleStart * roundness + angleMid) / (roundness + 1));
+            const c2x = Math.sin((angleEnd   * roundness + angleMid) / (roundness + 1));
+            const c2y = Math.cos((angleEnd   * roundness + angleMid) / (roundness + 1));
+
+            const nextx = Math.sin(angleNext) * radius;
+            const nexty = Math.cos(angleNext) * radius;
+
+            if (i < 1) {
+                data = `M  ${x1}  ${y1}`;
+            }
+            data += `
+                     Q  ${c1x} ${c1y}   ${mx} ${my}
+                     Q  ${c2x} ${c2y}   ${x2} ${y2}
+                     A ${radius} ${radius} 0 0 0 ${nextx} ${nexty}
+                     `
+        }
+
+        p.setAttribute("d", data);
+        console.log(data);
+    }
+    repaint();
+</script>
+
+
+</body>
+</html>
