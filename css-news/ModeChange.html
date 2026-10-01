@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <title>Two Anchors</title>
+    <style>
+        body {
+        }
+
+        .morning {
+            background-color: gold;
+        }
+
+
+        .noon {
+            background-color: lightblue;
+        }
+
+        .evening {
+            background-color: orange;
+            & .element {
+                background-color: green;
+            }
+        }
+
+        .night {
+            background-color: black;
+            color:            white;
+            color-scheme:     dark;
+        }
+
+        .element {
+            width: 50px;
+            aspect-ratio: 1/1;
+            background-color: greenyellow;
+            margin: 2em;
+            border: 3px solid black;
+            & .nested {
+                background-color: deeppink;
+                *:has(.noon) & {
+                    background-color: darkmagenta;
+                }
+            }
+            *:has(.noon) & {
+                background-color: magenta;
+            }
+        }
+
+    </style>
+</head>
+
+<body class="morning">
+
+<select onchange="document.body.className=this.selectedOptions[0].value">
+    <option selected>morning</option>
+    <option>noon</option>
+    <option>evening</option>
+    <option>night</option>
+</select>
+
+<div class="element">element
+
+   <div class="nested element">nested element</div>
+
+</div>
+
+<div class="element">element</div>
+
+
+<script>
+
+</script>
+
+</body>
+
+</html>
