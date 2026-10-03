@@ -44,5 +44,6 @@ see HTML files e.g.
 - [Gear Mask](https://dierk.github.io/HtmlJs/gear/GearMask.html)
 - [Gear Mask2](https://dierk.github.io/HtmlJs/gear/GearMask2.html)
 - [Interactive Gear](https://dierk.github.io/HtmlJs/gear/Gear1.html)
+- [Scroll Gear](https://dierk.github.io/HtmlJs/gear/ScrollTheEarth.html)
 
 

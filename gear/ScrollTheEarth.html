@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG</title>
+    <style>
+        @property --progress {
+            syntax: "<number>";
+            initial-value: 0;
+            inherits: true;
+        }
+
+        body {
+            --progress: 0;
+            --clr-theme: lightgrey;
+        }
+
+        .night      { --clr-theme: hsl(220deg 70% 20%); }
+        .morning    { --clr-theme: hsl(250deg 50% 40%); }
+        .noon       { --clr-theme: hsl(180deg 80% 30%); }
+        .evening    { --clr-theme: hsl( 40deg 80% 50%); }
+
+        .top {
+            width: 60%;
+            margin-inline: auto;
+            background: radial-gradient(circle at 50% 200%, white 50%, var(--clr-theme)  90%);
+            transition: background 1s;
+            aspect-ratio: 2 /1 ;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+        }
+        .gear {
+            aspect-ratio: 4 /1 ;
+            position: relative;
+            --stretch: 1.8;
+
+            & > svg {
+                pointer-events: none; /* no mouse events or the dimensions are off. Let parent handle mouse. */
+                position: absolute;
+                top: 0;
+                left: 0;
+                translate: calc(  (var(--stretch) - 1) * -100% / 4) 0;
+                width: calc(var(--stretch) * 100%);
+                rotate: calc(var(--progress)*60deg);
+
+            }
+            & .h-scroll-window {
+                position: absolute;
+                inset: 0;
+                overflow-x: scroll;
+                overscroll-behavior: contain;
+                scrollbar-width: none;
+
+                & .left-right {
+                    position: absolute;
+                    width: 300%;
+                    left: -100%;
+                    top: 0;
+                    bottom: 0;
+                }
+            }
+
+        }
+
+        .tooth {
+            stroke-width:   0.005;
+            stroke-opacity: 1;
+            stroke-linecap: square;
+            stroke:         white;
+            fill: #fff4;
+        }
+
+        .paintStroke {
+            stroke-dasharray:  100 100;
+            stroke-dashoffset: 0;
+            transition:        stroke-dashoffset 10s ;
+            @starting-style {
+                stroke-dashoffset: 100;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top">
+    <div class="gear">
+        <svg viewBox="-1.01 -1.01 2.02 2.02" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="tooth" />
+        </svg>
+        <div class="h-scroll-window">
+            <div class="left-right">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const gearPath = ({toothCount, roundness, ratio, radius}) => {
+        let result         = "";
+        const sin = x => Math.round(Math.sin(x) * 100) / 100;
+        const cos = x => Math.round(Math.cos(x) * 100) / 100;
+        for (let i = 0; i < toothCount; i++) {
+            const angleDistance = Math.PI * 2 / toothCount;     // from start to next start in rad
+            const angleStart    = angleDistance * i;              // angles are relative to the _vertical_ axis
+            const angleEnd      = angleStart + angleDistance * ratio;    // end of the tooth
+            const angleMid      = (angleEnd + angleStart) / 2;       // mid of the tooth
+            const angleNext     = angleStart + angleDistance;
+            const x1            = sin(angleStart) * radius;   // tooth base coords
+            const y1            = cos(angleStart) * radius;
+            const x2            = sin(angleEnd) * radius;
+            const y2            = cos(angleEnd) * radius;
+
+            const mx = sin(angleMid);
+            const my = cos(angleMid);
+
+            const c1x = sin((angleStart * roundness + angleMid) / (roundness + 1));
+            const c1y = cos((angleStart * roundness + angleMid) / (roundness + 1));
+            const c2x = sin((angleEnd   * roundness + angleMid) / (roundness + 1));
+            const c2y = cos((angleEnd   * roundness + angleMid) / (roundness + 1));
+
+            const nextx = sin(angleNext) * radius;
+            const nexty = cos(angleNext) * radius;
+
+            if (i < 1) {
+                result = `M  ${x1}  ${y1}`;
+            }
+            result += `
+                     Q  ${c1x} ${c1y}   ${mx} ${my}
+                     Q  ${c2x} ${c2y}   ${x2} ${y2}
+                     A ${radius} ${radius} 0 0 0 ${nextx} ${nexty}
+                     `
+        }
+        return result;
+    };
+    document.querySelector(".gear svg path")
+        .setAttribute("d", gearPath({toothCount:32, roundness:0.3, ratio:0.8, radius:0.88}));
+
+    let progress = 0; // value from 0 to 1
+    const setProgress = num => {
+        progress = num; // since we have no observable here, update all users manually
+        document.body.style.setProperty("--progress", String(1 - progress)); // change scroll direction (?)
+        let className = 'night';
+        const h = 1 / 24;
+        if (progress >=  0 * h && progress <   6 * h) className = 'night';
+        if (progress >=  6 * h && progress <  10 * h) className = 'morning';
+        if (progress >= 10 * h && progress <  16 * h) className = 'noon';
+        if (progress >= 16 * h && progress <  20 * h) className = 'evening';
+        if (progress >= 20 * h && progress <  24 * h) className = 'night';
+        document.body.className = className;
+    };
+
+    const targetHour = new Date().getHours();
+    const setAndWait = hour => {
+        setTimeout( _ => {
+            setProgress(hour/24);
+            hour +=0.2;
+            if ( hour > targetHour ) return;
+            setAndWait(hour);
+        }, 50);
+    };
+    setAndWait(0);
+
+    const scroller = document.querySelector(".h-scroll-window");
+    const scrollTotal = scroller.getBoundingClientRect().width;
+    scroller.onscroll = _evt => {
+        setProgress( scroller.scrollLeft / scrollTotal);
+    }
+
+</script>
+
+
+</body>
+</html>
