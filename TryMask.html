@@ -20,10 +20,13 @@
             mask: linear-gradient(black, white) luminance;
         }
         .mask-image {
-            mask: url("https://unsplash.it/200/200") luminance;
+            mask: url("./TryMaskImg.jpg") luminance;
         }
         .mask-svg {
             mask: url("TryMaskSVG.svg");
+        }
+        .mask-svg-internal {
+            /*mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");*/
         }
 
 
@@ -42,11 +45,14 @@
         <h2>Mask by luminance: black=transparent white=opaque</h2>
         <div class="mask-luminance">
         </div>
-        <h2>Mask by random image</h2>
+        <h2>Mask by image</h2>
         <div class="mask-image">
         </div>
-        <h2>Mask by svg</h2>
+        <h2>Mask by external svg</h2>
         <div class="mask-svg">
+        </div>
+        <h2>Mask by data-url svg</h2>
+        <div class="mask-svg-internal">
         </div>
 
 
@@ -58,6 +64,19 @@
 
 
 <script>
+    const source = `
+    <svg viewBox="-1 -1 2 2" xmlns="http://www.w3.org/2000/svg">
+        <circle r=".9" stroke="white" stroke-width=".05" fill="#0006"></circle>
+    </svg>`;
+    const out = "data:image/svg+xml," + source
+        .replaceAll(/  +/g, " ")
+        .replaceAll(/\n/g, "")
+        .replaceAll(/"/g, "'")
+        .replaceAll(/#/g, "%23")
+        .replaceAll(/</g, "%3C")
+        .replaceAll(/>/g,"%3E");
+    console.log(out);
+    document.querySelector(".mask-svg-internal").style.setProperty("mask", `url("${out}")`);
 
 </script>
 
